@@ -1,0 +1,10 @@
+{
+  "seed": 0,
+  "embedding_dim": 100,
+  "batch_size": 32,
+  "max_length": 256,
+  "vocab_size": 20003,
+  "val_perplexity_untrained": 23926.51612661354,
+  "val_avg_nll_untrained": 10.08274258428676,
+  "val_num_target_tokens": 983447
+}

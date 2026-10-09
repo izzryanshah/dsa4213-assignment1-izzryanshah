@@ -1,0 +1,19 @@
+# Raw data (keep data/ dir structure via .gitkeep, but not the actual data files)
+data/*
+!data/.gitkeep
+
+# Model checkpoints
+*.pt
+*.pth
+*.ckpt
+checkpoints/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables / secrets
+.env
+
+# macOS Finder artifacts
+.DS_Store

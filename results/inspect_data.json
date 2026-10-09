@@ -1,0 +1,19 @@
+{
+  "data_path": "data/IMDB Dataset.csv",
+  "seed": 0,
+  "column_names": [
+    "review",
+    "sentiment"
+  ],
+  "num_reviews": 50000,
+  "label_counts": {
+    "positive": 25000,
+    "negative": 25000
+  },
+  "total_words": 11557847,
+  "avg_review_length": 231.15694,
+  "num_reviews_with_br_tag": 29200,
+  "pct_reviews_with_br_tag": 58.4,
+  "word_budget": 3000000,
+  "subsample_suggestion_reviews": 12500
+}
