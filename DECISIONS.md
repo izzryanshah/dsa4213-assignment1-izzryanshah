@@ -249,7 +249,7 @@ From now on, every new design choice is added here **after** the user picks from
 
 ### F1. Generation prompts
 - **Value:** three prompts: `this movie was one of the best` / `i was really disappointed by the acting and` / `the story follows a young man who`.
-- **Where:** `prompt.txt:5`, `:8`, `:11` (reasons are in the `#` comment line under each prompt).
+- **Where:** `prompts.txt:5`, `:8`, `:11` (reasons are in the `#` comment line under each prompt).
 - **Chosen by:** User, prompt (2026-10-10). The prompts were suggested in a chat response that the user pasted and adopted; no prompt-reading or generation script exists yet.
 - **Alternatives:** not recorded.
 - **Reason (as given with the prompts):** all three are lowercase and use common words, so they match the preprocessing and should not hit `<unk>` (checked 2026-10-10: every token is in the 20,003-entry vocabulary). Each tests something different: (1) a positive opening — does the continuation stay positive or drift into a contradiction; (2) a negative opening — the same test in the other direction, and ending on "and" forces the model to continue a clause mid-thought; (3) a neutral plot opening — reviews often summarise plots, so this tests whether a model can keep a short story coherent (does "who" lead to something sensible, does the subject stay consistent).
@@ -268,9 +268,9 @@ From now on, every new design choice is added here **after** the user picks from
 ### G2. Prompts file and its format
 - **Value:** prompts are read from `prompts.txt` (a file the user is writing); one prompt per line; blank lines and lines starting with `#` are skipped. The prompts are cleaned and tokenized with the same function as the training data; words not in the vocabulary become `<unk>`.
 - **Where:** `configs/generations_ngram.json:19`; `src/generate.py:150-161` (`read_prompts`), `:164-170` (`encode_prompt`).
-- **Chosen by:** file name `prompts.txt` = User, prompt (2026-10-11). The line format and `#` comment rule = Assistant default (chosen so the existing `prompt.txt`, which has `#` reason lines, also works; see F1).
+- **Chosen by:** file name `prompts.txt` = User, prompt (2026-10-11). The line format and `#` comment rule = Assistant default (chosen so the file can carry `#` reason lines under each prompt; see F1).
 - **Alternatives:** JSON list of prompts; one prompt per paragraph.
-- **Status:** file name CONFIRMED; format NEEDS REVIEW. Note: `prompts.txt` does not exist yet, so the real run has not been done.
+- **Status:** file name CONFIRMED; format NEEDS REVIEW. `prompts.txt` (the F1 prompts, renamed by the user from `prompt.txt`) exists and was used for `results/generations_ngram.json`.
 
 ### G3. Random seed per generation
 - **Value:** each (prompt, sample number) gets its own random generator seeded from `[seed, sample number, CRC32 of the prompt text]`, so output depends only on those three things.

@@ -134,3 +134,9 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 - Rewrote `README.md` as reproduction instructions: data access (manual Kaggle download, not redistributed, no keys or credentials; the unfilled Kaggle-URL placeholder is replaced with the dataset link already in the citation), the preprocessing steps in `src/data.py`, dependencies with the exact package versions used for the recorded results (Python 3.10.11, torch 2.14.1, numpy 2.2.6, pandas 2.3.3, scikit-learn 1.7.2), the ordered commands for every script, the numbers recorded in `results/` for checking a re-run (copied from `results/RESULTS_LOG.md`, no interpretation), a table of the configs and how to override them, the random seeds and what each affects, the output/record files, repository layout and sharing notes.
 - Documentation only: no code, config or result changed. `requirements.txt` is left unpinned (versions are listed in the README instead).
 - Not done: not committed; the README commands were not re-run in this task (they were run earlier in this session, with identical results).
+
+## 2026-10-11 (n-gram generation run)
+
+- `prompts.txt` (the user's file; same three prompts as the earlier `prompt.txt`, which the user renamed) was checked: all prompt words are in the vocabulary. Ran `src/generate.py --config configs/generations_ngram.json`; saved `results/generations_ngram.json` (decoding settings + texts), refreshed `results/all_runs.csv` (7 runs).
+- Docs updated to the new file name: `README.md` (prompts section), `DECISIONS.md` (F1 location, G2 status), `results/RESULTS_LOG.md` (new entry; replaced the "no generation saved yet" note).
+- No code or config changed. Not committed (the `prompt.txt` -> `prompts.txt` rename and the new result are uncommitted, so the run record has `git_dirty: true`).

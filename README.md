@@ -105,11 +105,7 @@ The processed data and these numbers are deterministic: re-running reproduces th
 
 ### Generation prompts
 
-`src/generate.py` reads prompts from `prompts.txt` in the repository root (not committed; create it yourself): one prompt per line, blank lines and lines starting with `#` are ignored. `prompt.txt` holds the three prompts used so far, with the reason for each; copy it to `prompts.txt` to use them:
-
-```
-cp prompt.txt prompts.txt
-```
+`src/generate.py` reads prompts from `prompts.txt` in the repository root: one prompt per line, blank lines and lines starting with `#` are ignored. The file holds the three prompts used so far, with the reason for each as a `#` comment under it.
 
 Output goes to `results/generations_ngram.json` with the decoding settings stored beside the text.
 

@@ -50,6 +50,13 @@ All current-format runs below were executed on `CPU: Apple M2 (Darwin arm64)` wi
 - **Key numbers:** 7 of 7 tests passed.
 - **File:** `results/test_generate.json`
 
+### 2026-10-11 01:05 — n-gram text generation
+- **Script:** `src/generate.py`
+- **Command:** `/usr/local/bin/python3 src/generate.py --config configs/generations_ngram.json`
+- **Settings:** temperature 1.0, top-k 40, 50 max new tokens, 1 sample per prompt, banned `<pad>`/`<unk>`, stop at `<eos>`, seed 0; 3 prompts from `prompts.txt`; n-gram discounts (D3, D2, D1) 0.9, 0.8, 0.1 read from `results/ngram.json`.
+- **Key numbers:** 3 generations; 1 ended with `<eos>`; mean 41.0 new tokens.
+- **File:** `results/generations_ngram.json` (decoding settings and texts stored inside). Run record shows `git_dirty: true` (`prompt.txt` -> `prompts.txt` rename not yet committed).
+
 ### 2026-10-10 — summary table
 - **Script:** `src/summarise_runs.py`
 - **Command:** `/usr/local/bin/python3 src/summarise_runs.py`
@@ -89,5 +96,5 @@ These were run with the old command-line interface. Their result files were over
 
 ---
 
-## Note, 2026-10-11 — no generation result saved yet
-`src/generate.py` was run end to end twice (n-gram, `configs/generations_ngram.json` with `options.prompts_path=prompt.txt`, output to a scratch directory) to check it works and is reproducible (identical text both times). Those outputs were not saved to `results/`. The real run needs `prompts.txt`; its entry will be added here after that run.
+## Note, 2026-10-11 — earlier unsaved check runs
+Before `prompts.txt` existed, `src/generate.py` was run end to end twice (n-gram, `configs/generations_ngram.json` with `options.prompts_path=prompt.txt`, output to a scratch directory) to check it works and is reproducible (identical text both times). Those outputs were not saved to `results/`. The saved run is the 2026-10-11 01:05 entry above.
