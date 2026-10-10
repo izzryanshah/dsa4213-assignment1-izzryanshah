@@ -23,26 +23,22 @@ apply yet). Once a real model is trained later, a MUCH lower perplexity is
 what shows training actually worked.
 
 Usage:
-    python src/sanity_check.py
-    python src/sanity_check.py --seed 0 --batch-size 32
+    python src/sanity_check.py --config configs/sanity_check.json
+    python src/sanity_check.py --config configs/sanity_check.json --batch-size 64
+
+Settings (seed, embedding size, batch size, max review length, ...) come from
+the config file; see runconfig.py for how overrides work.
 """
 
 import argparse
-import json
 import math
-import os
 
 import torch
 import torch.nn as nn
 from torch.nn.utils.rnn import pad_sequence
 
-from data import load_processed_data
-
-# The project's standing rule is that every neural model uses a 100-dimensional
-# embedding (to match GloVe 100d later), so this is a fixed constant, not a
-# command-line option.
-EMBEDDING_DIM = 100
-
+from data import check_config_matches_data, load_processed_data
+from runconfig import add_config_args, load_config, save_run
 
 class BigramLM(nn.Module):
     """The simplest possible language model: predict the next token using
@@ -54,7 +50,7 @@ class BigramLM(nn.Module):
     makes it a good sanity check rather than a real model to train.
     """
 
-    def __init__(self, vocab_size, pad_id, embedding_dim=EMBEDDING_DIM):
+    def __init__(self, vocab_size, pad_id, embedding_dim):
         super().__init__()
         # padding_idx tells nn.Embedding to always keep the <pad> row at all
         # zeros and never update it — harmless here since nothing is
@@ -135,26 +131,19 @@ def compute_perplexity(model, reviews, pad_id, vocab_size, batch_size, device, m
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Sanity-check the data pipeline with an untrained LM.")
-    parser.add_argument("--processed-dir", type=str, default="data/processed")
-    parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--batch-size", type=int, default=32)
-    parser.add_argument(
-        "--max-length",
-        type=int,
-        default=256,
-        help="Truncate each review to at most this many tokens, to bound memory/compute.",
-    )
-    parser.add_argument("--results-path", type=str, default="results/sanity_check.json")
+    add_config_args(parser)
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
+    config, run = load_config(args)
+    opts = config["options"]  # processed_dir, max_length
 
     # Record the seed: it controls the model's random initial weights, so
     # the exact perplexity number is reproducible.
-    print(f"Random seed: {args.seed}")
-    torch.manual_seed(args.seed)
+    print(f"Random seed: {config['seed']}")
+    torch.manual_seed(config["seed"])
 
     # This untrained, 2-million-parameter model on 5,000 validation reviews
     # is tiny by deep-learning standards, so plain CPU is fast enough here
@@ -162,34 +151,31 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Device: {device}")
 
-    data = load_processed_data(args.processed_dir)
+    data = load_processed_data(opts["processed_dir"])
+    check_config_matches_data(config, data)
     vocab_size = len(data.vocab)
 
-    model = BigramLM(vocab_size, pad_id=data.vocab.pad_id).to(device)
+    model = BigramLM(vocab_size, pad_id=data.vocab.pad_id, embedding_dim=config["embedding_dim"]).to(device)
 
     val_reviews = data.val.reviews()
     perplexity, avg_nll, num_targets = compute_perplexity(
-        model, val_reviews, data.vocab.pad_id, vocab_size, args.batch_size, device, args.max_length
+        model, val_reviews, data.vocab.pad_id, vocab_size, config["batch_size"], device, opts["max_length"]
     )
 
     print(f"Vocabulary size: {vocab_size}")
     print(f"Untrained validation perplexity: {perplexity:.1f}")
     print(f"(average next-token loss: {avg_nll:.4f} nats, over {num_targets} non-padding tokens)")
 
-    results = {
-        "seed": args.seed,
-        "embedding_dim": EMBEDDING_DIM,
-        "batch_size": args.batch_size,
-        "max_length": args.max_length,
-        "vocab_size": vocab_size,
-        "val_perplexity_untrained": perplexity,
-        "val_avg_nll_untrained": avg_nll,
-        "val_num_target_tokens": num_targets,
-    }
-    os.makedirs(os.path.dirname(args.results_path), exist_ok=True)
-    with open(args.results_path, "w") as f:
-        json.dump(results, f, indent=2)
-    print(f"Saved results to {args.results_path}")
+    results_path = save_run(
+        args.results_dir, run, "src/sanity_check.py", config,
+        metrics={
+            "val_perplexity_untrained": perplexity,
+            "val_avg_nll_untrained": avg_nll,
+            "val_num_target_tokens": num_targets,
+        },
+        details={"vocab_size_with_special_tokens": vocab_size},
+    )
+    print(f"Saved run record to {results_path}")
 
 
 if __name__ == "__main__":

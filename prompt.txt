@@ -1,0 +1,12 @@
+# Generation prompts. Format: each line that does not start with '#' and is not blank is one prompt.
+# Lines starting with '#' are the reasons for the prompt above them and must be skipped by any script that reads this file.
+# All three are lowercase and use common words, so they match the preprocessing in src/data.py and should not map to <unk>.
+
+this movie was one of the best
+# Positive opening. Does the continuation stay positive, or drift into a contradiction like "...best films i have ever hated"?
+
+i was really disappointed by the acting and
+# Negative opening. Same test in the other direction. It also ends on "and", which forces the model to continue a list or clause mid-thought.
+
+the story follows a young man who
+# Neutral plot opening. Reviews often summarise plots, so this tests whether a model can keep a short story coherent: does "who" lead to something sensible, and does the subject stay consistent?

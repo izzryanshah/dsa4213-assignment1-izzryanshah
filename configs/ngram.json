@@ -1,0 +1,20 @@
+{
+  "architecture": "trigram_kneser_ney",
+  "layers": null,
+  "hidden_size": null,
+  "embedding_dim": null,
+  "embedding_init": null,
+  "context_length": 2,
+  "learning_rate": null,
+  "batch_size": 32,
+  "epochs": null,
+  "dropout": null,
+  "vocab_size": 20000,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "processed_dir": "data/processed",
+    "max_length": null,
+    "discount_grid": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95]
+  }
+}

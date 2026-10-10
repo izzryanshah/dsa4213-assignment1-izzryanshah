@@ -1,0 +1,47 @@
+{
+  "run": "test_generate",
+  "script": "tests/test_generate.py",
+  "date": "2026-10-11T00:03:36+08:00",
+  "git_commit": "8764c2a535ca4f8980bd2386e6aebbb01af0f22b",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
+  "seed": 0,
+  "config": {
+    "architecture": "bigram_lm",
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": 100,
+    "embedding_init": "random",
+    "context_length": 1,
+    "learning_rate": null,
+    "batch_size": null,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 47,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "num_fake_reviews": 200,
+      "max_fake_review_length": 30,
+      "num_draws": 3000
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "all_passed": true,
+    "num_passed": 7,
+    "num_tests": 7
+  },
+  "details": {
+    "tests": {
+      "test_temperature_and_topk_match_the_docstring_example": "passed",
+      "test_banned_words_are_never_sampled": "passed",
+      "test_topk_keeps_only_the_k_likeliest_allowed_words": "passed",
+      "test_same_seed_same_text_different_seed_different_text": "passed",
+      "test_stops_at_eos_and_does_not_include_it": "passed",
+      "test_neural_wrapper_gives_valid_distribution": "passed",
+      "test_ngram_next_token_matches_scoring_path": "passed"
+    }
+  }
+}

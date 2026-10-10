@@ -1,10 +1,38 @@
 {
+  "run": "sanity_check",
+  "script": "src/sanity_check.py",
+  "date": "2026-10-10T22:44:00+08:00",
+  "git_commit": "8764c2a535ca4f8980bd2386e6aebbb01af0f22b",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
   "seed": 0,
-  "embedding_dim": 100,
-  "batch_size": 32,
-  "max_length": 256,
-  "vocab_size": 20003,
-  "val_perplexity_untrained": 23926.51612661354,
-  "val_avg_nll_untrained": 10.08274258428676,
-  "val_num_target_tokens": 983447
+  "config": {
+    "architecture": "bigram_lm",
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": 100,
+    "embedding_init": "random",
+    "context_length": 1,
+    "learning_rate": null,
+    "batch_size": 32,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "processed_dir": "data/processed",
+      "max_length": 256
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "val_perplexity_untrained": 23926.51612661354,
+    "val_avg_nll_untrained": 10.08274258428676,
+    "val_num_target_tokens": 983447
+  },
+  "details": {
+    "vocab_size_with_special_tokens": 20003
+  }
 }

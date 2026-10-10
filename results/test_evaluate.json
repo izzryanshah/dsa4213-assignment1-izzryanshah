@@ -1,0 +1,45 @@
+{
+  "run": "test_evaluate",
+  "script": "tests/test_evaluate.py",
+  "date": "2026-10-11T00:04:03+08:00",
+  "git_commit": "8764c2a535ca4f8980bd2386e6aebbb01af0f22b",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
+  "seed": 0,
+  "config": {
+    "architecture": "bigram_lm",
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": 100,
+    "embedding_init": "random",
+    "context_length": 1,
+    "learning_rate": null,
+    "batch_size": 16,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 997,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "num_fake_reviews": 60,
+      "max_fake_review_length": 80,
+      "truncate_length": 40
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "all_passed": true,
+    "num_passed": 5,
+    "num_tests": 5
+  },
+  "details": {
+    "tests": {
+      "test_untrained_perplexity_is_near_vocab_size": "passed",
+      "test_matches_sanity_check_implementation": "passed",
+      "test_result_does_not_depend_on_batch_size": "passed",
+      "test_neural_and_ngram_style_scorer_see_same_targets": "passed",
+      "test_padding_is_ignored": "passed"
+    }
+  }
+}

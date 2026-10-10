@@ -1,19 +1,50 @@
 {
-  "data_path": "data/IMDB Dataset.csv",
+  "run": "inspect_data",
+  "script": "src/inspect_data.py",
+  "date": "2026-10-10T22:43:31+08:00",
+  "git_commit": "8764c2a535ca4f8980bd2386e6aebbb01af0f22b",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
   "seed": 0,
-  "column_names": [
-    "review",
-    "sentiment"
-  ],
-  "num_reviews": 50000,
-  "label_counts": {
-    "positive": 25000,
-    "negative": 25000
+  "config": {
+    "architecture": null,
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": null,
+    "embedding_init": null,
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": null,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": null,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "data_path": "data/IMDB Dataset.csv",
+      "n_examples": 3,
+      "word_budget": 3000000,
+      "example_chars": 500,
+      "round_to": 500
+    }
   },
-  "total_words": 11557847,
-  "avg_review_length": 231.15694,
-  "num_reviews_with_br_tag": 29200,
-  "pct_reviews_with_br_tag": 58.4,
-  "word_budget": 3000000,
-  "subsample_suggestion_reviews": 12500
+  "epoch_losses": [],
+  "metrics": {
+    "column_names": [
+      "review",
+      "sentiment"
+    ],
+    "num_reviews": 50000,
+    "label_counts": {
+      "positive": 25000,
+      "negative": 25000
+    },
+    "total_words": 11557847,
+    "avg_review_length": 231.15694,
+    "num_reviews_with_br_tag": 29200,
+    "pct_reviews_with_br_tag": 58.4,
+    "subsample_suggestion_reviews": 12500
+  },
+  "details": {}
 }

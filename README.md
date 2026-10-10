@@ -10,7 +10,7 @@ The dataset is downloaded **manually** from Kaggle, not programmatically, and is
 
 1. Download `IMDB Dataset.csv` from Kaggle: <PASTE THE EXACT KAGGLE DATASET URL YOU USED HERE> (requires a free Kaggle account).
 2. Place the file at `data/IMDB Dataset.csv` in this repository.
-3. Run `python src/inspect_data.py` to sanity-check it loaded correctly.
+3. Run `python src/inspect_data.py --config configs/inspect_data.json` to sanity-check it loaded correctly.
 
 ### Citation
 

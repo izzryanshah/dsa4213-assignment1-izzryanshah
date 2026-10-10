@@ -1,0 +1,20 @@
+{
+  "architecture": "bigram_lm",
+  "layers": null,
+  "hidden_size": null,
+  "embedding_dim": 100,
+  "embedding_init": "random",
+  "context_length": 1,
+  "learning_rate": null,
+  "batch_size": null,
+  "epochs": null,
+  "dropout": null,
+  "vocab_size": 47,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "num_fake_reviews": 200,
+    "max_fake_review_length": 30,
+    "num_draws": 3000
+  }
+}

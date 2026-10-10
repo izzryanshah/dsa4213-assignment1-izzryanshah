@@ -22,8 +22,11 @@ What this file does, in order:
 
 Run directly to (re)build the processed data:
 
-    python src/data.py --seed 0
-    python src/data.py --seed 0 --subsample-n 12500   # smaller corpus for LM training
+    python src/data.py --config configs/data_prep.json
+    python src/data.py --config configs/data_prep.json --subsample-size 12500   # override one setting
+
+All settings (seed, vocabulary size, subsample size, split fractions, paths)
+come from the config file; see runconfig.py for how overrides work.
 """
 
 import argparse
@@ -37,6 +40,8 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
+from runconfig import add_config_args, load_config, save_run
+
 # --- special tokens -----------------------------------------------------
 # Every split uses the same three reserved ids. <eos> (end-of-document) is
 # not one of the "most frequent words" from step 3 — it is a control symbol
@@ -44,6 +49,8 @@ from sklearn.model_selection import train_test_split
 # <pad> and <unk> do.
 PAD_TOKEN, UNK_TOKEN, EOS_TOKEN = "<pad>", "<unk>", "<eos>"
 PAD_ID, UNK_ID, EOS_ID = 0, 1, 2
+
+NUM_SPECIAL_TOKENS = 3  # <pad>, <unk>, <eos>
 
 LABEL_MAP = {"negative": 0, "positive": 1}
 
@@ -223,41 +230,39 @@ def load_processed_data(processed_dir="data/processed"):
     )
 
 
+def check_config_matches_data(config, data):
+    """Stop early if a run's config disagrees with the processed data on disk.
+
+    Every later script reads the data that `python src/data.py` wrote. If its
+    config claims a different vocabulary size than that data really has, the
+    saved results would be mislabelled, so fail loudly instead.
+    """
+    if config["vocab_size"] is not None:
+        actual = len(data.vocab) - NUM_SPECIAL_TOKENS
+        if actual != config["vocab_size"]:
+            raise SystemExit(f"Config says vocab_size={config['vocab_size']} but the processed data "
+                             f"has {actual} words (+{NUM_SPECIAL_TOKENS} special tokens). "
+                             "Re-run src/data.py or fix the config.")
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Build the word-level IMDB dataset.")
-    parser.add_argument("--data-path", type=str, default="data/IMDB Dataset.csv")
-    parser.add_argument("--output-dir", type=str, default="data/processed")
-    parser.add_argument("--results-path", type=str, default="results/data_prep_stats.json")
-    parser.add_argument("--seed", type=int, default=0, help="Random seed for splitting and subsampling.")
-    parser.add_argument("--val-frac", type=float, default=0.1)
-    parser.add_argument("--test-frac", type=float, default=0.1)
-    parser.add_argument(
-        "--vocab-size",
-        type=int,
-        default=20000,
-        help="Number of most-frequent training words to keep (10000-20000), on top of <pad>/<unk>/<eos>.",
-    )
-    parser.add_argument(
-        "--subsample-n",
-        type=int,
-        default=None,
-        help=(
-            "If set, subsample down to about this many reviews in total "
-            "(split proportionally and stratified by label within train/val/test), "
-            "with the same fixed seed. Leave unset to keep all reviews."
-        ),
-    )
+    add_config_args(parser)
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
-    if not (10_000 <= args.vocab_size <= 20_000):
-        raise SystemExit(f"--vocab-size must be between 10000 and 20000, got {args.vocab_size}")
+    config, run = load_config(args)
+    opts = config["options"]  # data_path, output_dir, val_frac, test_frac
+    seed = config["seed"]
+    # The assignment fixes the allowed vocabulary range; this is a rule, not a tunable setting.
+    if not (10_000 <= config["vocab_size"] <= 20_000):
+        raise SystemExit(f"vocab_size must be between 10000 and 20000, got {config['vocab_size']}")
 
-    print(f"Random seed: {args.seed}")
+    print(f"Random seed: {seed}")
 
-    df = pd.read_csv(args.data_path)
+    df = pd.read_csv(opts["data_path"])
     if not set(df["sentiment"].unique()).issubset(LABEL_MAP):
         raise SystemExit(f"Unexpected sentiment values: {df['sentiment'].unique().tolist()}")
 
@@ -269,17 +274,17 @@ def main():
 
     # --- step 2: split BEFORE the vocabulary is built -------------------
     train_idx, val_idx, test_idx = stratified_three_way_split(
-        original_indices_all, labels_all, args.val_frac, args.test_frac, args.seed
+        original_indices_all, labels_all, opts["val_frac"], opts["test_frac"], seed
     )
 
-    if args.subsample_n is not None:
+    if config["subsample_size"] is not None:
         total_n = len(df)
         # Scale the subsample target to each split's own size, so the
         # 80/10/10 ratio is preserved rather than e.g. emptying out val/test.
-        ratio = args.subsample_n / total_n
-        train_idx = subsample_indices(train_idx, labels_all[train_idx], round(len(train_idx) * ratio), args.seed)
-        val_idx = subsample_indices(val_idx, labels_all[val_idx], round(len(val_idx) * ratio), args.seed)
-        test_idx = subsample_indices(test_idx, labels_all[test_idx], round(len(test_idx) * ratio), args.seed)
+        ratio = config["subsample_size"] / total_n
+        train_idx = subsample_indices(train_idx, labels_all[train_idx], round(len(train_idx) * ratio), seed)
+        val_idx = subsample_indices(val_idx, labels_all[val_idx], round(len(val_idx) * ratio), seed)
+        test_idx = subsample_indices(test_idx, labels_all[test_idx], round(len(test_idx) * ratio), seed)
 
     # --- save which original review went into which split ---------------
     # This is what lets Part III reuse exactly the same reviews later, even
@@ -294,9 +299,9 @@ def main():
         split_of[i] = "test"
     # Indices not kept after subsampling still had a nominal split from the
     # 80/10/10 division; recompute it the same way, just to record it.
-    if args.subsample_n is not None:
+    if config["subsample_size"] is not None:
         full_train_idx, full_val_idx, full_test_idx = stratified_three_way_split(
-            original_indices_all, labels_all, args.val_frac, args.test_frac, args.seed
+            original_indices_all, labels_all, opts["val_frac"], opts["test_frac"], seed
         )
         for i in full_train_idx:
             split_of.setdefault(i, "train")
@@ -305,7 +310,8 @@ def main():
         for i in full_test_idx:
             split_of.setdefault(i, "test")
 
-    os.makedirs(args.output_dir, exist_ok=True)
+    output_dir = opts["output_dir"]
+    os.makedirs(output_dir, exist_ok=True)
     split_assignment = pd.DataFrame(
         {
             "original_index": list(split_of.keys()),
@@ -313,25 +319,18 @@ def main():
         }
     ).sort_values("original_index")
     split_assignment["included"] = split_assignment["original_index"].map(lambda i: kept.get(i, False))
-    split_assignment.to_csv(os.path.join(args.output_dir, "split_assignment.csv"), index=False)
+    split_assignment.to_csv(os.path.join(output_dir, "split_assignment.csv"), index=False)
 
     # --- step 3: build the vocabulary from the training split only -------
-    vocab = build_vocab((tokenized_reviews[i] for i in train_idx), args.vocab_size)
+    vocab = build_vocab((tokenized_reviews[i] for i in train_idx), config["vocab_size"])
     print(f"Vocabulary size (incl. <pad>/<unk>/<eos>): {len(vocab)}")
 
     # --- step 4: encode every split and save it ---------------------------
-    stats = {
-        "seed": args.seed,
-        "vocab_size": len(vocab),
-        "val_frac": args.val_frac,
-        "test_frac": args.test_frac,
-        "subsample_n": args.subsample_n,
-        "splits": {},
-    }
+    split_stats = {}
     for name, idx in [("train", train_idx), ("val", val_idx), ("test", test_idx)]:
         ids, review_lengths, split_labels, orig_idx = encode_split(tokenized_reviews, idx, labels_all, vocab)
         np.savez(
-            os.path.join(args.output_dir, f"{name}.npz"),
+            os.path.join(output_dir, f"{name}.npz"),
             ids=ids,
             review_lengths=review_lengths,
             labels=split_labels,
@@ -344,13 +343,13 @@ def main():
             f"{name}: {len(idx)} reviews, {num_tokens} tokens, "
             f"<unk> rate = {unk_rate:.4%}"
         )
-        stats["splits"][name] = {
+        split_stats[name] = {
             "num_reviews": int(len(idx)),
             "num_tokens": int(num_tokens),
             "unk_rate": unk_rate,
         }
 
-    with open(os.path.join(args.output_dir, "vocab.json"), "w") as f:
+    with open(os.path.join(output_dir, "vocab.json"), "w") as f:
         json.dump(
             {
                 "id_to_token": vocab.id_to_token,
@@ -360,13 +359,14 @@ def main():
             },
             f,
         )
-    with open(os.path.join(args.output_dir, "label_map.json"), "w") as f:
+    with open(os.path.join(output_dir, "label_map.json"), "w") as f:
         json.dump(LABEL_MAP, f)
 
-    os.makedirs(os.path.dirname(args.results_path), exist_ok=True)
-    with open(args.results_path, "w") as f:
-        json.dump(stats, f, indent=2)
-    print(f"Saved processed data to {args.output_dir}/ and stats to {args.results_path}")
+    results_path = save_run(
+        args.results_dir, run, "src/data.py", config,
+        metrics={"vocab_size_with_special_tokens": len(vocab), "splits": split_stats},
+    )
+    print(f"Saved processed data to {output_dir}/ and run record to {results_path}")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,53 @@
+{
+  "run": "data",
+  "script": "src/data.py",
+  "date": "2026-10-10T22:43:28+08:00",
+  "git_commit": "8764c2a535ca4f8980bd2386e6aebbb01af0f22b",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
+  "seed": 0,
+  "config": {
+    "architecture": null,
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": null,
+    "embedding_init": null,
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": null,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "data_path": "data/IMDB Dataset.csv",
+      "output_dir": "data/processed",
+      "val_frac": 0.1,
+      "test_frac": 0.1
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "vocab_size_with_special_tokens": 20003,
+    "splits": {
+      "train": {
+        "num_reviews": 40000,
+        "num_tokens": 11067213,
+        "unk_rate": 0.020730151303675098
+      },
+      "val": {
+        "num_reviews": 5000,
+        "num_tokens": 1388412,
+        "unk_rate": 0.022256361944437243
+      },
+      "test": {
+        "num_reviews": 5000,
+        "num_tokens": 1395673,
+        "unk_rate": 0.022388482115796464
+      }
+    }
+  },
+  "details": {}
+}
