@@ -128,3 +128,9 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 - Ran generation twice end to end with the existing `prompt.txt` (scratch output, not saved to `results/`): identical text both times. `prompts.txt` does not exist yet, so `results/generations_ngram.json` has not been produced.
 - `DECISIONS.md`: added G1-G8 (G1 confirmed by the user; G2-G8 marked NEEDS REVIEW). `results/RESULTS_LOG.md`: added the test run and a note about the unsaved check runs.
 - Not done: no neural model exists to generate from yet; nothing committed.
+
+## 2026-10-11 (README for reproduction)
+
+- Rewrote `README.md` as reproduction instructions: data access (manual Kaggle download, not redistributed, no keys or credentials; the unfilled Kaggle-URL placeholder is replaced with the dataset link already in the citation), the preprocessing steps in `src/data.py`, dependencies with the exact package versions used for the recorded results (Python 3.10.11, torch 2.14.1, numpy 2.2.6, pandas 2.3.3, scikit-learn 1.7.2), the ordered commands for every script, the numbers recorded in `results/` for checking a re-run (copied from `results/RESULTS_LOG.md`, no interpretation), a table of the configs and how to override them, the random seeds and what each affects, the output/record files, repository layout and sharing notes.
+- Documentation only: no code, config or result changed. `requirements.txt` is left unpinned (versions are listed in the README instead).
+- Not done: not committed; the README commands were not re-run in this task (they were run earlier in this session, with identical results).
