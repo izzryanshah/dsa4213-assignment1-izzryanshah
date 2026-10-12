@@ -1,0 +1,21 @@
+{
+  "architecture": "bigram",
+  "layers": null,
+  "hidden_size": null,
+  "embedding_dim": 100,
+  "embedding_init": null,
+  "context_length": 8,
+  "learning_rate": 0.01,
+  "batch_size": 4,
+  "epochs": 30,
+  "dropout": null,
+  "vocab_size": 20,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "patience": 2,
+    "grad_clip": 1.0,
+    "eval_max_length": 16,
+    "eval_batch_size": 4
+  }
+}

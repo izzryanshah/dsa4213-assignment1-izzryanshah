@@ -310,6 +310,181 @@ From now on, every new design choice is added here **after** the user picks from
 
 ---
 
+## H. Training windows (`src/data.py`)
+
+### H1. Context length
+- **Value:** 64 tokens per window.
+- **Where:** `configs/show_batch.json:7` (`context_length`); future training configs must set their own.
+- **Chosen by:** User, prompt (2026-10-11), from options offered. **Alternatives considered:** 32 (faster, less history); 128 (more context, about 2x compute per window, fewer windows).
+- **Reason given:** accepted the recommended value (the user's own example).
+- **Status:** CONFIRMED
+
+### H2. Window stride
+- **Value:** non-overlapping windows (stride = context length): window i starts at token i*L; each token is a target exactly once.
+- **Where:** `src/data.py:255-296` (`WindowDataset`, `start = i * self.context_length`).
+- **Chosen by:** User, prompt (2026-10-11), from options offered. **Alternatives considered:** half overlap (2x windows, tokens counted twice); stride 1 (about 64x windows, slow and redundant).
+- **Reason given:** accepted the recommended option.
+- **Status:** CONFIRMED
+
+### H3. Leftover tail of a split's token stream
+- **Value:** the tail shorter than L+1 tokens is dropped (no padding); windows run across review boundaries (reviews are separated by `<eos>`).
+- **Where:** `src/data.py:276-278` (`num_windows = (N - 1) // L`).
+- **Chosen by:** User, prompt (2026-10-11), from options offered. **Alternatives considered:** pad the tail with `<pad>` (keeps every token, needs loss masking).
+- **Reason given:** accepted the recommended option. Windows crossing review boundaries followed from the user's wording ("a split's token stream").
+- **Status:** CONFIRMED
+
+### H4. Batch size
+- **Value:** 64.
+- **Where:** `configs/show_batch.json:9` (`batch_size`).
+- **Chosen by:** User, prompt (2026-10-11), from options offered. **Alternatives considered:** 32 (noisier, less memory); 128 (faster epochs, more memory, fewer updates).
+- **Status:** CONFIRMED
+
+### H5. Shuffling and last batch
+- **Value:** train loader shuffles each epoch using a `torch.Generator` seeded from the config seed; val/test loaders do not shuffle; the final batch of an epoch may be smaller than `batch_size` (not dropped).
+- **Where:** `src/data.py:299-315` (`make_dataloader`).
+- **Chosen by:** Assistant default (shown in the design the user approved, but not offered as options); User, prompt (2026-10-11, reviewing NEEDS REVIEW) confirmed "keep those". **Alternatives considered:** `drop_last=True` for equal-size batches.
+- **Status:** CONFIRMED
+
+---
+
+## I. Training script (`src/train.py`)
+
+### I1. Early stopping and epoch cap
+- **Value:** stop after 3 epochs without validation improvement; at most 20 epochs.
+- **Where:** `configs/train_bigram.json:12` (`epochs`), `:20` (`options.patience`); used in `src/train.py` (`fit`).
+- **Chosen by:** User, prompt (2026-10-11), from options offered. **Alternatives considered:** N=2 / 10 epochs (fast, may stop on a noisy epoch); N=5 / 30 epochs (patient, slower).
+- **Status:** CONFIRMED
+
+### I2. Learning rate and gradient clipping
+- **Value:** Adam, learning rate 1e-3; gradients clipped to total norm 1.0.
+- **Where:** `configs/train_bigram.json:10` (`learning_rate`), `:21` (`options.grad_clip`); `src/train.py` (`fit`, `train_one_epoch`).
+- **Chosen by:** User, prompt (2026-10-11), from options offered. **Alternatives considered:** lr 3e-4 / clip 1.0 (steadier, slower); lr 1e-3 / clip 5.0 (looser).
+- **Status:** CONFIRMED
+
+### I3. Models behind `--model`
+- **Value:** only `bigram` (the existing `BigramLM`) for now; others are added with one line in `MODELS`.
+- **Where:** `src/train.py` (`MODELS`).
+- **Chosen by:** User, prompt (2026-10-11), from options offered. **Alternatives considered:** bigram + LSTM; bigram + LSTM + Transformer (each needs its own design choices first).
+- **Status:** CONFIRMED
+
+### I4. Validation/test review length
+- **Value:** reviews cut to their first 256 tokens before scoring with `evaluate()`; eval batch size 64.
+- **Where:** `configs/train_bigram.json:22-23` (`options.eval_max_length` = user's choice; `options.eval_batch_size` = assistant default, affects speed only).
+- **Chosen by:** `eval_max_length`: User, prompt (2026-10-11), from options offered. **Alternatives considered:** 64 (matches training windows); None (full reviews, slow).
+- **Confirmed:** User, prompt (2026-10-11, reviewing NEEDS REVIEW) kept the eval batch size 64.
+- **Status:** CONFIRMED
+
+### I5. Training-script defaults
+- **Value:** (a) the reported training loss is the token-weighted running average over the epoch's batches (computed while the weights are changing, dropout on), so it is not directly comparable to validation loss; (b) a checkpoint is saved only when validation loss is strictly lower than the best so far; (c) the best weights go to `checkpoints/<run>.pt` (git-ignored); (d) device is CUDA if available, else CPU; (e) training time is wall-clock seconds around the epoch loop (including validation, excluding data loading and the final test).
+- **Where:** `src/train.py` (`train_one_epoch`, `fit`, `main`); `configs/train_bigram.json:19` (`options.checkpoint_dir`).
+- **Chosen by:** Assistant default (shown in the design the user approved, not offered as options); User, prompt (2026-10-11, reviewing NEEDS REVIEW) confirmed "keep those". **Alternatives considered:** re-score the training set in eval mode after each epoch; `<=` instead of `<`; Apple MPS device.
+- **Status:** CONFIRMED
+
+---
+
+## J. Results document (`RESULTS.md`, `src/update_results.py`, 2026-10-12)
+
+The user's prompt of 2026-10-12 specified the document's sections, contents, the Checks list, the "My notes" headings, the Colab change and the CLAUDE.md rule. The items below are the values and mechanisms the prompt did not specify. The assistant chose them without offering options first (the prompt was a full specification), so all are `NEEDS REVIEW`.
+
+### J1. Which runs belong to Data / Part I / Part II / Part III (revised 2026-10-12 after reading the assignment brief)
+- **Value:** the brief defines the parts: Part I = n-gram, RNN, LSTM, Transformer comparison; Part II = three embedding settings on one architecture; Part III = downstream classifier on representations. Rules in order: `data`, `inspect_data`, `show_batch` -> Data; any run name containing `p2_` -> Part II; containing `p3_` -> Part III; `sanity_check`, `ngram`, `train_*`, `test_*`, `generations_*` -> Part I. **Naming convention for later runs: Part II runs start with `p2_`, Part III runs with `p3_`.** The bigram run (`train_bigram`) is not required by the brief; it is listed in Part I as a baseline. Each of Parts I and II shows its own perplexity/cost table and side-by-side generated text; Part III shows its run records.
+- **Where:** `configs/update_results.json`, `options.part_rules`, `options.part_comparison_extra_runs` (runs from another part to include in a part's comparison, e.g. the reused Part I model in Part II).
+- **Chosen by:** Parts: the brief (`Assignment1_2026.pdf`). Run-name convention and placing `train_bigram` in Part I: Assistant default.
+- **Alternatives considered:** a `part` field inside each config; a separate Part for baselines.
+- **Status:** NEEDS REVIEW (naming convention and bigram placement only)
+
+### J2. "Close to the vocabulary size" threshold
+- **Value:** untrained validation perplexity divided by vocabulary size must be between 0.5 and 2.0 to PASS.
+- **Where:** `configs/update_results.json`, `options.untrained_ppl_to_vocab_ratio_range`.
+- **Chosen by:** Assistant default.
+- **Alternatives considered:** a tighter band (0.8 to 1.25); report the ratio with no pass/fail line.
+- **Status:** NEEDS REVIEW
+
+### J3. How the exact command of each run is known
+- **Value:** `save_run` now stores a `command` field (interpreter + arguments) in every new `results/<run>.json`. For older records, the command is copied from `results/RESULTS_LOG.md`; if not found there it is shown as "not recorded".
+- **Where:** `src/runconfig.py` (`save_run`); lookup in `src/update_results.py` (`find_command`).
+- **Chosen by:** Assistant default.
+- **Alternatives considered:** re-run old runs to get commands stored (slow, changes their dates); write commands by hand into a file.
+- **Status:** NEEDS REVIEW
+
+### J4. How the test-set and padding checks are evidenced
+- **Value:** static scan of the source with Python `ast`: in `src/ngram.py` and `src/train.py`, `data.test` must be used exactly once, on a line after the `tune_discounts(...)` / `fit(...)` call, and no other `src/` file may use it. Padding: every `CrossEntropyLoss` in `src/train.py` and `src/sanity_check.py` must pass `ignore_index`, and the recorded test `test_padding_is_ignored` must be `passed`. Frozen embeddings: PASS needs a run with a pretrained `embedding_init` whose `details.frozen_embedding_max_abs_change` equals 0; `src/train.py` does not write that key yet, so a future Part II change must add it. Causality: any recorded test with "causal" in its name.
+- **Where:** `configs/update_results.json` (`test_set_markers`, `padding_loss_files`, `padding_test_*`, `causality_test_keyword`, `frozen_embedding_detail_key`, `not_frozen_embedding_inits`); logic in `src/update_results.py` (`check_*`).
+- **Chosen by:** Assistant default.
+- **Alternatives considered:** run-time instrumentation of the data loader; only trusting the unit tests.
+- **Status:** NEEDS REVIEW
+
+### J5. How "My notes" are protected
+- **Value:** each section ends with `### My notes` and a pair of HTML-comment marker lines; text between the markers is copied back unchanged on every rebuild. If the markers are missing from the old file, the script stops (override with `--force`).
+- **Where:** `src/update_results.py` (`extract_notes`, `notes_block`).
+- **Chosen by:** Assistant default.
+- **Alternatives considered:** keep notes in a separate file linked from RESULTS.md.
+- **Status:** NEEDS REVIEW
+
+### J6. Figures, and `update_results.py` not saving a run record
+- **Value:** matplotlib PNGs in `results/figures/`: tokens per split, n-gram discount tuning (D3 axis, D2/D1 at their chosen values), train/validation loss per trained run, and validation loss of all trained runs when there are two or more. Colours are the first slots of the dataviz skill's validated categorical palette. Runs named `test_*` are not plotted. `update_results.py` writes `RESULTS.md` and the figures but no `results/update_results.json`, because it is not an experiment run.
+- **Where:** `configs/update_results.json` (`figure_colours`, `test_run_prefix`); `src/update_results.py` (`fig_*`).
+- **Chosen by:** Assistant default.
+- **Alternatives considered:** an interactive HTML report; saving a run record for each rebuild.
+- **Status:** NEEDS REVIEW
+
+---
+
+## K. Task list (`MY_TASKS.md`, `src/my_tasks.py`, 2026-10-12)
+
+The user's prompt specified the six sections, checkboxes, planned days, overdue-first order, "never tick for me" and the `NEW FOR YOU:` rule. The assignment brief and the user's schedule are not in the repo, so the items below are assistant defaults, all `NEEDS REVIEW`.
+
+### K1. Report and submission requirement list (revised 2026-10-12 from the brief)
+- **Value:** 23 requirements taken from `Assignment1_2026.pdf` (Part I, II, III bullets, the report contents list, 6-page limit, citations, README, no credentials, submission, late policy), each tagged with the brief's points where known. Automatic evidence only for: the four Part I model families being present, the frozen-embedding check, README keywords, repo state. Everything else shows "not done" until the user ticks it. The split of each part's bullets into separate items is the assistant's.
+- **Where:** `configs/update_results.json`, `options.report_requirements`.
+- **Chosen by:** Content: the brief. Granularity: Assistant default.
+- **Alternatives considered:** one item per part.
+- **Status:** NEEDS REVIEW
+
+### K2. Schedule and planned days
+- **Value:** `options.schedule` is empty, so every item shows "Planned: not set" and nothing can be overdue. Deadline is Fri 16 Oct 2026, 23:59 Singapore time (from the user's prompt).
+- **Where:** `configs/update_results.json`, `options.schedule`, `options.deadline`, `options.timezone`.
+- **Chosen by:** Deadline: User, prompt (2026-10-12). Empty schedule: Assistant default (no schedule was available to read).
+- **Alternatives considered:** spread items evenly over the days left (would invent a schedule).
+- **Status:** NEEDS REVIEW
+
+### K3. What counts as "waiting on me now", and how interpretation items are counted
+- **Value:** Waiting = empty schedule, unresolved NEEDS REVIEW decisions, configs with no results yet, sections with results but empty *My notes*, failing checks, uncommitted or unpushed git changes. "Results to interpret" has one item per section (Data, Part I, Part II, Part III), because *My notes* exist per section, not per run. "Runs to do" lists configs in `configs/` with no `results/<run>.json` plus `options.extra_items` (steps from the brief that no script can detect, such as scripts still to be written); time is taken from earlier runs of the same script.
+- **Where:** `src/my_tasks.py` (`build_items`); `configs/update_results.json` (`tasks_ignore_configs`, `run_script_rules`, `extra_items`).
+- **Chosen by:** Assistant default.
+- **Alternatives considered:** one interpretation item per run; treat every NEEDS REVIEW item as blocking.
+- **Status:** NEEDS REVIEW
+
+---
+
+## L. Recurrent models (`src/models.py`, 2026-10-12)
+
+### L1. Default size of the RNN and LSTM
+- **Value:** hidden size 256, 2 recurrent layers, dropout 0.3, embedding dimension 100 (randomly initialised, trainable).
+- **Where:** `configs/train_rnn.json` and `configs/train_lstm.json`, lines 3-4 (`layers`, `hidden_size`) and 11 (`dropout`); overridable with `--hidden-size`, `--layers`, `--dropout`.
+- **Chosen by:** User, prompt (2026-10-12), from options offered. **Alternatives considered:** hidden 128 / 512; layers 1 / 3; dropout 0.1 / 0.5.
+- **Status:** CONFIRMED
+
+### L2. RNN nonlinearity
+- **Value:** tanh.
+- **Where:** `src/models.py` (`RNNLanguageModel`, `nonlinearity="tanh"`).
+- **Chosen by:** User, prompt (2026-10-12), from options offered. **Alternatives considered:** relu.
+- **Status:** CONFIRMED
+
+### L3. Dropout placement and layout
+- **Value:** dropout after the embedding, between stacked recurrent layers (PyTorch's `dropout=`, set to 0 when there is 1 layer) and before the output layer; unidirectional recurrent layers; no weight tying; the final hidden state is not carried between windows.
+- **Where:** `src/models.py` (`forward` of both classes).
+- **Chosen by:** Assistant default (shown in the design the user approved, not offered as options). **Alternatives:** no dropout on the embedding; tie the output layer to the embedding (needs hidden size = 100); carry the hidden state across consecutive windows.
+- **Status:** NEEDS REVIEW
+
+### L4. Smoke-test data
+- **Value:** the first 60 train / 40 val / 40 test reviews of the saved splits, copied to a scratch folder (not `data/processed`), 1 epoch, output to a scratch results folder.
+- **Where:** scratchpad only (not a repository file).
+- **Chosen by:** Assistant default for how to make the "small subset" (the user asked for a small subset). **Alternatives:** re-run `data.py` with `subsample_size` (would overwrite the saved splits).
+- **Status:** NEEDS REVIEW
+
+---
+
 ## NEEDS REVIEW summary
 
 **All 24 items resolved 2026-10-10.** The user reviewed every one (2-3 options with trade-offs each, per CLAUDE.md's record-keeping rules) and confirmed every current value as-is: A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, B1, B3, C1, C2, C3, D2, D3, D4, D5, D6, D7, D8, E1, E3. See each entry above for the specific options offered and the reasoning. No reruns were needed since nothing changed.
@@ -317,3 +492,15 @@ From now on, every new design choice is added here **after** the user picks from
 One item (D4) was accepted rather than fixed: the n-gram discount grid was widened and re-run after the test-set perplexity from the first run had already been seen. The test number was identical in both runs, so no actual leakage occurred this time, but the user explicitly signed off on this as a logged methodological risk rather than it being silently resolved.
 
 **New since that review (2026-10-11), pending the user:** G2 (prompt file format), G3, G4, G5, G6, G7, G8.
+
+**H5 (shuffling and last batch) was resolved 2026-10-11:** the user kept the current values.
+
+**I4 (eval batch size) and I5 (training-script defaults) were resolved 2026-10-11:** the user kept the current values.
+
+**New since then (2026-10-12), pending the user:** J1-J6 (results document and `update_results.py`).
+
+**New since then (2026-10-12), pending the user:** K1-K3 (task list).
+
+**2026-10-12, after reading the brief:** J1 and K1 were revised (parts now follow the brief).
+
+**New since that review (2026-10-12), pending the user:** L3 (dropout placement and layout), L4 (smoke-test data).

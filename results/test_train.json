@@ -1,0 +1,38 @@
+{
+  "run": "test_train",
+  "script": "tests/test_train.py",
+  "date": "2026-10-11T21:48:02+08:00",
+  "git_commit": "7ef446d309d48c3b046576d80ab284d9e97f0547",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
+  "seed": 0,
+  "config": {
+    "architecture": "bigram",
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": 100,
+    "embedding_init": null,
+    "context_length": 8,
+    "learning_rate": 0.01,
+    "batch_size": 4,
+    "epochs": 30,
+    "dropout": null,
+    "vocab_size": 20,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "patience": 2,
+      "grad_clip": 1.0,
+      "eval_max_length": 16,
+      "eval_batch_size": 4
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "passed": true,
+    "epochs_run": 7,
+    "best_epoch": 5
+  },
+  "details": {}
+}

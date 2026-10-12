@@ -46,7 +46,9 @@ block); the value is read as JSON when possible (so 256, 0.5, null and
 import json
 import os
 import platform
+import shlex
 import subprocess
+import sys
 from datetime import datetime
 
 # The settings every config must define (null where not applicable).
@@ -195,6 +197,7 @@ def save_run(results_dir, run, script, config, metrics, epoch_losses=None, detai
       git_commit          code version (+ git_dirty: uncommitted code changes?)
       gpu                 GPU name, or null on CPU
       hardware            "GPU: <name>" or "CPU: <name> (<OS> <arch>)"
+      command             the exact command line that was run (interpreter + arguments)
       seed                copied out of the config for easy filtering
       config              the full config actually used (after overrides)
       epoch_losses        list of {"epoch", "train_loss", "val_loss"}; empty
@@ -214,6 +217,7 @@ def save_run(results_dir, run, script, config, metrics, epoch_losses=None, detai
     record = {
         "run": run,
         "script": script,
+        "command": shlex.join([sys.executable] + sys.argv),
         "date": datetime.now().astimezone().isoformat(timespec="seconds"),
         "git_commit": commit,
         "git_dirty": dirty,

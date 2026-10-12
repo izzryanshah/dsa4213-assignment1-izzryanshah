@@ -1,0 +1,38 @@
+{
+  "run": "test_models",
+  "script": "tests/test_models.py",
+  "command": "/usr/local/bin/python3 tests/test_models.py --config configs/test_models.json",
+  "date": "2026-10-12T12:38:21+08:00",
+  "git_commit": "7ef446d309d48c3b046576d80ab284d9e97f0547",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
+  "seed": 0,
+  "config": {
+    "architecture": null,
+    "layers": 2,
+    "hidden_size": 16,
+    "embedding_dim": 100,
+    "embedding_init": "random",
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": 3,
+    "epochs": null,
+    "dropout": 0.3,
+    "vocab_size": 50,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "seq_len": 7
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "passed": true,
+    "models": [
+      "rnn",
+      "lstm"
+    ]
+  },
+  "details": {}
+}

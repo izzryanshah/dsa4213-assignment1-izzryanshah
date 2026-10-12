@@ -1,0 +1,18 @@
+{
+  "architecture": null,
+  "layers": null,
+  "hidden_size": null,
+  "embedding_dim": null,
+  "embedding_init": null,
+  "context_length": 64,
+  "learning_rate": null,
+  "batch_size": 64,
+  "epochs": null,
+  "dropout": null,
+  "vocab_size": 20000,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "processed_dir": "data/processed"
+  }
+}

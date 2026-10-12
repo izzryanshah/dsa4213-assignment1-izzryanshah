@@ -1,0 +1,379 @@
+{
+  "architecture": null,
+  "layers": null,
+  "hidden_size": null,
+  "embedding_dim": null,
+  "embedding_init": null,
+  "context_length": null,
+  "learning_rate": null,
+  "batch_size": null,
+  "epochs": null,
+  "dropout": null,
+  "vocab_size": null,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "results_dir": "results",
+    "configs_dir": "configs",
+    "decisions_path": "DECISIONS.md",
+    "results_log_path": "results/RESULTS_LOG.md",
+    "output_path": "RESULTS.md",
+    "figures_dir": "results/figures",
+    "sanity_check_run": "sanity_check",
+    "untrained_ppl_to_vocab_ratio_range": [
+      0.5,
+      2.0
+    ],
+    "padding_test_names": [
+      "test_padding_is_ignored"
+    ],
+    "padding_test_run": "test_evaluate",
+    "test_set_markers": {
+      "src/ngram.py": "tune_discounts",
+      "src/train.py": "fit"
+    },
+    "padding_loss_files": [
+      "src/train.py",
+      "src/sanity_check.py"
+    ],
+    "causality_test_keyword": "causal",
+    "frozen_embedding_detail_key": "frozen_embedding_max_abs_change",
+    "part_rules": [
+      [
+        "^(data|inspect_data|show_batch)$",
+        "Data"
+      ],
+      [
+        "p2_",
+        "Part II"
+      ],
+      [
+        "p3_",
+        "Part III"
+      ],
+      [
+        "^(sanity_check|ngram|train_.*|test_.*|generations_.*)$",
+        "Part I"
+      ]
+    ],
+    "test_run_prefix": "test_",
+    "figure_colours": [
+      "#2a78d6",
+      "#eb6834",
+      "#1baf7a",
+      "#eda100",
+      "#e87ba4",
+      "#008300",
+      "#6250d6"
+    ],
+    "not_frozen_embedding_inits": [
+      null,
+      "random"
+    ],
+    "tasks_output_path": "MY_TASKS.md",
+    "timezone": "Asia/Singapore",
+    "deadline": "2026-10-16T23:59:00+08:00",
+    "schedule": {},
+    "tasks_ignore_configs": [
+      "update_results"
+    ],
+    "run_script_rules": [
+      [
+        "^train_",
+        "src/train.py"
+      ],
+      [
+        "^generations_",
+        "src/generate.py"
+      ],
+      [
+        "^test_",
+        "tests/<name>.py"
+      ]
+    ],
+    "report_requirements": [
+      {
+        "id": "req-p1-models",
+        "text": "Part I (40 pts): n-gram, RNN, LSTM and Transformer trained on the same corpus; neural models use random trainable embeddings",
+        "evidence": "architectures",
+        "hint": "`RESULTS.md` Part I",
+        "required": {
+          "n-gram": "ngram|kneser",
+          "RNN": "^rnn",
+          "LSTM": "lstm",
+          "Transformer": "transformer"
+        }
+      },
+      {
+        "id": "req-p1-quality",
+        "text": "Part I: test perplexity or cross-entropy on the common setup, padding excluded",
+        "evidence": "manual",
+        "hint": "`RESULTS.md` Part I table and Checks"
+      },
+      {
+        "id": "req-p1-cost",
+        "text": "Part I: training time, model size, inference time or throughput; hardware, training budget and timing procedure stated",
+        "evidence": "manual",
+        "hint": "`RESULTS.md` Part I table"
+      },
+      {
+        "id": "req-p1-curves",
+        "text": "Part I: training and validation loss curves, with convergence or overfitting discussed",
+        "evidence": "manual",
+        "hint": "`RESULTS.md` figures; your *My notes*"
+      },
+      {
+        "id": "req-p1-text",
+        "text": "Part I: generated continuations compared (same prompts, matched decoding and lengths); repetition, local fluency, consistency discussed",
+        "evidence": "manual",
+        "hint": "`RESULTS.md` Part I, Generated text by prompt"
+      },
+      {
+        "id": "req-p1-tradeoffs",
+        "text": "Part I: tradeoffs explained; observed differences kept separate from possible explanations (architecture, parameter count, context length, training budget)",
+        "evidence": "manual"
+      },
+      {
+        "id": "req-p2-design",
+        "text": "Part II (30 pts): one architecture, three embedding settings (random learned; own, frozen; public, frozen) with dimension, architecture, data and training procedure identical",
+        "evidence": "manual",
+        "hint": "`RESULTS.md` Part II"
+      },
+      {
+        "id": "req-p2-coverage",
+        "text": "Part II: vocabulary coverage of the public embeddings documented, and how missing words are initialised",
+        "evidence": "manual"
+      },
+      {
+        "id": "req-p2-frozen",
+        "text": "Part II: the entire input-embedding table is fixed in both fixed settings (verified)",
+        "evidence": "check",
+        "hint": "`RESULTS.md` Checks",
+        "name": "Frozen embeddings unchanged"
+      },
+      {
+        "id": "req-p2-cost",
+        "text": "Part II: cost of training your own embeddings reported separately from LM training",
+        "evidence": "manual"
+      },
+      {
+        "id": "req-p2-analysis",
+        "text": "Part II: test quality, convergence, training stability and generated text compared; interpreted with embedding trainability and the extra data behind public embeddings in mind",
+        "evidence": "manual"
+      },
+      {
+        "id": "req-p3-reps",
+        "text": "Part III (20 pts): at least two representation choices compared on the same labeled data, with the same simple classifier family and evaluation procedure",
+        "evidence": "manual",
+        "hint": "`RESULTS.md` Part III"
+      },
+      {
+        "id": "req-p3-describe",
+        "text": "Part III: how each input becomes a fixed-length representation described (e.g. final hidden state, or mean of token states excluding padding)",
+        "evidence": "manual"
+      },
+      {
+        "id": "req-p3-metric",
+        "text": "Part III: held-out metric (accuracy or macro-F1) reported and representative errors examined",
+        "evidence": "manual"
+      },
+      {
+        "id": "req-p3-ranking",
+        "text": "Part III: which representation works better explained; if different language models, whether the LM ranking agrees with the downstream ranking",
+        "evidence": "manual"
+      },
+      {
+        "id": "req-question",
+        "text": "Report is organised around one clear comparison question",
+        "evidence": "manual"
+      },
+      {
+        "id": "req-contents",
+        "text": "Report states: dataset and preprocessing; models and variants; evaluation criteria; main quantitative and qualitative observations; most important limitations, failure cases and lessons learned",
+        "evidence": "manual",
+        "hint": "`RESULTS.md` Data and Settings; your *My notes*"
+      },
+      {
+        "id": "req-pages",
+        "text": "Report PDF is at most 6 pages, excluding appendices and references",
+        "evidence": "manual"
+      },
+      {
+        "id": "req-citations",
+        "text": "Citations for external code, datasets, pretrained models and substantial tool assistance (e.g. Claude Code, course notebooks, GloVe, the IMDB data)",
+        "evidence": "manual",
+        "hint": "`README.md` Citation section; `TOOL_USE.md`"
+      },
+      {
+        "id": "req-readme",
+        "text": "README.md with data access, preprocessing instructions, dependencies, commands, configurations and random seeds for the main results",
+        "evidence": "file_regex",
+        "hint": "`README.md`",
+        "file": "README.md",
+        "regexes": [
+          "(?i)data access",
+          "(?i)preprocess",
+          "(?i)requirements",
+          "(?i)--config",
+          "(?i)seed"
+        ]
+      },
+      {
+        "id": "req-secrets",
+        "text": "Nothing submitted contains API keys, credentials or data you may not share (`data/` is git-ignored)",
+        "evidence": "manual"
+      },
+      {
+        "id": "req-submit",
+        "text": "Submit the PDF report and the code (a GitHub link the instructor can open, or a zip)",
+        "evidence": "repo_access"
+      },
+      {
+        "id": "req-late",
+        "text": "Find out the late-submission policy and the submission platform (the brief says both are announced separately)",
+        "evidence": "manual"
+      }
+    ],
+    "part_comparison_extra_runs": {
+      "Part II": []
+    },
+    "matched_decoding_keys": [
+      "temperature",
+      "top_k",
+      "max_tokens",
+      "seed",
+      "num_samples"
+    ],
+    "extra_items": [
+      {
+        "section": "waiting",
+        "id": "w-question",
+        "text": "Choose your comparison question (brief, \"Experimental Focus\": e.g. how model families differ on your corpus, whether fixed embeddings help, or whether better next-token prediction leads to better classification). The report is organised around it",
+        "details": [
+          "Tell Claude your question; it is then logged in `DECISIONS.md`"
+        ]
+      },
+      {
+        "section": "waiting",
+        "id": "w-p1-go",
+        "text": "Tell Claude to build the RNN, LSTM and Transformer language models (Part I, 40 points). Nothing else in Parts I-III can start without them",
+        "details": [
+          "You will be offered 2-3 options per design value (layers, hidden size, context length, learning rate, batch size, epochs, dropout, training budget) and choose; each choice is logged in `DECISIONS.md`"
+        ]
+      },
+      {
+        "section": "waiting",
+        "id": "w-colab",
+        "text": "Set up Colab before any neural training: put the real GitHub URL into `REPO_URL` in `notebooks/run_colab.ipynb` (still `YOUR_GITHUB_URL`), push the repo, and make `data/IMDB Dataset.csv` available (`data/` is git-ignored, so a fresh Colab clone does not have it)",
+        "details": [
+          "The 20-epoch bigram run took 16,611 s on this CPU (`RESULTS.md`, Part I)"
+        ]
+      },
+      {
+        "section": "decisions",
+        "id": "dec-p2-arch",
+        "text": "Part II: choose which one Part I architecture (RNN, LSTM or Transformer) gets the three embedding settings",
+        "details": [
+          "Decide after Part I results exist"
+        ]
+      },
+      {
+        "section": "decisions",
+        "id": "dec-p3-task",
+        "text": "Part III: choose the labeled task and dataset, and the two or more representation choices to compare (brief examples: LSTM vs Transformer, two embedding variants, two pooling methods)",
+        "details": [
+          "IMDB sentiment labels are already in `data/IMDB Dataset.csv`; the brief also allows a different dataset"
+        ]
+      },
+      {
+        "section": "runs",
+        "id": "run-p1-rnn",
+        "text": "Train the RNN language model (Part I)",
+        "details": [
+          "Command: not available yet: `src/train.py` has only the `bigram` model; `rnn` and `configs/train_rnn.json` must be written first (then: `python3 src/train.py --config configs/train_rnn.json`)",
+          "Time: not known yet; use a Colab GPU",
+          "Produces: `results/train_rnn.json`, `checkpoints/train_rnn.pt`, loss-curve figure and a new Part I section in `RESULTS.md`"
+        ]
+      },
+      {
+        "section": "runs",
+        "id": "run-p1-lstm",
+        "text": "Train the LSTM language model (Part I)",
+        "details": [
+          "Command: not available yet: `src/train.py` has only the `bigram` model; `lstm` and `configs/train_lstm.json` must be written first (then: `python3 src/train.py --config configs/train_lstm.json`)",
+          "Time: not known yet; use a Colab GPU",
+          "Produces: `results/train_lstm.json`, `checkpoints/train_lstm.pt`, loss-curve figure and a new Part I section in `RESULTS.md`"
+        ]
+      },
+      {
+        "section": "runs",
+        "id": "run-p1-transformer",
+        "text": "Train the Transformer language model (Part I)",
+        "details": [
+          "Command: not available yet: `src/train.py` has only the `bigram` model; `transformer` and `configs/train_transformer.json` must be written first (then: `python3 src/train.py --config configs/train_transformer.json`)",
+          "Time: not known yet; use a Colab GPU",
+          "Produces: `results/train_transformer.json`, `checkpoints/train_transformer.pt`, loss-curve figure and a new Part I section in `RESULTS.md`"
+        ]
+      },
+      {
+        "section": "runs",
+        "id": "run-p1-inference",
+        "text": "Time inference for all Part I models on one common workload (brief: state hardware, budget and timing procedure)",
+        "details": [
+          "Command: not available yet: no inference-timing script exists yet",
+          "Time: not known yet",
+          "Produces: `inference_tokens_per_second` in each model's record, shown in the Part I table"
+        ]
+      },
+      {
+        "section": "runs",
+        "id": "run-p1-generations",
+        "text": "Generate continuations from the same prompts with matched decoding for each neural model",
+        "details": [
+          "Command: `python3 src/generate.py --config configs/generations_<model>.json` (the n-gram one is `configs/generations_ngram.json`; neural configs are written once the models exist)",
+          "Time: not known yet",
+          "Produces: `results/generations_<model>.json`; side-by-side text in `RESULTS.md` Part I"
+        ]
+      },
+      {
+        "section": "runs",
+        "id": "run-p2-glove",
+        "text": "Download public GloVe 100d vectors (GloVe 6B, Stanford NLP: nlp.stanford.edu/projects/glove) and place the file where the Part II config will point",
+        "details": [
+          "Command: manual download; the file is not in the repo and must not be committed",
+          "Produces: the vectors file; cite Pennington et al. (2014) in the report"
+        ]
+      },
+      {
+        "section": "runs",
+        "id": "run-p2-own",
+        "text": "Train your own word embeddings on the training split (Skip-gram, CBOW or GloVe), then freeze them",
+        "details": [
+          "Command: not available yet: no embedding-training script exists yet",
+          "Time: not known yet; the brief wants this cost reported separately from LM training",
+          "Produces: the vectors file and a `p2_` run record"
+        ]
+      },
+      {
+        "section": "runs",
+        "id": "run-p2-lms",
+        "text": "Train the two new Part II language models (own frozen embeddings; public frozen embeddings), same architecture and procedure as the reused Part I model",
+        "details": [
+          "Command: not available yet: `src/train.py` cannot load or freeze pretrained embeddings yet; name the runs `p2_*` so they land in Part II",
+          "Time: not known yet",
+          "Produces: `results/p2_*.json`, loss curves, the frozen-embeddings check in `RESULTS.md`"
+        ]
+      },
+      {
+        "section": "runs",
+        "id": "run-p3-clf",
+        "text": "Train the classifier for each representation choice on frozen language models (same classifier family and evaluation procedure)",
+        "details": [
+          "Command: not available yet: no classifier script exists yet; name the runs `p3_*` so they land in Part III",
+          "Time: not known yet; needs the saved checkpoints from Parts I-II (save `checkpoints/` to Drive on Colab)",
+          "Produces: `results/p3_*.json` with accuracy or macro-F1"
+        ]
+      }
+    ]
+  }
+}

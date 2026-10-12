@@ -1,0 +1,45 @@
+{
+  "run": "show_batch",
+  "script": "src/data.py --show-batch",
+  "date": "2026-10-11T20:22:22+08:00",
+  "git_commit": "7ef446d309d48c3b046576d80ab284d9e97f0547",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
+  "seed": 0,
+  "config": {
+    "architecture": null,
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": null,
+    "embedding_init": null,
+    "context_length": 64,
+    "learning_rate": null,
+    "batch_size": 64,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "processed_dir": "data/processed"
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "x_shape": [
+      64,
+      64
+    ],
+    "y_shape": [
+      64,
+      64
+    ],
+    "x_dtype": "torch.int64",
+    "y_dtype": "torch.int64",
+    "num_train_windows": 172925,
+    "num_train_batches": 2702,
+    "y_is_x_shifted_by_one": true
+  },
+  "details": {}
+}

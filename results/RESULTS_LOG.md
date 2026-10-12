@@ -98,3 +98,37 @@ These were run with the old command-line interface. Their result files were over
 
 ## Note, 2026-10-11 — earlier unsaved check runs
 Before `prompts.txt` existed, `src/generate.py` was run end to end twice (n-gram, `configs/generations_ngram.json` with `options.prompts_path=prompt.txt`, output to a scratch directory) to check it works and is reproducible (identical text both times). Those outputs were not saved to `results/`. The saved run is the 2026-10-11 01:05 entry above.
+
+### 2026-10-11 — training-window loader, one-batch shape check
+- **Script / command:** `src/data.py`; `python3 src/data.py --config configs/show_batch.json --show-batch` (seed 0)
+- **Key numbers:** x shape (64, 64) int64; y shape (64, 64) int64; train windows 172,925; batches per epoch 2,702; y equals x shifted by one: True. Also `python3 tests/test_windows.py`: all window tests passed.
+- **File:** `results/show_batch.json`
+
+### 2026-10-11 — training-script test (synthetic data; no real training run yet)
+- **Script / command:** `tests/test_train.py`; `python3 tests/test_train.py --config configs/test_train.json` (seed 0)
+- **Key numbers:** all checks passed; 7 epochs run, best epoch 5, early stop with patience 2. Separate end-to-end check of `src/train.py` on a 60-review slice of the real data (3 epochs, scratch output, not saved to `results/`): 4,020,603 trainable parameters, CPU. Measured about 0.36 s per training batch on the full data (2,702 batches per epoch).
+- **File:** `results/test_train.json`
+
+### 2026-10-12 02:26 — bigram language model training (entry added later, 2026-10-12)
+- **Script:** `src/train.py`
+- **Command:** `python3 src/train.py --config configs/train_bigram.json --model bigram` (launched 2026-10-11 21:49 in the background with `nohup`; the command is from the session, not from the run record).
+- **Key numbers:** 20 epochs run (early stop, patience 3); best epoch 17; best validation loss 5.0973; test cross-entropy 5.0895 nats, test perplexity 162.31; 4,020,603 trainable parameters; training time 16,610.5 s; CPU: Apple M2.
+- **File:** `results/train_bigram.json`
+
+### 2026-10-12 — results document and builder script
+- **Script:** `src/update_results.py` (new), `src/summarise_runs.py`
+- **Command:** `python3 src/update_results.py --config configs/update_results.json`, then `python3 src/summarise_runs.py`
+- **Key numbers:** 10 run records read; 3 figures written to `results/figures/`; `RESULTS.md` has 6 sections (Data, Part I, Part II, Part III, Settings, Checks); Settings lists 54 decisions, 13 flagged NEEDS REVIEW; Checks: 3 PASS, 2 NOT YET AVAILABLE; `results/all_runs.csv` has 10 rows.
+- **File:** `RESULTS.md`, `results/figures/`, `results/all_runs.csv`
+
+### 2026-10-12 — task list built
+- **Script:** `src/update_results.py` (now also writes `MY_TASKS.md` via `src/my_tasks.py`)
+- **Command:** `python3 src/update_results.py --config configs/update_results.json`
+- **Key numbers:** `MY_TASKS.md` lists 4 waiting items, 16 decisions to review, 0 runs to do, 4 sections to interpret, 9 report requirements, 0 failed checks. No new run record.
+- **File:** `MY_TASKS.md`
+
+### 2026-10-12 — rebuild after reading the assignment brief
+- **Script:** `src/update_results.py`
+- **Command:** `python3 src/update_results.py --config configs/update_results.json`
+- **Key numbers:** 10 run records; Checks: 3 PASS, 1 FAIL (all models scored on identical test targets: `ngram` 1,390,673 targets vs `train_bigram` 981,353 targets, different checksums), 3 NOT YET AVAILABLE. No new run record.
+- **File:** `RESULTS.md`, `MY_TASKS.md`

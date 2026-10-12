@@ -140,3 +140,56 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 - `prompts.txt` (the user's file; same three prompts as the earlier `prompt.txt`, which the user renamed) was checked: all prompt words are in the vocabulary. Ran `src/generate.py --config configs/generations_ngram.json`; saved `results/generations_ngram.json` (decoding settings + texts), refreshed `results/all_runs.csv` (7 runs).
 - Docs updated to the new file name: `README.md` (prompts section), `DECISIONS.md` (F1 location, G2 status), `results/RESULTS_LOG.md` (new entry; replaced the "no generation saved yet" note).
 - No code or config changed. Not committed (the `prompt.txt` -> `prompts.txt` rename and the new result are uncommitted, so the run record has `git_dirty: true`).
+
+## 2026-10-11 (run_part1_ngram.sh)
+
+- Added `run_part1_ngram.sh`: runs, in order, `data.py`, `inspect_data.py`, `sanity_check.py`, `ngram.py`, `test_evaluate.py`, `test_generate.py`, `generate.py` (n-gram) and `summarise_runs.py`, each with its config from `configs/`, stopping at the first error (`set -euo pipefail`). Uses `python3` (override with `PYTHON=...`); checks that the dataset CSV and `prompts.txt` exist before starting.
+- Only syntax-checked (`bash -n`); the script was not executed, so no results were overwritten. No design values added; it only calls the existing commands from `README.md`. Not committed.
+
+## 2026-10-11 (training-window Dataset and DataLoader)
+
+- Added to `src/data.py`: `WindowDataset` (cuts a split's token stream into non-overlapping windows of `context_length` tokens; target = input shifted by one), `make_dataloader` (seeded shuffle for train), and a `--show-batch` mode that prints one batch's shapes and saves `results/show_batch.json`. `torch` is now imported at the top of `data.py`.
+- Added `configs/show_batch.json` (context length 64, batch size 64, seed 0) and `tests/test_windows.py` (tiny made-up stream: window count, shift-by-one, no overlap, seeded shuffle repeatable).
+- Choices (context length, stride, tail, batch size) were chosen by the user and logged in `DECISIONS.md` section H; H5 (shuffle/last batch) is an assistant default marked NEEDS REVIEW. Logged the run in `results/RESULTS_LOG.md`; refreshed `results/all_runs.csv`.
+- Not committed.
+
+## 2026-10-11 (training script)
+
+- Added `src/train.py`: one script for all neural LMs, chosen by `--model` (table `MODELS`, only `bigram` for now). Seeded; Adam with gradient-norm clipping; per-epoch training loss and validation loss (validation via `evaluate.py`); best-validation checkpoint saved to `checkpoints/<run>.pt`; early stopping; one test evaluation at the end with the best checkpoint; `results/<run>.json` with epoch losses, training seconds, parameter count, hardware/GPU. The logits are reshaped `(B, T, V)` -> `(B*T, V)` and targets `(B, T)` -> `(B*T,)` before `CrossEntropyLoss(ignore_index=PAD_ID)`.
+- Added `configs/train_bigram.json`, `configs/test_train.json` and `tests/test_train.py` (tiny synthetic data: loss decreases, early stop, checkpoint is the best epoch, repeatable under the same seed, parameter count).
+- Values chosen by the user are in `DECISIONS.md` section I; I5 (and the eval batch size in I4) are assistant defaults marked NEEDS REVIEW.
+- The full bigram training run was NOT started (about 16 minutes per epoch on CPU). Not committed.
+
+## 2026-10-12 (automatic results document)
+
+- Added `src/update_results.py` and `configs/update_results.json`: rebuild `RESULTS.md` (sections Data, Part I, Part II, Part III, Settings, Checks) and `results/figures/*.png` from `results/*.json`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Per run it shows command, date, git commit, hardware, settings, key numbers, figures; generated text is side by side per prompt; loss curves are drawn for every trained run. Each section ends with a "My notes" block between marker comments that is copied back unchanged on every rebuild.
+- Checks section: untrained perplexity vs vocabulary size, test set used only after tuning/fit (static `ast` scan), padding ignored in the loss, causality test and frozen-embedding check (both "NOT YET AVAILABLE" until those tests/runs exist).
+- `src/runconfig.py`: `save_run` now also stores the exact `command` in each run record.
+- `notebooks/run_colab.ipynb`: new Drive-setup cell defining `save_results()` (rebuilds RESULTS.md, copies `results/` and `RESULTS.md` to Drive, restores them at session start); each training cell is followed by a `save_results()` cell; old end-of-notebook mount/copy cells removed.
+- `CLAUDE.md`: new rule 7. `DECISIONS.md`: new section J (J1-J6, all NEEDS REVIEW). Logged in `results/RESULTS_LOG.md` (also added the missing `train_bigram` entry). Not committed.
+
+## 2026-10-12 (full bigram training run logged)
+
+- Ran `python3 src/train.py --config configs/train_bigram.json --model bigram` (started 2026-10-11 21:49, record written 2026-10-12 02:26) -> `results/train_bigram.json`, checkpoint `checkpoints/train_bigram.pt`. Key numbers are in `results/RESULTS_LOG.md` (entry "bigram language model training"); I corrected that entry's command line to the exact command above.
+- Re-ran `src/summarise_runs.py` (`results/all_runs.csv`, 10 runs). `RESULTS.md` already lists `train_bigram`.
+- Not done: `python3 src/update_results.py --config configs/update_results.json` failed with `ModuleNotFoundError: No module named 'my_tasks'` (line 49 of the untracked `src/update_results.py`), so `RESULTS.md` was not rebuilt by me. Not committed.
+
+## 2026-10-12 (MY_TASKS.md)
+
+- Added `src/my_tasks.py` (called by `src/update_results.py`, which now also rebuilds `MY_TASKS.md` on every run) and new settings in `configs/update_results.json` (deadline, timezone, schedule, requirement list, run-script rules).
+- `MY_TASKS.md` has six sections: Waiting on me now, Decisions to review, Runs to do, Results to interpret, Report and submission, Failed checks. Every item is an unticked checkbox; the script never writes a tick, and keeps ticks (matched by hidden `<!--id:...-->` tags) and an "Added by me" block per section. Overdue items (planned day before today, Singapore time) are listed first.
+- `update_results.py`: `parse_decisions` now also returns each decision's options and line number; `render_checks` also returns the check results. `CLAUDE.md` rule 8 (`NEW FOR YOU:` line). `DECISIONS.md` section K (K1-K3, NEEDS REVIEW). Not committed.
+
+## 2026-10-12 (assignment brief read; parts corrected)
+
+- Read `Assignment1_2026.pdf`. Part I = n-gram/RNN/LSTM/Transformer, Part II = embedding ablation, Part III = downstream classifier; the earlier part mapping (J1) was wrong and is revised: Parts I and II each get a perplexity/cost table (parameters, training seconds, inference tokens/s, hardware) and side-by-side generated text. Run-name convention: `p2_*`, `p3_*`.
+- `src/update_results.py`: two new checks (all models scored on identical test targets; generation runs use matched decoding and prompts). `src/my_tasks.py`: requirement kinds `architectures` and `check`; `extra_items` replace `planned_runs`. `configs/update_results.json`: the 23 requirements from the brief and the not-yet-possible steps (blocked runs, Colab setup, GloVe download).
+- `notebooks/run_colab.ipynb`: `save_results()` also copies `checkpoints/` to and from Drive (Part III needs the trained models).
+
+## 2026-10-12 (RNN and LSTM models)
+
+- Added `src/models.py`: `RNNLanguageModel` (tanh) and `LSTMLanguageModel`: embedding (100, random, trainable, `<pad>` row zero) -> dropout -> recurrent layers -> dropout -> linear. The module docstring explains the difference between them.
+- `src/train.py`: registered `rnn` and `lstm` in `MODELS` (builder reads `embedding_dim`, `hidden_size`, `layers`, `dropout`, `embedding_init` from the config and stops on nulls). The `--hidden-size`, `--layers` and `--dropout` options already existed through `runconfig.add_config_args`, so no new flags were needed.
+- Added `configs/train_rnn.json`, `configs/train_lstm.json` (hidden 256, 2 layers, dropout 0.3), `configs/test_models.json`, `tests/test_models.py` (shape, no future leakage, `<pad>` row, trainable embedding).
+- Smoke test: 1 epoch of each model on a 60/40/40-review slice copied to a scratch folder (saved splits untouched), plus one run with command-line overrides. All ran. Logged in `results/RESULTS_LOG.md`. Choices in `DECISIONS.md` section L (L3, L4 NEEDS REVIEW).
+- No full training run was started. Not committed.

@@ -25,6 +25,11 @@ Run directly to (re)build the processed data:
     python src/data.py --config configs/data_prep.json
     python src/data.py --config configs/data_prep.json --subsample-size 12500   # override one setting
 
+Also provides `WindowDataset` / `make_dataloader` (fixed-length next-token
+windows for the language models) and a shapes check:
+
+    python src/data.py --config configs/show_batch.json --show-batch
+
 All settings (seed, vocabulary size, subsample size, split fractions, paths)
 come from the config file; see runconfig.py for how overrides work.
 """
@@ -38,7 +43,9 @@ from dataclasses import dataclass
 
 import numpy as np
 import pandas as pd
+import torch
 from sklearn.model_selection import train_test_split
+from torch.utils.data import DataLoader, Dataset
 
 from runconfig import add_config_args, load_config, save_run
 
@@ -245,15 +252,107 @@ def check_config_matches_data(config, data):
                              "Re-run src/data.py or fix the config.")
 
 
+class WindowDataset(Dataset):
+    """Cuts one split's long token stream into fixed-length training windows.
+
+    A PyTorch `Dataset` is just an object that answers two questions:
+    "how many examples are there?" (`__len__`) and "give me example number i"
+    (`__getitem__`). A `DataLoader` (below) then uses those two answers to
+    build batches for you.
+
+    Here, one example is a window of `context_length` (L) tokens plus the same
+    window shifted one token to the right:
+
+        stream:   t0 t1 t2 t3 t4 t5 t6 t7 t8 ...
+        x (L=4):  t0 t1 t2 t3            <- what the model reads
+        y (L=4):     t1 t2 t3 t4         <- what it must predict at each position
+
+    So y[k] is the token that comes right after x[k]. Position k of the model
+    only gets to see x[0..k], never y, so nothing leaks from the future.
+
+    Windows do not overlap: window i starts at token i*L. Each window needs
+    L+1 tokens (L inputs + the one extra token for the last target), and any
+    leftover tail shorter than that is dropped, so every window is full length
+    and no padding is needed. The stream runs straight across review
+    boundaries (reviews are separated by <eos>), so a window can contain the
+    end of one review and the start of the next.
+    """
+
+    def __init__(self, ids, context_length):
+        self.ids = ids  # 1D numpy array of token ids for the whole split
+        self.context_length = context_length
+        # N tokens give (N - 1) // L full windows: the "- 1" is the extra
+        # token the last target needs.
+        self.num_windows = max(0, (len(ids) - 1) // context_length)
+
+    def __len__(self):
+        return self.num_windows
+
+    def __getitem__(self, i):
+        start = i * self.context_length
+        chunk = self.ids[start : start + self.context_length + 1]  # L + 1 tokens
+        # torch.long (int64) is the type nn.Embedding and the loss expect.
+        chunk = torch.from_numpy(chunk.astype(np.int64))
+        return chunk[:-1], chunk[1:]  # (input, target = input shifted by one)
+
+
+def make_dataloader(split, context_length, batch_size, shuffle, seed):
+    """Wrap a split (a `SplitData`) in a DataLoader of (x, y) batches.
+
+    shuffle=True (use for training): the windows are visited in a random order
+    each epoch. The random order comes from a generator seeded with `seed`, so
+    a run can be repeated exactly. Use shuffle=False for validation and test.
+    The last batch of an epoch may be smaller than `batch_size`.
+    """
+    generator = torch.Generator()
+    generator.manual_seed(seed)
+    return DataLoader(
+        WindowDataset(split.ids, context_length),
+        batch_size=batch_size,
+        shuffle=shuffle,
+        generator=generator,
+    )
+
+
+def show_batch(config, args):
+    """Load the saved data, take ONE batch from the train loader, report its shapes."""
+    opts = config["options"]
+    data = load_processed_data(opts["processed_dir"])
+    check_config_matches_data(config, data)
+    print(f"Random seed: {config['seed']}")
+
+    loader = make_dataloader(data.train, config["context_length"], config["batch_size"],
+                             shuffle=True, seed=config["seed"])
+    x, y = next(iter(loader))
+    shapes = {"x_shape": list(x.shape), "y_shape": list(y.shape),
+              "x_dtype": str(x.dtype), "y_dtype": str(y.dtype)}
+    shifted_ok = bool((x[:, 1:] == y[:, :-1]).all())
+    metrics = {**shapes,
+               "num_train_windows": len(loader.dataset),
+               "num_train_batches": len(loader),
+               "y_is_x_shifted_by_one": shifted_ok}
+    print(f"x: {tuple(x.shape)} {x.dtype}   y: {tuple(y.shape)} {y.dtype}")
+    print(f"train windows: {metrics['num_train_windows']}, batches per epoch: {metrics['num_train_batches']}")
+    print(f"y is x shifted by one token: {shifted_ok}")
+    path = save_run(args.results_dir, args.run, "src/data.py --show-batch", config, metrics=metrics)
+    print(f"Saved run record to {path}")
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Build the word-level IMDB dataset.")
     add_config_args(parser)
+    parser.add_argument("--show-batch", action="store_true",
+                        help="Instead of building the data, print the shapes of one training batch.")
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
     config, run = load_config(args)
+    if args.show_batch:
+        args.run = run
+        show_batch(config, args)
+        return
     opts = config["options"]  # data_path, output_dir, val_frac, test_frac
     seed = config["seed"]
     # The assignment fixes the allowed vocabulary range; this is a rule, not a tunable setting.

@@ -1,0 +1,18 @@
+{
+  "architecture": null,
+  "layers": 2,
+  "hidden_size": 16,
+  "embedding_dim": 100,
+  "embedding_init": "random",
+  "context_length": null,
+  "learning_rate": null,
+  "batch_size": 3,
+  "epochs": null,
+  "dropout": 0.3,
+  "vocab_size": 50,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "seq_len": 7
+  }
+}
