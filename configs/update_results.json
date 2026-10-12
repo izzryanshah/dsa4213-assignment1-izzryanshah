@@ -300,7 +300,8 @@
           "Time: not known yet; the RNN took 3,388 s and the LSTM 3,850 s on a Tesla T4",
           "Produces: `results/train_transformer.json`, `checkpoints/train_transformer.pt`, loss-curve figure and a new Part I section in `RESULTS.md`",
           "Colab only (CLAUDE.md rule 9): never run on this machine"
-        ]
+        ],
+        "done_if_result": "train_transformer"
       },
       {
         "section": "runs",

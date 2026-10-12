@@ -1,6 +1,6 @@
 # Results
 
-Rebuilt by `src/update_results.py` on 2026-10-12T21:58:36+08:00 from 13 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-12T21:57:48+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
+Rebuilt by `src/update_results.py` on 2026-10-13T00:05:54+08:00 from 15 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-12T21:57:48+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
 
 Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III](#part-iii) · [Settings](#settings) · [Checks](#checks)
 
@@ -613,6 +613,90 @@ Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III
 
 ![train_bigram_loss.png](results/figures/train_bigram_loss.png)
 
+#### `train_bigram_colab`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/train.py --config configs/train_bigram.json --model bigram --run-name train_bigram_colab` |
+| Script | `src/train.py` |
+| Date | 2026-10-12T15:38:17+00:00 |
+| Git commit | `b59b5ed (uncommitted changes at run time)` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/train_bigram_colab.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | bigram |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | 100 |
+| `embedding_init` | — |
+| `context_length` | 64 |
+| `learning_rate` | 0.0010 |
+| `batch_size` | 64 |
+| `epochs` | 20 |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.processed_dir` | data/processed |
+| `options.checkpoint_dir` | checkpoints |
+| `options.patience` | 3 |
+| `options.grad_clip` | 1.0000 |
+| `options.eval_max_length` | 256 |
+| `options.eval_batch_size` | 64 |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `best_epoch` | 17 |
+| `best_val_loss` | 5.0973 |
+| `test_cross_entropy` | 5.0895 |
+| `test_perplexity` | 162.3082 |
+| `train_seconds` | 1,970.07 |
+| `num_parameters` | 4,020,603 |
+| `epochs_run` | 20 |
+| `stopped_early` | True |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `checkpoint_path` | checkpoints/train_bigram_colab.pt |
+| `test_num_targets` | 981,353 |
+| `test_target_checksum` | 4f77927a1cd952f56697be95540ea0fc002013d9f8278d3f95c1290e6c305605 |
+
+**Loss per epoch**
+
+| Epoch | Train loss | Validation loss |
+|---|---|---|
+| 1 | 5.9058 | 5.3227 |
+| 2 | 5.2628 | 5.2130 |
+| 3 | 5.1755 | 5.1715 |
+| 4 | 5.1295 | 5.1487 |
+| 5 | 5.0989 | 5.1339 |
+| 6 | 5.0764 | 5.1240 |
+| 7 | 5.0590 | 5.1168 |
+| 8 | 5.0446 | 5.1119 |
+| 9 | 5.0327 | 5.1081 |
+| 10 | 5.0223 | 5.1047 |
+| 11 | 5.0134 | 5.1022 |
+| 12 | 5.0054 | 5.1010 |
+| 13 | 4.9983 | 5.0997 |
+| 14 | 4.9917 | 5.0985 |
+| 15 | 4.9859 | 5.0981 |
+| 16 | 4.9804 | 5.0981 |
+| 17 | 4.9754 | 5.0973 |
+| 18 | 4.9708 | 5.0983 |
+| 19 | 4.9663 | 5.0978 |
+| 20 | 4.9623 | 5.0981 |
+
+![train_bigram_colab_loss.png](results/figures/train_bigram_colab_loss.png)
+
 #### `train_lstm`
 
 | Field | Value |
@@ -781,6 +865,92 @@ Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III
 
 ![train_rnn_loss.png](results/figures/train_rnn_loss.png)
 
+#### `train_transformer`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/train.py --config configs/train_transformer.json --model transformer` |
+| Script | `src/train.py` |
+| Date | 2026-10-12T15:05:12+00:00 |
+| Git commit | `b59b5ed` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/train_transformer.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | transformer |
+| `layers` | 2 |
+| `hidden_size` | 256 |
+| `embedding_dim` | 100 |
+| `embedding_init` | random |
+| `context_length` | 64 |
+| `learning_rate` | 0.0010 |
+| `batch_size` | 64 |
+| `epochs` | 20 |
+| `dropout` | 0.3000 |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.processed_dir` | data/processed |
+| `options.checkpoint_dir` | checkpoints |
+| `options.patience` | 3 |
+| `options.grad_clip` | 1.0000 |
+| `options.eval_max_length` | 256 |
+| `options.eval_batch_size` | 64 |
+| `options.num_heads` | 4 |
+| `options.max_positions` | 256 |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `best_epoch` | 20 |
+| `best_val_loss` | 5.0639 |
+| `test_cross_entropy` | 5.0559 |
+| `test_perplexity` | 156.9419 |
+| `train_seconds` | 2,246.04 |
+| `num_parameters` | 4,231,115 |
+| `epochs_run` | 20 |
+| `stopped_early` | False |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `checkpoint_path` | checkpoints/train_transformer.pt |
+| `test_num_targets` | 981,353 |
+| `test_target_checksum` | 4f77927a1cd952f56697be95540ea0fc002013d9f8278d3f95c1290e6c305605 |
+
+**Loss per epoch**
+
+| Epoch | Train loss | Validation loss |
+|---|---|---|
+| 1 | 5.6914 | 5.3427 |
+| 2 | 5.2608 | 5.2243 |
+| 3 | 5.1314 | 5.1779 |
+| 4 | 5.0580 | 5.1563 |
+| 5 | 5.0070 | 5.1350 |
+| 6 | 4.9698 | 5.1299 |
+| 7 | 4.9405 | 5.1224 |
+| 8 | 4.9173 | 5.1122 |
+| 9 | 4.8978 | 5.1022 |
+| 10 | 4.8812 | 5.0984 |
+| 11 | 4.8670 | 5.0906 |
+| 12 | 4.8546 | 5.0864 |
+| 13 | 4.8443 | 5.0854 |
+| 14 | 4.8348 | 5.0830 |
+| 15 | 4.8262 | 5.0814 |
+| 16 | 4.8189 | 5.0769 |
+| 17 | 4.8121 | 5.0719 |
+| 18 | 4.8065 | 5.0717 |
+| 19 | 4.8006 | 5.0687 |
+| 20 | 4.7950 | 5.0639 |
+
+![train_transformer_loss.png](results/figures/train_transformer_loss.png)
+
 ### Language-model comparison
 
 Validation perplexity of a neural run is exp(best validation loss); the n-gram figure is as recorded. Inference throughput shows — until a run records `inference_tokens_per_second`.
@@ -789,8 +959,10 @@ Validation perplexity of a neural run is exp(best validation loss); the n-gram f
 |---|---|---|---|---|---|---|---|
 | `ngram` | trigram_kneser_ney | 116.9503 | 116.5364 | 6,445,342 stored counts | 0.8364 | — | CPU: Apple M2 (Darwin arm64) |
 | `train_bigram` | bigram | 163.5824 | 162.3054 | 4,020,603 parameters | 16,610.52 | — | CPU: Apple M2 (Darwin arm64) |
+| `train_bigram_colab` | bigram | 163.5852 | 162.3082 | 4,020,603 parameters | 1,970.07 | — | GPU: Tesla T4 |
 | `train_lstm` | lstm | 81.3690 | 80.4494 | 8,033,999 parameters | 3,849.67 | — | GPU: Tesla T4 |
 | `train_rnn` | rnn | 110.5351 | 109.3664 | 7,364,303 parameters | 3,387.55 | — | GPU: Tesla T4 |
+| `train_transformer` | transformer | 158.2141 | 156.9419 | 4,231,115 parameters | 2,246.04 | — | GPU: Tesla T4 |
 
 ### Generated text by prompt
 
@@ -996,8 +1168,10 @@ Source: `DECISIONS.md` (copied as written there).
 
 - `ngram`: 1,390,673 targets, checksum `fd778f4c313d...`
 - `train_bigram`: 981,353 targets, checksum `4f77927a1cd9...`
+- `train_bigram_colab`: 981,353 targets, checksum `4f77927a1cd9...`
 - `train_lstm`: 981,353 targets, checksum `4f77927a1cd9...`
 - `train_rnn`: 981,353 targets, checksum `4f77927a1cd9...`
+- `train_transformer`: 981,353 targets, checksum `4f77927a1cd9...`
 
 #### Generation runs use matched decoding settings and prompts: NOT YET AVAILABLE
 

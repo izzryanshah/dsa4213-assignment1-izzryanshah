@@ -1,0 +1,151 @@
+{
+  "run": "train_bigram_colab",
+  "script": "src/train.py",
+  "command": "/usr/bin/python3 src/train.py --config configs/train_bigram.json --model bigram --run-name train_bigram_colab",
+  "date": "2026-10-12T15:38:17+00:00",
+  "git_commit": "b59b5edeba923436751d1a65b48aee466c30e47e",
+  "git_dirty": true,
+  "gpu": "Tesla T4",
+  "hardware": "GPU: Tesla T4",
+  "seed": 0,
+  "config": {
+    "architecture": "bigram",
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": 100,
+    "embedding_init": null,
+    "context_length": 64,
+    "learning_rate": 0.001,
+    "batch_size": 64,
+    "epochs": 20,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "processed_dir": "data/processed",
+      "checkpoint_dir": "checkpoints",
+      "patience": 3,
+      "grad_clip": 1.0,
+      "eval_max_length": 256,
+      "eval_batch_size": 64
+    }
+  },
+  "epoch_losses": [
+    {
+      "epoch": 1,
+      "train_loss": 5.905797519634203,
+      "val_loss": 5.322746894900108
+    },
+    {
+      "epoch": 2,
+      "train_loss": 5.262825954492957,
+      "val_loss": 5.213010038737664
+    },
+    {
+      "epoch": 3,
+      "train_loss": 5.175519990756951,
+      "val_loss": 5.171481387671131
+    },
+    {
+      "epoch": 4,
+      "train_loss": 5.1295324536398414,
+      "val_loss": 5.148660971409753
+    },
+    {
+      "epoch": 5,
+      "train_loss": 5.098919432991517,
+      "val_loss": 5.133948782630434
+    },
+    {
+      "epoch": 6,
+      "train_loss": 5.076436898285415,
+      "val_loss": 5.124036232326827
+    },
+    {
+      "epoch": 7,
+      "train_loss": 5.058960327938731,
+      "val_loss": 5.116829282251452
+    },
+    {
+      "epoch": 8,
+      "train_loss": 5.044606211379513,
+      "val_loss": 5.111875720280036
+    },
+    {
+      "epoch": 9,
+      "train_loss": 5.03266287941386,
+      "val_loss": 5.108128657118218
+    },
+    {
+      "epoch": 10,
+      "train_loss": 5.022343197020557,
+      "val_loss": 5.104680843425023
+    },
+    {
+      "epoch": 11,
+      "train_loss": 5.01341001058945,
+      "val_loss": 5.102233626204973
+    },
+    {
+      "epoch": 12,
+      "train_loss": 5.005434606126645,
+      "val_loss": 5.100991572546609
+    },
+    {
+      "epoch": 13,
+      "train_loss": 4.998255806884721,
+      "val_loss": 5.099663273695539
+    },
+    {
+      "epoch": 14,
+      "train_loss": 4.991732422932218,
+      "val_loss": 5.098480195858173
+    },
+    {
+      "epoch": 15,
+      "train_loss": 4.985863461209736,
+      "val_loss": 5.098073887889467
+    },
+    {
+      "epoch": 16,
+      "train_loss": 4.980410505258677,
+      "val_loss": 5.098092492001593
+    },
+    {
+      "epoch": 17,
+      "train_loss": 4.975383141045972,
+      "val_loss": 5.0973339316058075
+    },
+    {
+      "epoch": 18,
+      "train_loss": 4.9707702873972295,
+      "val_loss": 5.098345411709067
+    },
+    {
+      "epoch": 19,
+      "train_loss": 4.966341789472271,
+      "val_loss": 5.0978460427743215
+    },
+    {
+      "epoch": 20,
+      "train_loss": 4.962334613485696,
+      "val_loss": 5.098065752901736
+    }
+  ],
+  "metrics": {
+    "best_epoch": 17,
+    "best_val_loss": 5.0973339316058075,
+    "test_cross_entropy": 5.08949707804562,
+    "test_perplexity": 162.30821315992532,
+    "train_seconds": 1970.0712220650003,
+    "num_parameters": 4020603,
+    "epochs_run": 20,
+    "stopped_early": true
+  },
+  "details": {
+    "checkpoint_path": "checkpoints/train_bigram_colab.pt",
+    "test_num_targets": 981353,
+    "test_target_checksum": "4f77927a1cd952f56697be95540ea0fc002013d9f8278d3f95c1290e6c305605"
+  }
+}

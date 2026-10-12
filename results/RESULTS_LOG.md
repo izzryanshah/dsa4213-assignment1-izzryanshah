@@ -154,3 +154,13 @@ Before `prompts.txt` existed, `src/generate.py` was run end to end twice (n-gram
 - **Command:** `python3 tests/test_models.py --config configs/test_models.json`
 - **Key numbers:** passed: rnn, lstm, transformer (seed 0).
 - **File:** `results/test_models.json`
+
+### 2026-10-12 15:05 UTC — Transformer language model training (Colab)
+- **Script / command:** `src/train.py`; `python -u src/train.py --config configs/train_transformer.json --model transformer` (seed 0; git commit `b59b5ed`, `git_dirty: false`).
+- **Key numbers:** hidden (feed-forward) 256, 2 layers, 4 heads, max_positions 256, dropout 0.3; 20 epochs run (epoch cap), not stopped early; best epoch 20; best validation loss 5.0639; test cross-entropy 5.0559 nats, test perplexity 156.94; 4,231,115 trainable parameters; training time 2,246.0 s; Tesla T4.
+- **File:** `results/train_transformer.json`
+
+### 2026-10-12 15:38 UTC — Bigram baseline re-run (Colab)
+- **Script / command:** `src/train.py`; `python -u src/train.py --config configs/train_bigram.json --model bigram --run-name train_bigram_colab` (seed 0; git commit `b59b5ed`, `git_dirty: true`).
+- **Key numbers:** 20 epochs run, `stopped_early: true`; best epoch 17; best validation loss 5.0973; test cross-entropy 5.0895 nats, test perplexity 162.31; 4,020,603 trainable parameters; training time 1,970.1 s; Tesla T4.
+- **File:** `results/train_bigram_colab.json`

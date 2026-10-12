@@ -1,6 +1,6 @@
 # My tasks
 
-Rebuilt by `src/update_results.py` on Mon 12 Oct 2026, 21:58 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (4 day(s) left; today is Mon 12 Oct).
+Rebuilt by `src/update_results.py` on Tue 13 Oct 2026, 00:05 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (3 day(s) left; today is Tue 13 Oct).
 
 Tick a box yourself with `[x]`; this file never ticks anything for you, and keeps your ticks and anything you write between the marker lines. Do not delete the `<!--id:...-->` tags at the end of each line.
 
@@ -10,11 +10,9 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 
 - [ ] Put your planned day for each task into `schedule` in `configs/update_results.json` (item id -> `YYYY-MM-DD`, or `section:<key>` -> date). Until then every item shows "Planned: not set" and nothing can be overdue *(Planned: not set)* <!--id:wait-schedule-->
 - [ ] Review 20 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
-- [ ] Re-run `train_bigram` in Colab (it ran locally): see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-rerun-train_bigram-->
-- [ ] Start run `train_transformer`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-train_transformer-->
 - [ ] Write your notes for Data, Part I: see [Results to interpret](#results-to-interpret) *(Planned: not set)* <!--id:wait-notes-->
 - [ ] Fix failing check: All models scored on identical test targets: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-all-models-scored-on-identical-test-targets-->
-- [ ] Commit and push: 16 uncommitted file(s), 0 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
+- [ ] Commit and push: 11 uncommitted file(s), 0 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
 - [ ] Choose your comparison question (brief, "Experimental Focus": e.g. how model families differ on your corpus, whether fixed embeddings help, or whether better next-token prediction leads to better classification). The report is organised around it *(Planned: not set)* <!--id:w-question-->
   - Tell Claude your question; it is then logged in `DECISIONS.md`
 
@@ -119,15 +117,6 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 
 ## Runs to do
 
-- [ ] Run `train_transformer` *(Planned: not set)* <!--id:run-train_transformer-->
-  - Command: `python3 src/train.py --config configs/train_transformer.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
-  - Time: earlier run `train_bigram` of this script took 16,611 s (about 4.6 h) on CPU: Apple M2 (Darwin arm64)
-  - Produces: `results/train_transformer.json`, then a new section in `RESULTS.md` after `update_results.py`
-- [ ] Train the Transformer language model (Part I) *(Planned: not set)* <!--id:run-p1-transformer-->
-  - Command (in Colab): `!python -u src/train.py --config configs/train_transformer.json --model transformer` (cell 4 in `notebooks/run_colab.ipynb`)
-  - Time: not known yet; the RNN took 3,388 s and the LSTM 3,850 s on a Tesla T4
-  - Produces: `results/train_transformer.json`, `checkpoints/train_transformer.pt`, loss-curve figure and a new Part I section in `RESULTS.md`
-  - Colab only (CLAUDE.md rule 9): never run on this machine
 - [ ] Time inference for all Part I models on one common workload, in `benchmark.py` on the same Colab GPU for every model (brief: state hardware, budget and timing procedure) *(Planned: not set)* <!--id:run-p1-inference-->
   - Command: not available yet: no inference-timing script exists yet
   - Time: not known yet
@@ -157,10 +146,6 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Time: not known yet; needs the saved checkpoints from Parts I-II (save `checkpoints/` to Drive on Colab)
   - Produces: `results/p3_*.json` with accuracy or macro-F1
   - Feature extraction: Colab only (CLAUDE.md rule 9): never run on this machine
-- [ ] Re-run `train_bigram` in Colab: it was run locally on CPU: Apple M2 (Darwin arm64), and Colab-only runs must come from the Colab GPU *(Planned: not set)* <!--id:rerun-train_bigram-->
-  - Command (Colab cell): `!python -u src/train.py --config configs/train_bigram.json --model bigram --run-name train_bigram_colab` (a new run name, so the local result is kept)
-  - Time: the local run took 16,611 s (about 4.6 h) on CPU; GPU time not known yet
-  - Produces: `results/train_bigram_colab.json`, `checkpoints/train_bigram_colab.pt`; the local `results/train_bigram.json` stays as it is
 
 ### Added by me
 
@@ -174,7 +159,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Runs in this section: `data`, `inspect_data`, `show_batch`
   - Where: the empty *My notes* block at the end of the Data section of `RESULTS.md`
 - [ ] Write your notes for [Part I](RESULTS.md#part-i) *(Planned: not set)* <!--id:interp-part1-->
-  - Runs in this section: `generations_ngram`, `ngram`, `sanity_check`, `test_evaluate`, `test_generate`, `test_models`, `test_train`, `train_bigram`, `train_lstm`, `train_rnn`
+  - Runs in this section: `generations_ngram`, `ngram`, `sanity_check`, `test_evaluate`, `test_generate`, `test_models`, `test_train`, `train_bigram`, `train_bigram_colab`, `train_lstm`, `train_rnn`, `train_transformer`
   - Where: the empty *My notes* block at the end of the Part I section of `RESULTS.md`
 
 ### Added by me
@@ -186,7 +171,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 ## Report and submission
 
 - [ ] Part I (40 pts): n-gram, RNN, LSTM and Transformer trained on the same corpus; neural models use random trainable embeddings *(Planned: not set)* <!--id:req-p1-models-->
-  - Status: not done (no run yet for: Transformer (architectures with results: bigram, bigram_lm, lstm, rnn, trigram_kneser_ney))
+  - Status: done (all present: n-gram, RNN, LSTM, Transformer)
   - Where to look: `RESULTS.md` Part I
 - [ ] Part I: test perplexity or cross-entropy on the common setup, padding excluded *(Planned: not set)* <!--id:req-p1-quality-->
   - Status: not done (cannot be checked automatically; tick when finished)
@@ -239,7 +224,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 - [ ] Nothing submitted contains API keys, credentials or data you may not share (`data/` is git-ignored) *(Planned: not set)* <!--id:req-secrets-->
   - Status: not done (cannot be checked automatically; tick when finished)
 - [ ] Submit the PDF report and the code (a GitHub link the instructor can open, or a zip) *(Planned: not set)* <!--id:req-submit-->
-  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 16 uncommitted file(s); 0 unpushed commit(s). Whether the instructor has access cannot be checked from here)
+  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 11 uncommitted file(s); 0 unpushed commit(s). Whether the instructor has access cannot be checked from here)
 - [ ] Find out the late-submission policy and the submission platform (the brief says both are announced separately) *(Planned: not set)* <!--id:req-late-->
   - Status: not done (cannot be checked automatically; tick when finished)
 
@@ -254,8 +239,10 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 - [ ] All models scored on identical test targets: FAIL *(Planned: not set)* <!--id:fail-all-models-scored-on-identical-test-targets-->
   - Evidence (Checks section of `RESULTS.md`): `ngram`: 1,390,673 targets, checksum `fd778f4c313d...`
   - Evidence (Checks section of `RESULTS.md`): `train_bigram`: 981,353 targets, checksum `4f77927a1cd9...`
+  - Evidence (Checks section of `RESULTS.md`): `train_bigram_colab`: 981,353 targets, checksum `4f77927a1cd9...`
   - Evidence (Checks section of `RESULTS.md`): `train_lstm`: 981,353 targets, checksum `4f77927a1cd9...`
   - Evidence (Checks section of `RESULTS.md`): `train_rnn`: 981,353 targets, checksum `4f77927a1cd9...`
+  - Evidence (Checks section of `RESULTS.md`): `train_transformer`: 981,353 targets, checksum `4f77927a1cd9...`
   - Needs fixing: the evidence above shows what does not hold; after fixing, re-run `update_results.py`
 
 ### Added by me

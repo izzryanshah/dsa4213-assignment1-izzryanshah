@@ -230,3 +230,8 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 - `configs/update_results.json`: removed the "tell Claude to build the Transformer" item; updated the Transformer run command.
 - `DECISIONS.md`: new section M (M1, M2 confirmed; M3, M4 NEEDS REVIEW).
 - Smoke test (CPU, 40 fake reviews, scratch folder, nothing saved to `results/`): ran through `fit()`, loss went down.
+
+## 2026-10-13 (Colab results imported)
+
+- Copied `results/train_transformer.json` and `results/train_bigram_colab.json` from the Colab results zip (scratch extraction, compared against local files first; only these two were new). No code changed.
+- Ran `update_results.py` (RESULTS.md, figures, MY_TASKS.md rebuilt); added two entries to `results/RESULTS_LOG.md`.
