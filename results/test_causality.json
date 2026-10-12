@@ -1,0 +1,51 @@
+{
+  "run": "test_causality",
+  "script": "tests/test_causality.py",
+  "command": "/usr/local/bin/python3 tests/test_causality.py --config configs/test_causality.json",
+  "date": "2026-10-13T00:17:56+08:00",
+  "git_commit": "66bc88f69c0a4c7d99e9fd80687234a9c2ab0df5",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
+  "seed": 0,
+  "config": {
+    "architecture": null,
+    "layers": 2,
+    "hidden_size": 16,
+    "embedding_dim": 100,
+    "embedding_init": "random",
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": 4,
+    "epochs": null,
+    "dropout": 0.3,
+    "vocab_size": 50,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "seq_len": 12,
+      "num_heads": 4,
+      "max_positions": 16,
+      "tolerance": 1e-06
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "passed": true,
+    "models": {
+      "LSTMLanguageModel": {
+        "positions_tested": 12,
+        "max_change_before_t": 0.0
+      },
+      "RNNLanguageModel": {
+        "positions_tested": 12,
+        "max_change_before_t": 0.0
+      },
+      "TransformerLanguageModel": {
+        "positions_tested": 12,
+        "max_change_before_t": 0.0
+      }
+    }
+  },
+  "details": {}
+}

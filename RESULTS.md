@@ -1,6 +1,6 @@
 # Results
 
-Rebuilt by `src/update_results.py` on 2026-10-13T00:05:54+08:00 from 15 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-12T21:57:48+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
+Rebuilt by `src/update_results.py` on 2026-10-13T00:32:46+08:00 from 16 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-13T00:17:56+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
 
 Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III](#part-iii) · [Settings](#settings) · [Checks](#checks)
 
@@ -342,6 +342,52 @@ Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III
 | Name | Value |
 |---|---|
 | `vocab_size_with_special_tokens` | 20,003 |
+
+#### `test_causality`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/local/bin/python3 tests/test_causality.py --config configs/test_causality.json` |
+| Script | `tests/test_causality.py` |
+| Date | 2026-10-13T00:17:56+08:00 |
+| Git commit | `66bc88f (uncommitted changes at run time)` |
+| Hardware | CPU: Apple M2 (Darwin arm64) |
+| Seed | 0 |
+| Result file | `results/test_causality.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | — |
+| `layers` | 2 |
+| `hidden_size` | 16 |
+| `embedding_dim` | 100 |
+| `embedding_init` | random |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | 4 |
+| `epochs` | — |
+| `dropout` | 0.3000 |
+| `vocab_size` | 50 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.seq_len` | 12 |
+| `options.num_heads` | 4 |
+| `options.max_positions` | 16 |
+| `options.tolerance` | 0.0000 |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `passed` | True |
+| `models.LSTMLanguageModel.positions_tested` | 12 |
+| `models.LSTMLanguageModel.max_change_before_t` | 0.0000 |
+| `models.RNNLanguageModel.positions_tested` | 12 |
+| `models.RNNLanguageModel.max_change_before_t` | 0.0000 |
+| `models.TransformerLanguageModel.positions_tested` | 12 |
+| `models.TransformerLanguageModel.max_change_before_t` | 0.0000 |
 
 #### `test_evaluate`
 
@@ -1032,7 +1078,7 @@ No runs yet.
 
 Source: `DECISIONS.md` (copied as written there).
 
-### NEEDS REVIEW (20)
+### NEEDS REVIEW (22)
 
 | ID | Decision | Status |
 |---|---|---|
@@ -1056,8 +1102,10 @@ Source: `DECISIONS.md` (copied as written there).
 | L4 | Smoke-test data | NEEDS REVIEW |
 | M3 | Block style and other defaults | NEEDS REVIEW |
 | M4 | Training settings copied from the LSTM | NEEDS REVIEW |
+| N1 | Test settings | NEEDS REVIEW |
+| O2 | Other benchmark details | NEEDS REVIEW |
 
-### All design choices (65)
+### All design choices (68)
 
 | ID | Decision | Value | Where | Chosen by | Status |
 |---|---|---|---|---|---|
@@ -1126,6 +1174,9 @@ Source: `DECISIONS.md` (copied as written there).
 | M2 | Positional embedding table size | `max_positions` 256 (learned positional embeddings), while training windows stay at `context_length` 64. Positions 64-255 are never updated in training (they stay at their random start values), but evaluation (`eval_max_length` 256) feeds sequences up to 256. | `configs/train_transformer.json`, `options.max_positions`. | User, prompt (2026-10-12), from options offered (256 / 64 with sliding window / train at 256). | CONFIRMED |
 | M3 | Block style and other defaults | pre-norm blocks (LayerNorm before attention and feed-forward) plus one final LayerNorm; GELU activation; dropout after the embeddings and inside each block; positional embedding starts at PyTorch's default random values; no weight tying; causal mask built with `torch.triu` and passed to `nn.TransformerEncoder`. | `src/models.py`, class `TransformerLanguageModel`. | Assistant default (shown in the design the user approved, not offered as options). | NEEDS REVIEW |
 | M4 | Training settings copied from the LSTM | learning rate 0.001, batch size 64, epochs 20, context length 64, patience 3, grad clip 1.0, vocabulary 20000, seed 0. | `configs/train_transformer.json`. | Assistant default (copied from `configs/train_lstm.json` so the comparison is matched; not offered as options). | NEEDS REVIEW |
+| N1 | Test settings | random sequences of length 12, batch 4, tolerance 1e-6 on the largest change in any probability; every position t from 0 to 11 is changed in turn; models are in eval mode (dropout off); every class in `models.py` is tested, found automatically. The bigram (in `sanity_check.py`) is not covered. | `configs/test_causality.json` (`batch_size`, `options.seq_len`, `options.tolerance`). | Assistant default (the user specified what to check, not these values; not offered as options). | NEEDS REVIEW |
+| O1 | Workload, warm-up and devices | batch size 64 and context length 256 (the same as the evaluation settings, so the speed is for the exact scoring that gave the perplexities); 2 full warm-up passes; 3 timed repeats (mean and standard deviation); every neural model timed on the GPU and on the CPU, the n-gram on the CPU only (NumPy). | `configs/benchmark.json` (`batch_size`, `context_length`, `options.warmup_passes`, `options.repeats`, `options.devices`). | User, prompt (2026-10-13): 3 repeats; the rest from options offered ("proceed with your recommended set"). | CONFIRMED |
+| O2 | Other benchmark details | the timed region is the whole `evaluate()` call (sorting, padding and scoring included); the n-gram is refit from the training split with its saved discounts, untimed; the n-gram "parameters" are its stored counts, with a column saying so; n-gram training and tuning seconds are separate columns; a run stops if a model's perplexity differs from its saved test perplexity by more than 0.1% (neural models only; the n-gram was scored without the 256 cut) or if the scored targets differ between models. | `src/benchmark.py`; `configs/benchmark.json` (`options.perplexity_rel_tolerance`). | Assistant default (shown in the design the user approved, not offered as options). | NEEDS REVIEW |
 
 ### My notes
 
@@ -1138,7 +1189,7 @@ Source: `DECISIONS.md` (copied as written there).
 | Check | Result |
 |---|---|
 | Untrained perplexity is close to the vocabulary size | **PASS** |
-| Test set used only for final evaluation | **PASS** |
+| Test set used only for final evaluation | **FAIL** |
 | Padding excluded from the loss | **PASS** |
 | All models scored on identical test targets | **FAIL** |
 | Generation runs use matched decoding settings and prompts | **NOT YET AVAILABLE** |
@@ -1151,11 +1202,11 @@ Source: `DECISIONS.md` (copied as written there).
 - ratio 1.196; accepted range 0.5 to 2.0 (`configs/update_results.json`, `untrained_ppl_to_vocab_ratio_range`)
 - source: `results/sanity_check.json`
 
-#### Test set used only for final evaluation: PASS
+#### Test set used only for final evaluation: FAIL
 
 - `src/ngram.py`: `data.test` used at line(s) [333]; `tune_discounts(...)` called at line(s) [321]; single use after the call
 - `src/train.py`: `data.test` used at line(s) [220]; `fit(...)` called at line(s) [216]; single use after the call
-- other files in `src/` that use `data.test`: none
+- other files in `src/` that use `data.test`: `src/benchmark.py` lines [152]
 - method: static scan of the source (Python `ast`), not a run-time trace
 
 #### Padding excluded from the loss: PASS

@@ -305,17 +305,6 @@
       },
       {
         "section": "runs",
-        "id": "run-p1-inference",
-        "text": "Time inference for all Part I models on one common workload, in `benchmark.py` on the same Colab GPU for every model (brief: state hardware, budget and timing procedure)",
-        "details": [
-          "Command: not available yet: no inference-timing script exists yet",
-          "Time: not known yet",
-          "Produces: `inference_tokens_per_second` in each model's record, shown in the Part I table",
-          "Colab only (CLAUDE.md rule 9): never run on this machine"
-        ]
-      },
-      {
-        "section": "runs",
         "id": "run-p1-generations",
         "text": "Generate continuations from the same prompts with matched decoding for each neural model (in Colab)",
         "details": [

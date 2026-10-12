@@ -235,3 +235,15 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 
 - Copied `results/train_transformer.json` and `results/train_bigram_colab.json` from the Colab results zip (scratch extraction, compared against local files first; only these two were new). No code changed.
 - Ran `update_results.py` (RESULTS.md, figures, MY_TASKS.md rebuilt); added two entries to `results/RESULTS_LOG.md`.
+
+## 2026-10-13 (causality test)
+
+- `tests/test_causality.py` (new): for every model class in `src/models.py` (found automatically) and every position t, replaces the token at t and checks the softmax distributions at positions before t are unchanged (and that position t does change). Saves `results/test_causality.json`.
+- `configs/test_causality.json` (new); `DECISIONS.md` N1 (NEEDS REVIEW).
+- Checked the test can fail: with the Transformer's mask replaced by "mask nothing" (scratch script, nothing saved) it fails at position 1.
+
+## 2026-10-13 (benchmark)
+
+- `src/benchmark.py` (new): loads the best checkpoint of the RNN, LSTM and Transformer (architecture rebuilt from the saved training config) and refits the n-gram; times `evaluate()` over the whole test set (batch 64, context 256) with untimed warm-up passes and `torch.cuda.synchronize()` before and after each timed pass, 3 repeats; checks all models scored identical targets; writes `results/benchmark.json` and `results/part1_costs.csv`. The docstring explains why warm-up and synchronisation matter.
+- `configs/benchmark.json` (new); `notebooks/run_colab.ipynb`: new "5. Benchmark" cells (bigram re-run renumbered to 6); `configs/update_results.json`: removed the hand-written inference task (the auto-generated "Run `benchmark`" task replaces it); `DECISIONS.md` section O (O1 confirmed, O2 NEEDS REVIEW).
+- Smoke test only (CPU, 40 test reviews, random-weight checkpoints made in a scratch folder, output not in `results/`): all four models ran and scored identical targets. Not a result. The real run is Colab-only (CLAUDE.md rule 9).

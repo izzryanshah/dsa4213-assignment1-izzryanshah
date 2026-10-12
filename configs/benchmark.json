@@ -1,0 +1,48 @@
+{
+  "architecture": null,
+  "layers": null,
+  "hidden_size": null,
+  "embedding_dim": null,
+  "embedding_init": null,
+  "context_length": 256,
+  "learning_rate": null,
+  "batch_size": 64,
+  "epochs": null,
+  "dropout": null,
+  "vocab_size": 20000,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "processed_dir": "data/processed",
+    "warmup_passes": 2,
+    "repeats": 3,
+    "devices": [
+      "cuda",
+      "cpu"
+    ],
+    "max_reviews": null,
+    "perplexity_rel_tolerance": 0.001,
+    "costs_csv": "results/part1_costs.csv",
+    "models": [
+      {
+        "name": "ngram",
+        "train_result": "results/ngram.json"
+      },
+      {
+        "name": "rnn",
+        "train_result": "results/train_rnn.json",
+        "checkpoint": "checkpoints/train_rnn.pt"
+      },
+      {
+        "name": "lstm",
+        "train_result": "results/train_lstm.json",
+        "checkpoint": "checkpoints/train_lstm.pt"
+      },
+      {
+        "name": "transformer",
+        "train_result": "results/train_transformer.json",
+        "checkpoint": "checkpoints/train_transformer.pt"
+      }
+    ]
+  }
+}

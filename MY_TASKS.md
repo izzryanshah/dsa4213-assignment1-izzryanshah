@@ -1,6 +1,6 @@
 # My tasks
 
-Rebuilt by `src/update_results.py` on Tue 13 Oct 2026, 00:05 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (3 day(s) left; today is Tue 13 Oct).
+Rebuilt by `src/update_results.py` on Tue 13 Oct 2026, 00:32 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (3 day(s) left; today is Tue 13 Oct).
 
 Tick a box yourself with `[x]`; this file never ticks anything for you, and keeps your ticks and anything you write between the marker lines. Do not delete the `<!--id:...-->` tags at the end of each line.
 
@@ -9,10 +9,12 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 ## Waiting on me now
 
 - [ ] Put your planned day for each task into `schedule` in `configs/update_results.json` (item id -> `YYYY-MM-DD`, or `section:<key>` -> date). Until then every item shows "Planned: not set" and nothing can be overdue *(Planned: not set)* <!--id:wait-schedule-->
-- [ ] Review 20 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
+- [ ] Review 22 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
+- [ ] Start run `benchmark`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-benchmark-->
 - [ ] Write your notes for Data, Part I: see [Results to interpret](#results-to-interpret) *(Planned: not set)* <!--id:wait-notes-->
+- [ ] Fix failing check: Test set used only for final evaluation: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-test-set-used-only-for-final-evaluation-->
 - [ ] Fix failing check: All models scored on identical test targets: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-all-models-scored-on-identical-test-targets-->
-- [ ] Commit and push: 11 uncommitted file(s), 0 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
+- [ ] Commit and push: 12 uncommitted file(s), 1 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
 - [ ] Choose your comparison question (brief, "Experimental Focus": e.g. how model families differ on your corpus, whether fixed embeddings help, or whether better next-token prediction leads to better classification). The report is organised around it *(Planned: not set)* <!--id:w-question-->
   - Tell Claude your question; it is then logged in `DECISIONS.md`
 
@@ -104,6 +106,14 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Options: a smaller learning rate or warmup, which Transformers often prefer.
   - Current value: learning rate 0.001, batch size 64, epochs 20, context length 64, patience 3, grad clip 1.0, vocabulary 20000, seed 0.
   - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry M4 (line 508), which sets `Chosen by` and `Status`
+- [ ] **N1** Test settings *(Planned: not set)* <!--id:dec-N1-->
+  - Options: longer sequences (up to 256); tolerance 1e-8 or exact equality; also testing in train mode with a fixed dropout seed.
+  - Current value: random sequences of length 12, batch 4, tolerance 1e-6 on the largest change in any probability; every position t from 0 to 11 is changed in turn; models are in...
+  - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry N1 (line 518), which sets `Chosen by` and `Status`
+- [ ] **O2** Other benchmark details *(Planned: not set)* <!--id:dec-O2-->
+  - Options: time only the model forward pass on pre-built batches; use parameter counts only for the neural models.
+  - Current value: the timed region is the whole `evaluate()` call (sorting, padding and scoring included); the n-gram is refit from the training split with its saved discounts, u...
+  - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry O2 (line 534), which sets `Chosen by` and `Status`
 - [ ] Part II: choose which one Part I architecture (RNN, LSTM or Transformer) gets the three embedding settings *(Planned: not set)* <!--id:dec-p2-arch-->
   - Decide after Part I results exist
 - [ ] Part III: choose the labeled task and dataset, and the two or more representation choices to compare (brief examples: LSTM vs Transformer, two embedding variants, two pooling methods) *(Planned: not set)* <!--id:dec-p3-task-->
@@ -117,11 +127,10 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 
 ## Runs to do
 
-- [ ] Time inference for all Part I models on one common workload, in `benchmark.py` on the same Colab GPU for every model (brief: state hardware, budget and timing procedure) *(Planned: not set)* <!--id:run-p1-inference-->
-  - Command: not available yet: no inference-timing script exists yet
-  - Time: not known yet
-  - Produces: `inference_tokens_per_second` in each model's record, shown in the Part I table
-  - Colab only (CLAUDE.md rule 9): never run on this machine
+- [ ] Run `benchmark` *(Planned: not set)* <!--id:run-benchmark-->
+  - Command: `python3 src/benchmark.py --config configs/benchmark.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+  - Time: no earlier run of this script has a recorded time
+  - Produces: `results/benchmark.json`, then a new section in `RESULTS.md` after `update_results.py`
 - [ ] Generate continuations from the same prompts with matched decoding for each neural model (in Colab) *(Planned: not set)* <!--id:run-p1-generations-->
   - Command: `python3 src/generate.py --config configs/generations_<model>.json` (the n-gram one is `configs/generations_ngram.json`; neural configs are written once the models exist)
   - Time: not known yet
@@ -159,7 +168,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Runs in this section: `data`, `inspect_data`, `show_batch`
   - Where: the empty *My notes* block at the end of the Data section of `RESULTS.md`
 - [ ] Write your notes for [Part I](RESULTS.md#part-i) *(Planned: not set)* <!--id:interp-part1-->
-  - Runs in this section: `generations_ngram`, `ngram`, `sanity_check`, `test_evaluate`, `test_generate`, `test_models`, `test_train`, `train_bigram`, `train_bigram_colab`, `train_lstm`, `train_rnn`, `train_transformer`
+  - Runs in this section: `generations_ngram`, `ngram`, `sanity_check`, `test_causality`, `test_evaluate`, `test_generate`, `test_models`, `test_train`, `train_bigram`, `train_bigram_colab`, `train_lstm`, `train_rnn`, `train_transformer`
   - Where: the empty *My notes* block at the end of the Part I section of `RESULTS.md`
 
 ### Added by me
@@ -224,7 +233,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 - [ ] Nothing submitted contains API keys, credentials or data you may not share (`data/` is git-ignored) *(Planned: not set)* <!--id:req-secrets-->
   - Status: not done (cannot be checked automatically; tick when finished)
 - [ ] Submit the PDF report and the code (a GitHub link the instructor can open, or a zip) *(Planned: not set)* <!--id:req-submit-->
-  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 11 uncommitted file(s); 0 unpushed commit(s). Whether the instructor has access cannot be checked from here)
+  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 12 uncommitted file(s); 1 unpushed commit(s). Whether the instructor has access cannot be checked from here)
 - [ ] Find out the late-submission policy and the submission platform (the brief says both are announced separately) *(Planned: not set)* <!--id:req-late-->
   - Status: not done (cannot be checked automatically; tick when finished)
 
@@ -236,6 +245,12 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 
 ## Failed checks
 
+- [ ] Test set used only for final evaluation: FAIL *(Planned: not set)* <!--id:fail-test-set-used-only-for-final-evaluation-->
+  - Evidence (Checks section of `RESULTS.md`): `src/ngram.py`: `data.test` used at line(s) [333]; `tune_discounts(...)` called at line(s) [321]; single use after the call
+  - Evidence (Checks section of `RESULTS.md`): `src/train.py`: `data.test` used at line(s) [220]; `fit(...)` called at line(s) [216]; single use after the call
+  - Evidence (Checks section of `RESULTS.md`): other files in `src/` that use `data.test`: `src/benchmark.py` lines [152]
+  - Evidence (Checks section of `RESULTS.md`): method: static scan of the source (Python `ast`), not a run-time trace
+  - Needs fixing: the evidence above shows what does not hold; after fixing, re-run `update_results.py`
 - [ ] All models scored on identical test targets: FAIL *(Planned: not set)* <!--id:fail-all-models-scored-on-identical-test-targets-->
   - Evidence (Checks section of `RESULTS.md`): `ngram`: 1,390,673 targets, checksum `fd778f4c313d...`
   - Evidence (Checks section of `RESULTS.md`): `train_bigram`: 981,353 targets, checksum `4f77927a1cd9...`

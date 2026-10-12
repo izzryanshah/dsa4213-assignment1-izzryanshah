@@ -513,6 +513,32 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 
 ---
 
+## N. Causality test (`tests/test_causality.py`, 2026-10-13)
+
+### N1. Test settings
+- **Value:** random sequences of length 12, batch 4, tolerance 1e-6 on the largest change in any probability; every position t from 0 to 11 is changed in turn; models are in eval mode (dropout off); every class in `models.py` is tested, found automatically. The bigram (in `sanity_check.py`) is not covered.
+- **Where:** `configs/test_causality.json` (`batch_size`, `options.seq_len`, `options.tolerance`).
+- **Chosen by:** Assistant default (the user specified what to check, not these values; not offered as options). **Alternatives:** longer sequences (up to 256); tolerance 1e-8 or exact equality; also testing in train mode with a fixed dropout seed.
+- **Status:** NEEDS REVIEW
+
+---
+
+## O. Benchmark (`src/benchmark.py`, 2026-10-13)
+
+### O1. Workload, warm-up and devices
+- **Value:** batch size 64 and context length 256 (the same as the evaluation settings, so the speed is for the exact scoring that gave the perplexities); 2 full warm-up passes; 3 timed repeats (mean and standard deviation); every neural model timed on the GPU and on the CPU, the n-gram on the CPU only (NumPy).
+- **Where:** `configs/benchmark.json` (`batch_size`, `context_length`, `options.warmup_passes`, `options.repeats`, `options.devices`).
+- **Chosen by:** User, prompt (2026-10-13): 3 repeats; the rest from options offered ("proceed with your recommended set"). **Alternatives considered:** 64/64 (training context) or batch 1; 1 warm-up pass or a few batches; GPU-only neural timing without CPU columns.
+- **Status:** CONFIRMED
+
+### O2. Other benchmark details
+- **Value:** the timed region is the whole `evaluate()` call (sorting, padding and scoring included); the n-gram is refit from the training split with its saved discounts, untimed; the n-gram "parameters" are its stored counts, with a column saying so; n-gram training and tuning seconds are separate columns; a run stops if a model's perplexity differs from its saved test perplexity by more than 0.1% (neural models only; the n-gram was scored without the 256 cut) or if the scored targets differ between models.
+- **Where:** `src/benchmark.py`; `configs/benchmark.json` (`options.perplexity_rel_tolerance`).
+- **Chosen by:** Assistant default (shown in the design the user approved, not offered as options). **Alternatives:** time only the model forward pass on pre-built batches; use parameter counts only for the neural models.
+- **Status:** NEEDS REVIEW
+
+---
+
 ## NEEDS REVIEW summary
 
 **All 24 items resolved 2026-10-10.** The user reviewed every one (2-3 options with trade-offs each, per CLAUDE.md's record-keeping rules) and confirmed every current value as-is: A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, B1, B3, C1, C2, C3, D2, D3, D4, D5, D6, D7, D8, E1, E3. See each entry above for the specific options offered and the reasoning. No reruns were needed since nothing changed.
@@ -534,3 +560,7 @@ One item (D4) was accepted rather than fixed: the n-gram discount grid was widen
 **New since that review (2026-10-12), pending the user:** L3 (dropout placement and layout), L4 (smoke-test data).
 
 **New since then (2026-10-12), pending the user:** M3, M4 (Transformer defaults).
+
+**New since then (2026-10-13), pending the user:** N1 (causality test settings).
+
+**New since then (2026-10-13), pending the user:** O2 (benchmark details).

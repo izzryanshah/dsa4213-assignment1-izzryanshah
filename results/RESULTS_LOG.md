@@ -164,3 +164,9 @@ Before `prompts.txt` existed, `src/generate.py` was run end to end twice (n-gram
 - **Script / command:** `src/train.py`; `python -u src/train.py --config configs/train_bigram.json --model bigram --run-name train_bigram_colab` (seed 0; git commit `b59b5ed`, `git_dirty: true`).
 - **Key numbers:** 20 epochs run, `stopped_early: true`; best epoch 17; best validation loss 5.0973; test cross-entropy 5.0895 nats, test perplexity 162.31; 4,020,603 trainable parameters; training time 1,970.1 s; Tesla T4.
 - **File:** `results/train_bigram_colab.json`
+
+### 2026-10-13 — Causality test
+- **Script:** `tests/test_causality.py`
+- **Command:** `python3 tests/test_causality.py --config configs/test_causality.json`
+- **Key numbers:** passed for LSTMLanguageModel, RNNLanguageModel, TransformerLanguageModel; 12 positions each; largest change before the edited position 0.0 for all three (seed 0).
+- **File:** `results/test_causality.json`
