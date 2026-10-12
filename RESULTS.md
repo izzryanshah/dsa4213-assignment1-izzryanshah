@@ -1,6 +1,6 @@
 # Results
 
-Rebuilt by `src/update_results.py` on 2026-10-13T00:32:46+08:00 from 16 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-13T00:17:56+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
+Rebuilt by `src/update_results.py` on 2026-10-13T01:50:14+08:00 from 17 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-13T00:17:56+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
 
 Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III](#part-iii) · [Settings](#settings) · [Checks](#checks)
 
@@ -1067,6 +1067,105 @@ No generation runs yet.
 ## Part III
 
 No runs yet.
+
+### Runs not assigned to a section
+
+These runs match no rule in `part_rules` (`configs/update_results.json`).
+
+#### `benchmark`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/benchmark.py --config configs/benchmark.json` |
+| Script | `src/benchmark.py` |
+| Date | 2026-10-12T17:46:34+00:00 |
+| Git commit | `bd9eb67` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/benchmark.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | — |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | 256 |
+| `learning_rate` | — |
+| `batch_size` | 64 |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.processed_dir` | data/processed |
+| `options.warmup_passes` | 2 |
+| `options.repeats` | 3 |
+| `options.devices` | `["cuda", "cpu"]` |
+| `options.max_reviews` | — |
+| `options.perplexity_rel_tolerance` | 0.0010 |
+| `options.costs_csv` | results/part1_costs.csv |
+| `options.models` | `[{"name": "ngram", "train_result": "results/ngram.json"}, {"name": "rnn", "train_result": "results/train_rnn.json", "checkpoint": "checkpoints/train_rnn.pt"}, {"name": "lstm", "train_result": "results/train_lstm.json", "checkpoint": "checkpoints/train_lstm.pt"}, {"name": "transformer", "train_result": "results/train_transformer.json", "checkpoint": "checkpoints/train_transformer.pt"}]` |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `ngram.cpu.tokens_per_second_mean` | 411,333.96 |
+| `ngram.cpu.tokens_per_second_std` | 73,730.15 |
+| `rnn.cuda.tokens_per_second_mean` | 229,944.45 |
+| `rnn.cuda.tokens_per_second_std` | 1,199.79 |
+| `rnn.cpu.tokens_per_second_mean` | 4,290.51 |
+| `rnn.cpu.tokens_per_second_std` | 44.9155 |
+| `lstm.cuda.tokens_per_second_mean` | 164,100.08 |
+| `lstm.cuda.tokens_per_second_std` | 2,996.51 |
+| `lstm.cpu.tokens_per_second_mean` | 4,027.21 |
+| `lstm.cpu.tokens_per_second_std` | 15.5268 |
+| `transformer.cuda.tokens_per_second_mean` | 286,163.33 |
+| `transformer.cuda.tokens_per_second_std` | 7,949.74 |
+| `transformer.cpu.tokens_per_second_mean` | 4,959.89 |
+| `transformer.cpu.tokens_per_second_std` | 109.0474 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `num_targets` | 981,353 |
+| `target_checksum` | 4f77927a1cd952f56697be95540ea0fc002013d9f8278d3f95c1290e6c305605 |
+| `costs_csv` | results/part1_costs.csv |
+| `per_model.ngram.cpu.tokens_per_second_mean` | 411,333.96 |
+| `per_model.ngram.cpu.tokens_per_second_std` | 73,730.15 |
+| `per_model.ngram.cpu.seconds_per_repeat` | `[2.7233127239996975, 2.5977159550002398, 1.9790375080010563]` |
+| `per_model.ngram.cpu.perplexity` | 111.3124 |
+| `per_model.rnn.cuda.tokens_per_second_mean` | 229,944.45 |
+| `per_model.rnn.cuda.tokens_per_second_std` | 1,199.79 |
+| `per_model.rnn.cuda.seconds_per_repeat` | `[4.2684084929987876, 4.2453272539987665, 4.289845125998909]` |
+| `per_model.rnn.cuda.perplexity` | 109.3664 |
+| `per_model.rnn.cpu.tokens_per_second_mean` | 4,290.51 |
+| `per_model.rnn.cpu.tokens_per_second_std` | 44.9155 |
+| `per_model.rnn.cpu.seconds_per_repeat` | `[226.0493249200008, 229.60479648399996, 230.5752105540014]` |
+| `per_model.rnn.cpu.perplexity` | 109.3663 |
+| `per_model.lstm.cuda.tokens_per_second_mean` | 164,100.08 |
+| `per_model.lstm.cuda.tokens_per_second_std` | 2,996.51 |
+| `per_model.lstm.cuda.seconds_per_repeat` | `[5.8768716100003076, 5.972537378000197, 6.095219308999731]` |
+| `per_model.lstm.cuda.perplexity` | 80.4494 |
+| `per_model.lstm.cpu.tokens_per_second_mean` | 4,027.21 |
+| `per_model.lstm.cpu.tokens_per_second_std` | 15.5268 |
+| `per_model.lstm.cpu.seconds_per_repeat` | `[242.86494289700022, 243.47310186100003, 244.7108190759991]` |
+| `per_model.lstm.cpu.perplexity` | 80.4492 |
+| `per_model.transformer.cuda.tokens_per_second_mean` | 286,163.33 |
+| `per_model.transformer.cuda.tokens_per_second_std` | 7,949.74 |
+| `per_model.transformer.cuda.seconds_per_repeat` | `[3.340338027999678, 3.4220091059996776, 3.5310044449997804]` |
+| `per_model.transformer.cuda.perplexity` | 156.9419 |
+| `per_model.transformer.cpu.tokens_per_second_mean` | 4,959.89 |
+| `per_model.transformer.cpu.tokens_per_second_std` | 109.0474 |
+| `per_model.transformer.cpu.seconds_per_repeat` | `[195.43262368999967, 195.3237406190001, 203.01145059699957]` |
+| `per_model.transformer.cpu.perplexity` | 156.9369 |
+| `torch_cpu_threads` | 1 |
+| `smoke_test` | False |
 
 ### My notes
 

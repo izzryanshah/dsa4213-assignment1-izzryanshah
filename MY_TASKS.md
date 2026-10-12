@@ -1,6 +1,6 @@
 # My tasks
 
-Rebuilt by `src/update_results.py` on Tue 13 Oct 2026, 00:32 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (3 day(s) left; today is Tue 13 Oct).
+Rebuilt by `src/update_results.py` on Tue 13 Oct 2026, 01:50 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (3 day(s) left; today is Tue 13 Oct).
 
 Tick a box yourself with `[x]`; this file never ticks anything for you, and keeps your ticks and anything you write between the marker lines. Do not delete the `<!--id:...-->` tags at the end of each line.
 
@@ -10,11 +10,10 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 
 - [ ] Put your planned day for each task into `schedule` in `configs/update_results.json` (item id -> `YYYY-MM-DD`, or `section:<key>` -> date). Until then every item shows "Planned: not set" and nothing can be overdue *(Planned: not set)* <!--id:wait-schedule-->
 - [ ] Review 22 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
-- [ ] Start run `benchmark`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-benchmark-->
 - [ ] Write your notes for Data, Part I: see [Results to interpret](#results-to-interpret) *(Planned: not set)* <!--id:wait-notes-->
 - [ ] Fix failing check: Test set used only for final evaluation: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-test-set-used-only-for-final-evaluation-->
 - [ ] Fix failing check: All models scored on identical test targets: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-all-models-scored-on-identical-test-targets-->
-- [ ] Commit and push: 12 uncommitted file(s), 1 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
+- [ ] Commit and push: 5 uncommitted file(s), 0 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
 - [ ] Choose your comparison question (brief, "Experimental Focus": e.g. how model families differ on your corpus, whether fixed embeddings help, or whether better next-token prediction leads to better classification). The report is organised around it *(Planned: not set)* <!--id:w-question-->
   - Tell Claude your question; it is then logged in `DECISIONS.md`
 
@@ -127,10 +126,6 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 
 ## Runs to do
 
-- [ ] Run `benchmark` *(Planned: not set)* <!--id:run-benchmark-->
-  - Command: `python3 src/benchmark.py --config configs/benchmark.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
-  - Time: no earlier run of this script has a recorded time
-  - Produces: `results/benchmark.json`, then a new section in `RESULTS.md` after `update_results.py`
 - [ ] Generate continuations from the same prompts with matched decoding for each neural model (in Colab) *(Planned: not set)* <!--id:run-p1-generations-->
   - Command: `python3 src/generate.py --config configs/generations_<model>.json` (the n-gram one is `configs/generations_ngram.json`; neural configs are written once the models exist)
   - Time: not known yet
@@ -233,7 +228,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 - [ ] Nothing submitted contains API keys, credentials or data you may not share (`data/` is git-ignored) *(Planned: not set)* <!--id:req-secrets-->
   - Status: not done (cannot be checked automatically; tick when finished)
 - [ ] Submit the PDF report and the code (a GitHub link the instructor can open, or a zip) *(Planned: not set)* <!--id:req-submit-->
-  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 12 uncommitted file(s); 1 unpushed commit(s). Whether the instructor has access cannot be checked from here)
+  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 5 uncommitted file(s); 0 unpushed commit(s). Whether the instructor has access cannot be checked from here)
 - [ ] Find out the late-submission policy and the submission platform (the brief says both are announced separately) *(Planned: not set)* <!--id:req-late-->
   - Status: not done (cannot be checked automatically; tick when finished)
 

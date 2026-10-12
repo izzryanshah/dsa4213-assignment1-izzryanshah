@@ -247,3 +247,8 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 - `src/benchmark.py` (new): loads the best checkpoint of the RNN, LSTM and Transformer (architecture rebuilt from the saved training config) and refits the n-gram; times `evaluate()` over the whole test set (batch 64, context 256) with untimed warm-up passes and `torch.cuda.synchronize()` before and after each timed pass, 3 repeats; checks all models scored identical targets; writes `results/benchmark.json` and `results/part1_costs.csv`. The docstring explains why warm-up and synchronisation matter.
 - `configs/benchmark.json` (new); `notebooks/run_colab.ipynb`: new "5. Benchmark" cells (bigram re-run renumbered to 6); `configs/update_results.json`: removed the hand-written inference task (the auto-generated "Run `benchmark`" task replaces it); `DECISIONS.md` section O (O1 confirmed, O2 NEEDS REVIEW).
 - Smoke test only (CPU, 40 test reviews, random-weight checkpoints made in a scratch folder, output not in `results/`): all four models ran and scored identical targets. Not a result. The real run is Colab-only (CLAUDE.md rule 9).
+
+## 2026-10-13 (benchmark results imported)
+
+- Copied `results/benchmark.json` and `results/part1_costs.csv` from the Colab results zip (scratch extraction, compared against local files first; only these two were new). No code changed.
+- Ran `update_results.py`; added a `results/RESULTS_LOG.md` entry.

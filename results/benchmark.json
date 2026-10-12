@@ -1,0 +1,185 @@
+{
+  "run": "benchmark",
+  "script": "src/benchmark.py",
+  "command": "/usr/bin/python3 src/benchmark.py --config configs/benchmark.json",
+  "date": "2026-10-12T17:46:34+00:00",
+  "git_commit": "bd9eb67329484380bbf362670ab38dda9a562bb9",
+  "git_dirty": false,
+  "gpu": "Tesla T4",
+  "hardware": "GPU: Tesla T4",
+  "seed": 0,
+  "config": {
+    "architecture": null,
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": null,
+    "embedding_init": null,
+    "context_length": 256,
+    "learning_rate": null,
+    "batch_size": 64,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "processed_dir": "data/processed",
+      "warmup_passes": 2,
+      "repeats": 3,
+      "devices": [
+        "cuda",
+        "cpu"
+      ],
+      "max_reviews": null,
+      "perplexity_rel_tolerance": 0.001,
+      "costs_csv": "results/part1_costs.csv",
+      "models": [
+        {
+          "name": "ngram",
+          "train_result": "results/ngram.json"
+        },
+        {
+          "name": "rnn",
+          "train_result": "results/train_rnn.json",
+          "checkpoint": "checkpoints/train_rnn.pt"
+        },
+        {
+          "name": "lstm",
+          "train_result": "results/train_lstm.json",
+          "checkpoint": "checkpoints/train_lstm.pt"
+        },
+        {
+          "name": "transformer",
+          "train_result": "results/train_transformer.json",
+          "checkpoint": "checkpoints/train_transformer.pt"
+        }
+      ]
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "ngram": {
+      "cpu": {
+        "tokens_per_second_mean": 411333.957030067,
+        "tokens_per_second_std": 73730.15484965761
+      }
+    },
+    "rnn": {
+      "cuda": {
+        "tokens_per_second_mean": 229944.45485456553,
+        "tokens_per_second_std": 1199.7905254175355
+      },
+      "cpu": {
+        "tokens_per_second_mean": 4290.508889681323,
+        "tokens_per_second_std": 44.91552740326719
+      }
+    },
+    "lstm": {
+      "cuda": {
+        "tokens_per_second_mean": 164100.078580621,
+        "tokens_per_second_std": 2996.5118149604623
+      },
+      "cpu": {
+        "tokens_per_second_mean": 4027.211252915592,
+        "tokens_per_second_std": 15.526799911239594
+      }
+    },
+    "transformer": {
+      "cuda": {
+        "tokens_per_second_mean": 286163.32773322973,
+        "tokens_per_second_std": 7949.740625541189
+      },
+      "cpu": {
+        "tokens_per_second_mean": 4959.885258299818,
+        "tokens_per_second_std": 109.04737975255995
+      }
+    }
+  },
+  "details": {
+    "num_targets": 981353,
+    "target_checksum": "4f77927a1cd952f56697be95540ea0fc002013d9f8278d3f95c1290e6c305605",
+    "costs_csv": "results/part1_costs.csv",
+    "per_model": {
+      "ngram": {
+        "cpu": {
+          "tokens_per_second_mean": 411333.957030067,
+          "tokens_per_second_std": 73730.15484965761,
+          "seconds_per_repeat": [
+            2.7233127239996975,
+            2.5977159550002398,
+            1.9790375080010563
+          ],
+          "perplexity": 111.3124445454152
+        }
+      },
+      "rnn": {
+        "cuda": {
+          "tokens_per_second_mean": 229944.45485456553,
+          "tokens_per_second_std": 1199.7905254175355,
+          "seconds_per_repeat": [
+            4.2684084929987876,
+            4.2453272539987665,
+            4.289845125998909
+          ],
+          "perplexity": 109.36640734248003
+        },
+        "cpu": {
+          "tokens_per_second_mean": 4290.508889681323,
+          "tokens_per_second_std": 44.91552740326719,
+          "seconds_per_repeat": [
+            226.0493249200008,
+            229.60479648399996,
+            230.5752105540014
+          ],
+          "perplexity": 109.36630982171394
+        }
+      },
+      "lstm": {
+        "cuda": {
+          "tokens_per_second_mean": 164100.078580621,
+          "tokens_per_second_std": 2996.5118149604623,
+          "seconds_per_repeat": [
+            5.8768716100003076,
+            5.972537378000197,
+            6.095219308999731
+          ],
+          "perplexity": 80.44937180664519
+        },
+        "cpu": {
+          "tokens_per_second_mean": 4027.211252915592,
+          "tokens_per_second_std": 15.526799911239594,
+          "seconds_per_repeat": [
+            242.86494289700022,
+            243.47310186100003,
+            244.7108190759991
+          ],
+          "perplexity": 80.44922656171667
+        }
+      },
+      "transformer": {
+        "cuda": {
+          "tokens_per_second_mean": 286163.32773322973,
+          "tokens_per_second_std": 7949.740625541189,
+          "seconds_per_repeat": [
+            3.340338027999678,
+            3.4220091059996776,
+            3.5310044449997804
+          ],
+          "perplexity": 156.9419120574047
+        },
+        "cpu": {
+          "tokens_per_second_mean": 4959.885258299818,
+          "tokens_per_second_std": 109.04737975255995,
+          "seconds_per_repeat": [
+            195.43262368999967,
+            195.3237406190001,
+            203.01145059699957
+          ],
+          "perplexity": 156.93692902900924
+        }
+      }
+    },
+    "torch_cpu_threads": 1,
+    "smoke_test": false
+  }
+}

@@ -170,3 +170,8 @@ Before `prompts.txt` existed, `src/generate.py` was run end to end twice (n-gram
 - **Command:** `python3 tests/test_causality.py --config configs/test_causality.json`
 - **Key numbers:** passed for LSTMLanguageModel, RNNLanguageModel, TransformerLanguageModel; 12 positions each; largest change before the edited position 0.0 for all three (seed 0).
 - **File:** `results/test_causality.json`
+
+### 2026-10-12 17:46 UTC — Inference benchmark (Colab)
+- **Script / command:** `src/benchmark.py`; `python src/benchmark.py --config configs/benchmark.json` (seed 0; git commit `bd9eb67`, `git_dirty: false`; Tesla T4; torch CPU threads 1).
+- **Key numbers:** workload = test set, batch size 64, context length 256, 981,353 target tokens (same checksum `4f77927a1cd9...` for all models), 2 warm-up passes, 3 timed repeats. Tokens/second, mean (std): GPU: RNN 229,944 (1,200), LSTM 164,100 (2,997), Transformer 286,163 (7,950). CPU: n-gram 411,334 (73,730), RNN 4,291 (45), LSTM 4,027 (16), Transformer 4,960 (109). Perplexity on this workload: n-gram 111.31, RNN 109.37, LSTM 80.45, Transformer 156.94.
+- **Files:** `results/benchmark.json`, `results/part1_costs.csv`
