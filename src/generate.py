@@ -81,6 +81,7 @@ import torch.nn as nn
 from data import check_config_matches_data, clean_and_tokenize, load_processed_data
 from ngram import KneserNeyTrigram, build_events
 from runconfig import add_config_args, load_config, save_run
+from train import MODELS, count_parameters
 
 
 # ------------------------------------------------------------------ model wrapper
@@ -187,8 +188,34 @@ def build_model(config, data):
         source = {"ngram_results_path": opts["ngram_results_path"], "ngram_run_date": ngram_run["date"],
                   "ngram_run_git_commit": ngram_run["git_commit"], "discounts": d}
         return model, source
-    raise SystemExit(f"Model '{opts['model']}' is not available yet. Neural models need a trained, saved "
-                     "model first; add a loader for it here (wrap it with NeuralNextToken).")
+    if opts["model"] in ("rnn", "lstm", "transformer"):
+        return build_neural(opts, data)
+    raise SystemExit(f"Unknown model '{opts['model']}'. Choose ngram, rnn, lstm or transformer.")
+
+
+def build_neural(opts, data):
+    """Rebuild a trained RNN/LSTM/Transformer and load its best saved weights.
+
+    The model's size settings are NOT taken from the generation config: they are
+    read from the training run's record (`train_result`), i.e. the config that
+    was really used to train the checkpoint. That way the architecture can never
+    disagree with the saved weights.
+    """
+    with open(opts["train_result"]) as f:
+        train_run = json.load(f)
+    train_config = train_run["config"]
+    if train_config["architecture"] != opts["model"]:
+        raise SystemExit(f"{opts['train_result']} is a '{train_config['architecture']}' run, not '{opts['model']}'.")
+    model = MODELS[opts["model"]](train_config, data.vocab)  # random weights for now
+    # map_location="cpu": load onto the CPU first, then move; works with or without a GPU.
+    model.load_state_dict(torch.load(opts["checkpoint"], map_location="cpu"))
+    if count_parameters(model) != train_run["metrics"]["num_parameters"]:
+        raise SystemExit("The rebuilt model's parameter count does not match its training record.")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    source = {"train_result": opts["train_result"], "train_run_date": train_run["date"],
+              "train_run_git_commit": train_run["git_commit"], "checkpoint": opts["checkpoint"],
+              "num_parameters": train_run["metrics"]["num_parameters"], "device": str(device)}
+    return model.to(device), source
 
 
 def parse_args():

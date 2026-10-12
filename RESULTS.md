@@ -1,6 +1,6 @@
 # Results
 
-Rebuilt by `src/update_results.py` on 2026-10-13T01:50:14+08:00 from 17 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-13T00:17:56+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
+Rebuilt by `src/update_results.py` on 2026-10-13T02:01:11+08:00 from 17 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-13T00:17:56+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
 
 Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III](#part-iii) · [Settings](#settings) · [Checks](#checks)
 
@@ -1177,7 +1177,7 @@ These runs match no rule in `part_rules` (`configs/update_results.json`).
 
 Source: `DECISIONS.md` (copied as written there).
 
-### NEEDS REVIEW (22)
+### NEEDS REVIEW (23)
 
 | ID | Decision | Status |
 |---|---|---|
@@ -1203,8 +1203,9 @@ Source: `DECISIONS.md` (copied as written there).
 | M4 | Training settings copied from the LSTM | NEEDS REVIEW |
 | N1 | Test settings | NEEDS REVIEW |
 | O2 | Other benchmark details | NEEDS REVIEW |
+| P2 | Loading neural models and the combined file | NEEDS REVIEW |
 
-### All design choices (68)
+### All design choices (70)
 
 | ID | Decision | Value | Where | Chosen by | Status |
 |---|---|---|---|---|---|
@@ -1276,6 +1277,8 @@ Source: `DECISIONS.md` (copied as written there).
 | N1 | Test settings | random sequences of length 12, batch 4, tolerance 1e-6 on the largest change in any probability; every position t from 0 to 11 is changed in turn; models are in eval mode (dropout off); every class in `models.py` is tested, found automatically. The bigram (in `sanity_check.py`) is not covered. | `configs/test_causality.json` (`batch_size`, `options.seq_len`, `options.tolerance`). | Assistant default (the user specified what to check, not these values; not offered as options). | NEEDS REVIEW |
 | O1 | Workload, warm-up and devices | batch size 64 and context length 256 (the same as the evaluation settings, so the speed is for the exact scoring that gave the perplexities); 2 full warm-up passes; 3 timed repeats (mean and standard deviation); every neural model timed on the GPU and on the CPU, the n-gram on the CPU only (NumPy). | `configs/benchmark.json` (`batch_size`, `context_length`, `options.warmup_passes`, `options.repeats`, `options.devices`). | User, prompt (2026-10-13): 3 repeats; the rest from options offered ("proceed with your recommended set"). | CONFIRMED |
 | O2 | Other benchmark details | the timed region is the whole `evaluate()` call (sorting, padding and scoring included); the n-gram is refit from the training split with its saved discounts, untimed; the n-gram "parameters" are its stored counts, with a column saying so; n-gram training and tuning seconds are separate columns; a run stops if a model's perplexity differs from its saved test perplexity by more than 0.1% (neural models only; the n-gram was scored without the 256 cut) or if the scored targets differ between models. | `src/benchmark.py`; `configs/benchmark.json` (`options.perplexity_rel_tolerance`). | Assistant default (shown in the design the user approved, not offered as options). | NEEDS REVIEW |
+| P1 | Shared decoding settings for all four models | temperature 1.0; top-k 40; 50 new tokens; seed 0; 1 sample per prompt; `&lt;pad&gt;` and `&lt;unk&gt;` never sampled; stop at `&lt;eos&gt;`; prompts from `prompts.txt`. Identical in `configs/generations_{ngram,rnn,lstm,transformer}.json`, and `combine_generations.py` stops if they differ. | `configs/generations_*.json`, `options.temperature`, `options.top_k`, `options.max_new_tokens`, `options.num_samples`, `seed`. | User, prompt (2026-10-13), from options offered ("proceed with your recommended set"; the temperature, top-k and length also match the earlier choice in G3). | CONFIRMED |
+| P2 | Loading neural models and the combined file | the neural model's size settings come from its training record (`results/train_&lt;name&gt;.json`), not from the generation config; the checkpoint's parameter count must match that record; generation runs on the GPU when available; the combined file `results/part1_generations.md` lists the shared settings, each source file's commit, hardware and date, and one section per prompt with the models in the order n-gram, RNN, LSTM, Transformer; it adds no commentary. | `src/generate.py` (`build_neural`), `src/combine_generations.py`, `configs/combine_generations.json`. | Assistant default (shown in the design the user approved, not offered as options). | NEEDS REVIEW |
 
 ### My notes
 

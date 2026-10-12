@@ -305,17 +305,6 @@
       },
       {
         "section": "runs",
-        "id": "run-p1-generations",
-        "text": "Generate continuations from the same prompts with matched decoding for each neural model (in Colab)",
-        "details": [
-          "Command: `python3 src/generate.py --config configs/generations_<model>.json` (the n-gram one is `configs/generations_ngram.json`; neural configs are written once the models exist)",
-          "Time: not known yet",
-          "Produces: `results/generations_<model>.json`; side-by-side text in `RESULTS.md` Part I",
-          "Colab only (CLAUDE.md rule 9): never run on this machine"
-        ]
-      },
-      {
-        "section": "runs",
         "id": "run-p2-glove",
         "text": "Download public GloVe 100d vectors (GloVe 6B, Stanford NLP: nlp.stanford.edu/projects/glove) in Colab, never on this machine",
         "details": [

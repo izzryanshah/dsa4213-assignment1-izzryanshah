@@ -1,6 +1,6 @@
 # My tasks
 
-Rebuilt by `src/update_results.py` on Tue 13 Oct 2026, 01:50 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (3 day(s) left; today is Tue 13 Oct).
+Rebuilt by `src/update_results.py` on Tue 13 Oct 2026, 02:01 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (3 day(s) left; today is Tue 13 Oct).
 
 Tick a box yourself with `[x]`; this file never ticks anything for you, and keeps your ticks and anything you write between the marker lines. Do not delete the `<!--id:...-->` tags at the end of each line.
 
@@ -9,11 +9,15 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 ## Waiting on me now
 
 - [ ] Put your planned day for each task into `schedule` in `configs/update_results.json` (item id -> `YYYY-MM-DD`, or `section:<key>` -> date). Until then every item shows "Planned: not set" and nothing can be overdue *(Planned: not set)* <!--id:wait-schedule-->
-- [ ] Review 22 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
+- [ ] Review 23 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
+- [ ] Start run `combine_generations`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-combine_generations-->
+- [ ] Start run `generations_lstm`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-generations_lstm-->
+- [ ] Start run `generations_rnn`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-generations_rnn-->
+- [ ] Start run `generations_transformer`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-generations_transformer-->
 - [ ] Write your notes for Data, Part I: see [Results to interpret](#results-to-interpret) *(Planned: not set)* <!--id:wait-notes-->
 - [ ] Fix failing check: Test set used only for final evaluation: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-test-set-used-only-for-final-evaluation-->
 - [ ] Fix failing check: All models scored on identical test targets: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-all-models-scored-on-identical-test-targets-->
-- [ ] Commit and push: 5 uncommitted file(s), 0 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
+- [ ] Commit and push: 12 uncommitted file(s), 0 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
 - [ ] Choose your comparison question (brief, "Experimental Focus": e.g. how model families differ on your corpus, whether fixed embeddings help, or whether better next-token prediction leads to better classification). The report is organised around it *(Planned: not set)* <!--id:w-question-->
   - Tell Claude your question; it is then logged in `DECISIONS.md`
 
@@ -113,6 +117,10 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Options: time only the model forward pass on pre-built batches; use parameter counts only for the neural models.
   - Current value: the timed region is the whole `evaluate()` call (sorting, padding and scoring included); the n-gram is refit from the training split with its saved discounts, u...
   - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry O2 (line 534), which sets `Chosen by` and `Status`
+- [ ] **P2** Loading neural models and the combined file *(Planned: not set)* <!--id:dec-P2-->
+  - Options: model sizes typed into each generation config; one file per prompt; a table instead of block quotes.
+  - Current value: the neural model's size settings come from its training record (`results/train_<name>.json`), not from the generation config; the checkpoint's parameter count m...
+  - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry P2 (line 550), which sets `Chosen by` and `Status`
 - [ ] Part II: choose which one Part I architecture (RNN, LSTM or Transformer) gets the three embedding settings *(Planned: not set)* <!--id:dec-p2-arch-->
   - Decide after Part I results exist
 - [ ] Part III: choose the labeled task and dataset, and the two or more representation choices to compare (brief examples: LSTM vs Transformer, two embedding variants, two pooling methods) *(Planned: not set)* <!--id:dec-p3-task-->
@@ -126,11 +134,22 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 
 ## Runs to do
 
-- [ ] Generate continuations from the same prompts with matched decoding for each neural model (in Colab) *(Planned: not set)* <!--id:run-p1-generations-->
-  - Command: `python3 src/generate.py --config configs/generations_<model>.json` (the n-gram one is `configs/generations_ngram.json`; neural configs are written once the models exist)
-  - Time: not known yet
-  - Produces: `results/generations_<model>.json`; side-by-side text in `RESULTS.md` Part I
-  - Colab only (CLAUDE.md rule 9): never run on this machine
+- [ ] Run `combine_generations` *(Planned: not set)* <!--id:run-combine_generations-->
+  - Command: `python3 src/combine_generations.py --config configs/combine_generations.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+  - Time: no earlier run of this script has a recorded time
+  - Produces: `results/combine_generations.json`, then a new section in `RESULTS.md` after `update_results.py`
+- [ ] Run `generations_lstm` *(Planned: not set)* <!--id:run-generations_lstm-->
+  - Command: `python3 src/generate.py --config configs/generations_lstm.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+  - Time: no earlier run of this script has a recorded time
+  - Produces: `results/generations_lstm.json`, then a new section in `RESULTS.md` after `update_results.py`
+- [ ] Run `generations_rnn` *(Planned: not set)* <!--id:run-generations_rnn-->
+  - Command: `python3 src/generate.py --config configs/generations_rnn.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+  - Time: no earlier run of this script has a recorded time
+  - Produces: `results/generations_rnn.json`, then a new section in `RESULTS.md` after `update_results.py`
+- [ ] Run `generations_transformer` *(Planned: not set)* <!--id:run-generations_transformer-->
+  - Command: `python3 src/generate.py --config configs/generations_transformer.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+  - Time: no earlier run of this script has a recorded time
+  - Produces: `results/generations_transformer.json`, then a new section in `RESULTS.md` after `update_results.py`
 - [ ] Download public GloVe 100d vectors (GloVe 6B, Stanford NLP: nlp.stanford.edu/projects/glove) in Colab, never on this machine *(Planned: not set)* <!--id:run-p2-glove-->
   - Command: not available yet: the Colab cell is added together with the Part II code that loads the file; the vectors file must not be committed
   - Produces: the vectors file on Colab/Drive; cite Pennington et al. (2014) in the report
@@ -228,7 +247,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 - [ ] Nothing submitted contains API keys, credentials or data you may not share (`data/` is git-ignored) *(Planned: not set)* <!--id:req-secrets-->
   - Status: not done (cannot be checked automatically; tick when finished)
 - [ ] Submit the PDF report and the code (a GitHub link the instructor can open, or a zip) *(Planned: not set)* <!--id:req-submit-->
-  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 5 uncommitted file(s); 0 unpushed commit(s). Whether the instructor has access cannot be checked from here)
+  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 12 uncommitted file(s); 0 unpushed commit(s). Whether the instructor has access cannot be checked from here)
 - [ ] Find out the late-submission policy and the submission platform (the brief says both are announced separately) *(Planned: not set)* <!--id:req-late-->
   - Status: not done (cannot be checked automatically; tick when finished)
 

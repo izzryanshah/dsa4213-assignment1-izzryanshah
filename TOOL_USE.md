@@ -252,3 +252,12 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 
 - Copied `results/benchmark.json` and `results/part1_costs.csv` from the Colab results zip (scratch extraction, compared against local files first; only these two were new). No code changed.
 - Ran `update_results.py`; added a `results/RESULTS_LOG.md` entry.
+
+## 2026-10-13 (matched generation for all four models)
+
+- `src/generate.py`: `build_neural` loads the RNN, LSTM or Transformer (architecture from the training record, best checkpoint, parameter-count check); `build_model` now routes to it. Decoding code unchanged.
+- `configs/generations_{rnn,lstm,transformer}.json` (new): same decoding values as `configs/generations_ngram.json`.
+- `src/combine_generations.py` + `configs/combine_generations.json` (new): checks all four `results/generations_<model>.json` share decoding settings, prompts and samples, then writes `results/part1_generations.md` grouped by prompt. No commentary.
+- `notebooks/run_colab.ipynb`: new "6. Generate text" cells (bigram re-run is now 7). `DECISIONS.md` section P (P1 confirmed, P2 NEEDS REVIEW).
+- Smoke test only (CPU, random-weight checkpoints in a scratch folder, output not in `results/`): the three loaders and the combiner ran; the combiner refused a file whose temperature differed. Not a result. The real neural generation is Colab-only (CLAUDE.md rule 9).
+- `configs/update_results.json`: removed the hand-written generations task (auto-generated "Run `generations_<model>`" and "Run `combine_generations`" tasks replace it).

@@ -1,0 +1,31 @@
+{
+  "architecture": "rnn",
+  "layers": 2,
+  "hidden_size": 256,
+  "embedding_dim": 100,
+  "embedding_init": "random",
+  "context_length": null,
+  "learning_rate": null,
+  "batch_size": null,
+  "epochs": null,
+  "dropout": 0.3,
+  "vocab_size": 20000,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "model": "rnn",
+    "processed_dir": "data/processed",
+    "prompts_path": "prompts.txt",
+    "temperature": 1.0,
+    "top_k": 40,
+    "max_new_tokens": 50,
+    "num_samples": 1,
+    "banned_tokens": [
+      "<pad>",
+      "<unk>"
+    ],
+    "stop_at_eos": true,
+    "train_result": "results/train_rnn.json",
+    "checkpoint": "checkpoints/train_rnn.pt"
+  }
+}

@@ -539,6 +539,22 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 
 ---
 
+## P. Matched generation for Part I (`src/generate.py`, `src/combine_generations.py`, 2026-10-13)
+
+### P1. Shared decoding settings for all four models
+- **Value:** temperature 1.0; top-k 40; 50 new tokens; seed 0; 1 sample per prompt; `<pad>` and `<unk>` never sampled; stop at `<eos>`; prompts from `prompts.txt`. Identical in `configs/generations_{ngram,rnn,lstm,transformer}.json`, and `combine_generations.py` stops if they differ.
+- **Where:** `configs/generations_*.json`, `options.temperature`, `options.top_k`, `options.max_new_tokens`, `options.num_samples`, `seed`.
+- **Chosen by:** User, prompt (2026-10-13), from options offered ("proceed with your recommended set"; the temperature, top-k and length also match the earlier choice in G3). **Alternatives considered:** temperature 0.8 / 0.5; top-k 10 / off; 100 or 30 tokens; 3 samples per prompt; another seed.
+- **Status:** CONFIRMED
+
+### P2. Loading neural models and the combined file
+- **Value:** the neural model's size settings come from its training record (`results/train_<name>.json`), not from the generation config; the checkpoint's parameter count must match that record; generation runs on the GPU when available; the combined file `results/part1_generations.md` lists the shared settings, each source file's commit, hardware and date, and one section per prompt with the models in the order n-gram, RNN, LSTM, Transformer; it adds no commentary.
+- **Where:** `src/generate.py` (`build_neural`), `src/combine_generations.py`, `configs/combine_generations.json`.
+- **Chosen by:** Assistant default (shown in the design the user approved, not offered as options). **Alternatives:** model sizes typed into each generation config; one file per prompt; a table instead of block quotes.
+- **Status:** NEEDS REVIEW
+
+---
+
 ## NEEDS REVIEW summary
 
 **All 24 items resolved 2026-10-10.** The user reviewed every one (2-3 options with trade-offs each, per CLAUDE.md's record-keeping rules) and confirmed every current value as-is: A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, B1, B3, C1, C2, C3, D2, D3, D4, D5, D6, D7, D8, E1, E3. See each entry above for the specific options offered and the reasoning. No reruns were needed since nothing changed.
@@ -564,3 +580,5 @@ One item (D4) was accepted rather than fixed: the n-gram discount grid was widen
 **New since then (2026-10-13), pending the user:** N1 (causality test settings).
 
 **New since then (2026-10-13), pending the user:** O2 (benchmark details).
+
+**New since then (2026-10-13), pending the user:** P2 (neural generation loading and combined file).
