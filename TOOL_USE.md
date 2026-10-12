@@ -204,3 +204,29 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 
 - Unzipped the user's Drive download into a scratch folder, read the records and copied only `results/train_lstm.json` and `results/train_rnn.json` into `results/` (the zip's other files were not copied over the local ones; its `RESULTS_LOG.md` was identical to the local one).
 - Added two entries to `results/RESULTS_LOG.md` (commands taken from `notebooks/run_colab.ipynb`), re-ran `src/summarise_runs.py` and `src/update_results.py` (rebuilds `RESULTS.md` and `results/figures/`). No code changed. Not committed.
+
+## 2026-10-12 (ASSIGNMENT.md)
+
+- Added `ASSIGNMENT.md`: the brief's requirements and scope (parts, points, constraints, submission, grading, integrity rules), restated from `Assignment1_2026.pdf`. No code changed.
+
+## 2026-10-12 (project scope for future agents)
+
+- `CLAUDE.md`: new first section "Project scope and your role": the assignment's three parts and report, the agent's job versus the user's, a map of the key files, the run-name convention, and what exists so far. No code changed.
+
+## 2026-10-12 (Colab-only rule)
+
+- `CLAUDE.md` rule 9 (Colab-only runs: neural training, `benchmark.py`, neural generation, `extract_features.py`, GloVe download); replaced the dated "what exists" line with a pointer to `RESULTS.md`/`MY_TASKS.md`.
+- Checked what ran locally: only `train_bigram` (neural training on CPU: Apple M2, 16,610 s). `train_rnn` and `train_lstm` ran on a Tesla T4. No neural generation, benchmark, feature extraction or GloVe download exists locally. Nothing deleted.
+- `src/my_tasks.py` + `configs/update_results.json`: any Colab-only run whose record shows a CPU is listed in `MY_TASKS.md` as needing a Colab re-run (new run name with suffix `_colab`, local result kept); `done_if_result` drops finished static items (RNN, LSTM); Colab-only notes added to the benchmark, generation, GloVe, feature-extraction and Part II items; removed the outdated Colab-setup item (the repo URL is set).
+- `notebooks/run_colab.ipynb`: new cells "4. Re-run the bigram baseline" (`--run-name train_bigram_colab`) followed by `save_results()`.
+
+## 2026-10-12 (Transformer language model)
+
+- `src/models.py`: new `TransformerLanguageModel` (token embedding 100-d, learned positional embedding, N pre-norm decoder blocks via `nn.TransformerEncoder` with a causal mask built by `torch.triu`, final LayerNorm, linear output). The mask is explained line by line in the code.
+- `src/train.py`: `build_transformer` and a `transformer` entry in `MODELS`; `num_heads` and `max_positions` are read from the config's `options`.
+- `configs/train_transformer.json` (new); `configs/test_models.json` gained `num_heads`, `max_positions`.
+- `tests/test_models.py`: now also tests the Transformer (output shape, no future leakage, `<pad>` row zero, trainable embedding, gradients). Passed.
+- `notebooks/run_colab.ipynb`: new "4. Train the Transformer" cells; bigram re-run renumbered to 5.
+- `configs/update_results.json`: removed the "tell Claude to build the Transformer" item; updated the Transformer run command.
+- `DECISIONS.md`: new section M (M1, M2 confirmed; M3, M4 NEEDS REVIEW).
+- Smoke test (CPU, 40 fake reviews, scratch folder, nothing saved to `results/`): ran through `fit()`, loss went down.

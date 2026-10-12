@@ -2,7 +2,7 @@
 
 Run with:   python3 tests/test_models.py --config configs/test_models.json
 
-Checks, for both the RNN and the LSTM: output shape, no leakage from future
+Checks, for the RNN, the LSTM and the Transformer: output shape, no leakage from future
 tokens, the <pad> embedding row stays zero, and the embedding is trainable.
 Saves a pass/fail record to results/test_models.json.
 """
@@ -17,7 +17,7 @@ import torch
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from models import LSTMLanguageModel, RNNLanguageModel  # noqa: E402
+from models import LSTMLanguageModel, RNNLanguageModel, TransformerLanguageModel  # noqa: E402
 from runconfig import add_config_args, load_config, save_run  # noqa: E402
 
 PAD_ID, NUM_SPECIAL = 0, 3
@@ -33,9 +33,11 @@ def main():
     vocab_total = config["vocab_size"] + NUM_SPECIAL
     batch, seq = config["batch_size"], config["options"]["seq_len"]
     passed = []
-    for name, cls in [("rnn", RNNLanguageModel), ("lstm", LSTMLanguageModel)]:
+    for name, cls in [("rnn", RNNLanguageModel), ("lstm", LSTMLanguageModel),
+                      ("transformer", TransformerLanguageModel)]:
+        extra = (config["options"]["num_heads"], config["options"]["max_positions"]) if name == "transformer" else ()
         model = cls(vocab_total, PAD_ID, config["embedding_dim"], config["hidden_size"],
-                    config["layers"], config["dropout"])
+                    config["layers"], config["dropout"], *extra)
         model.eval()  # dropout off, so outputs are deterministic
         x = torch.randint(NUM_SPECIAL, vocab_total, (batch, seq))
 

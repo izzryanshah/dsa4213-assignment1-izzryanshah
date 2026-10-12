@@ -42,7 +42,7 @@ import torch.nn as nn
 from data import check_config_matches_data, load_processed_data, make_dataloader
 from evaluate import evaluate
 from runconfig import add_config_args, load_config, save_run
-from models import LSTMLanguageModel, RNNLanguageModel
+from models import LSTMLanguageModel, RNNLanguageModel, TransformerLanguageModel
 from sanity_check import BigramLM
 
 
@@ -69,9 +69,26 @@ def build_recurrent(model_class):
     return build
 
 
+def build_transformer(config, vocab):
+    """Make a TransformerLanguageModel from the config (num_heads, max_positions live in `options`)."""
+    opts = config["options"]
+    needed = {"embedding_dim": config["embedding_dim"], "hidden_size": config["hidden_size"],
+              "layers": config["layers"], "dropout": config["dropout"],
+              "options.num_heads": opts.get("num_heads"), "options.max_positions": opts.get("max_positions")}
+    missing = [k for k, v in needed.items() if v is None]
+    if missing:
+        raise SystemExit(f"transformer needs these config values, but they are null or missing: {missing}")
+    if config["embedding_init"] != "random":
+        raise SystemExit(f"embedding_init must be 'random' for now, got {config['embedding_init']!r}")
+    if config["embedding_dim"] % opts["num_heads"] != 0:
+        raise SystemExit("embedding_dim must be divisible by options.num_heads")
+    return TransformerLanguageModel(len(vocab), vocab.pad_id, config["embedding_dim"], config["hidden_size"],
+                                    config["layers"], config["dropout"], opts["num_heads"], opts["max_positions"])
+
+
 # --model name -> function(config, vocab) that returns an nn.Module.
 MODELS = {"bigram": build_bigram, "rnn": build_recurrent(RNNLanguageModel),
-          "lstm": build_recurrent(LSTMLanguageModel)}
+          "lstm": build_recurrent(LSTMLanguageModel), "transformer": build_transformer}
 
 
 def set_seed(seed):

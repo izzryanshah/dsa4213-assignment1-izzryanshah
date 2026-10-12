@@ -1,6 +1,6 @@
 # Results
 
-Rebuilt by `src/update_results.py` on 2026-10-12T21:38:20+08:00 from 13 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-12T12:38:21+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
+Rebuilt by `src/update_results.py` on 2026-10-12T21:58:36+08:00 from 13 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-12T21:57:48+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
 
 Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III](#part-iii) · [Settings](#settings) · [Checks](#checks)
 
@@ -453,8 +453,8 @@ Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III
 |---|---|
 | Command | `/usr/local/bin/python3 tests/test_models.py --config configs/test_models.json` |
 | Script | `tests/test_models.py` |
-| Date | 2026-10-12T12:38:21+08:00 |
-| Git commit | `7ef446d (uncommitted changes at run time)` |
+| Date | 2026-10-12T21:57:48+08:00 |
+| Git commit | `9afc2c8 (uncommitted changes at run time)` |
 | Hardware | CPU: Apple M2 (Darwin arm64) |
 | Seed | 0 |
 | Result file | `results/test_models.json` |
@@ -477,13 +477,15 @@ Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III
 | `subsample_size` | — |
 | `seed` | 0 |
 | `options.seq_len` | 7 |
+| `options.num_heads` | 4 |
+| `options.max_positions` | 16 |
 
 **Key numbers**
 
 | Metric | Value |
 |---|---|
 | `passed` | True |
-| `models` | `["rnn", "lstm"]` |
+| `models` | `["rnn", "lstm", "transformer"]` |
 
 #### `test_train`
 
@@ -858,7 +860,7 @@ No runs yet.
 
 Source: `DECISIONS.md` (copied as written there).
 
-### NEEDS REVIEW (18)
+### NEEDS REVIEW (20)
 
 | ID | Decision | Status |
 |---|---|---|
@@ -880,8 +882,10 @@ Source: `DECISIONS.md` (copied as written there).
 | K3 | What counts as "waiting on me now", and how interpretation items are counted | NEEDS REVIEW |
 | L3 | Dropout placement and layout | NEEDS REVIEW |
 | L4 | Smoke-test data | NEEDS REVIEW |
+| M3 | Block style and other defaults | NEEDS REVIEW |
+| M4 | Training settings copied from the LSTM | NEEDS REVIEW |
 
-### All design choices (61)
+### All design choices (65)
 
 | ID | Decision | Value | Where | Chosen by | Status |
 |---|---|---|---|---|---|
@@ -946,6 +950,10 @@ Source: `DECISIONS.md` (copied as written there).
 | L2 | RNN nonlinearity | tanh. | `src/models.py` (`RNNLanguageModel`, `nonlinearity="tanh"`). | User, prompt (2026-10-12), from options offered. | CONFIRMED |
 | L3 | Dropout placement and layout | dropout after the embedding, between stacked recurrent layers (PyTorch's `dropout=`, set to 0 when there is 1 layer) and before the output layer; unidirectional recurrent layers; no weight tying; the final hidden state is not carried between windows. | `src/models.py` (`forward` of both classes). | Assistant default (shown in the design the user approved, not offered as options). | NEEDS REVIEW |
 | L4 | Smoke-test data | the first 60 train / 40 val / 40 test reviews of the saved splits, copied to a scratch folder (not `data/processed`), 1 epoch, output to a scratch results folder. | scratchpad only (not a repository file). | Assistant default for how to make the "small subset" (the user asked for a small subset). | NEEDS REVIEW |
+| M1 | Size: blocks, heads, feed-forward width | 2 decoder blocks, 4 attention heads (25 dims each), feed-forward width 256, dropout 0.3, embedding dimension 100 (random, trainable). | `configs/train_transformer.json` lines 3-4 (`layers`, `hidden_size`), 11 (`dropout`) and `options.num_heads`. | User, prompt (2026-10-12), from options offered ("proceed with your recommended set"). | CONFIRMED |
+| M2 | Positional embedding table size | `max_positions` 256 (learned positional embeddings), while training windows stay at `context_length` 64. Positions 64-255 are never updated in training (they stay at their random start values), but evaluation (`eval_max_length` 256) feeds sequences up to 256. | `configs/train_transformer.json`, `options.max_positions`. | User, prompt (2026-10-12), from options offered (256 / 64 with sliding window / train at 256). | CONFIRMED |
+| M3 | Block style and other defaults | pre-norm blocks (LayerNorm before attention and feed-forward) plus one final LayerNorm; GELU activation; dropout after the embeddings and inside each block; positional embedding starts at PyTorch's default random values; no weight tying; causal mask built with `torch.triu` and passed to `nn.TransformerEncoder`. | `src/models.py`, class `TransformerLanguageModel`. | Assistant default (shown in the design the user approved, not offered as options). | NEEDS REVIEW |
+| M4 | Training settings copied from the LSTM | learning rate 0.001, batch size 64, epochs 20, context length 64, patience 3, grad clip 1.0, vocabulary 20000, seed 0. | `configs/train_transformer.json`. | Assistant default (copied from `configs/train_lstm.json` so the comparison is matched; not offered as options). | NEEDS REVIEW |
 
 ### My notes
 
@@ -974,13 +982,13 @@ Source: `DECISIONS.md` (copied as written there).
 #### Test set used only for final evaluation: PASS
 
 - `src/ngram.py`: `data.test` used at line(s) [333]; `tune_discounts(...)` called at line(s) [321]; single use after the call
-- `src/train.py`: `data.test` used at line(s) [203]; `fit(...)` called at line(s) [199]; single use after the call
+- `src/train.py`: `data.test` used at line(s) [220]; `fit(...)` called at line(s) [216]; single use after the call
 - other files in `src/` that use `data.test`: none
 - method: static scan of the source (Python `ast`), not a run-time trace
 
 #### Padding excluded from the loss: PASS
 
-- `src/train.py`: `CrossEntropyLoss(ignore_index=...)` at line(s) [133]; without `ignore_index` at none
+- `src/train.py`: `CrossEntropyLoss(ignore_index=...)` at line(s) [150]; without `ignore_index` at none
 - `src/sanity_check.py`: `CrossEntropyLoss(ignore_index=...)` at line(s) [78]; without `ignore_index` at none
 - `test_padding_is_ignored` in `results/test_evaluate.json`: passed
 

@@ -142,3 +142,15 @@ Before `prompts.txt` existed, `src/generate.py` was run end to end twice (n-gram
 - **Script / command:** `src/train.py`; `python -u src/train.py --config configs/train_rnn.json --model rnn` (command from `notebooks/run_colab.ipynb`; seed 0; git commit `7b9bbe6`, `git_dirty: true`).
 - **Key numbers:** hidden 256, 2 layers, dropout 0.3; 20 epochs run (epoch cap), not stopped early; best epoch 20; best validation loss 4.7053; test cross-entropy 4.6947 nats, test perplexity 109.37; 7,364,303 trainable parameters; training time 3,387.6 s; Tesla T4.
 - **File:** `results/train_rnn.json`
+
+### 2026-10-12 — Colab-only audit (no new run)
+- **Script:** `src/update_results.py`
+- **Command:** `python3 src/update_results.py --config configs/update_results.json`
+- **Key numbers:** 13 run records. Colab-only runs found on a CPU: 1 (`train_bigram`, CPU: Apple M2, 16,610.5 s). `train_rnn` and `train_lstm`: GPU: Tesla T4. Pending Colab re-run listed in `MY_TASKS.md`: `train_bigram` as `train_bigram_colab`.
+- **File:** `MY_TASKS.md`
+
+### 2026-10-12 — Model tests including the Transformer (no training run)
+- **Script:** `tests/test_models.py`
+- **Command:** `python3 tests/test_models.py --config configs/test_models.json`
+- **Key numbers:** passed: rnn, lstm, transformer (seed 0).
+- **File:** `results/test_models.json`

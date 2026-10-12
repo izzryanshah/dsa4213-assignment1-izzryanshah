@@ -105,6 +105,28 @@ def pending_runs(opts, runs):
     return pending
 
 
+def colab_only_local_runs(opts, runs):
+    """Runs of a Colab-only script (neural training, benchmark, feature extraction, neural generation)
+    whose record shows they ran on a CPU, and that have no Colab re-run record yet.
+
+    Returns (run, "script --config configs/<run>.json [--model ...]", record) tuples.
+    """
+    found = []
+    for run, rec in runs.items():
+        script = rec.get("script", "")
+        neural_generation = script == opts["colab_only_generate_script"] and \
+            (rec["config"].get("options") or {}).get("model") != opts["colab_only_generate_skip_model"]
+        if run.startswith(opts["test_run_prefix"]) or run.endswith(opts["colab_rerun_suffix"]):
+            continue
+        if script not in opts["colab_only_scripts"] and not neural_generation:
+            continue
+        if not str(rec.get("hardware", "")).startswith("CPU") or f"{run}{opts['colab_rerun_suffix']}" in runs:
+            continue
+        model_flag = f" --model {rec['config']['architecture']}" if script == "src/train.py" else ""
+        found.append((run, f"{script} --config configs/{run}.json{model_flag}", rec))
+    return found
+
+
 def script_for(run, rules):
     for candidate in (f"src/{run}.py", f"tests/{run}.py"):
         if os.path.exists(os.path.join(REPO_ROOT, candidate)):
@@ -172,6 +194,8 @@ def build_items(opts, runs, decisions, checks, notes, section_runs, git):
     if needs:
         w.append(make_item("wait-decisions", f"Review {len(needs)} NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review)",
                            section_key="waiting"))
+    for run, _, _ in colab_only_local_runs(opts, runs):
+        w.append(make_item(f"wait-rerun-{run}", f"Re-run `{run}` in Colab (it ran locally): see [Runs to do](#runs-to-do)", section_key="waiting"))
     for run in pending:
         w.append(make_item(f"wait-run-{run}", f"Start run `{run}`: see [Runs to do](#runs-to-do)", section_key="waiting"))
     if pending_notes:
@@ -205,7 +229,19 @@ def build_items(opts, runs, decisions, checks, notes, section_runs, git):
              f"Time: {time_estimate(script, runs)}",
              f"Produces: `results/{run}.json`, then a new section in `RESULTS.md` after `update_results.py`"], "runs"))
     for extra in opts["extra_items"]:  # items from the assignment brief that scripts cannot detect
+        # `done_if_result`: drop the item once results/<that run>.json exists.
+        if extra.get("done_if_result") and extra["done_if_result"] in runs:
+            continue
         items[extra["section"]].append(make_item(extra["id"], extra["text"], extra.get("details", []), extra["section"]))
+    for run, command_line, rec in colab_only_local_runs(opts, runs):
+        suffix = opts["colab_rerun_suffix"]
+        seconds = (rec.get("metrics") or {}).get("train_seconds")
+        items["runs"].append(make_item(
+            f"rerun-{run}", f"Re-run `{run}` in Colab: it was run locally on {rec.get('hardware')}, and Colab-only runs must come from the Colab GPU",
+            [f"Command (Colab cell): `!python -u {command_line} --run-name {run}{suffix}` (a new run name, so the local result is kept)",
+             f"Time: the local run took {seconds:,.0f} s (about {seconds / 3600:.1f} h) on CPU; GPU time not known yet" if seconds
+             else "Time: not known yet",
+             f"Produces: `results/{run}{suffix}.json`, `checkpoints/{run}{suffix}.pt`; the local `results/{run}.json` stays as it is"], "runs"))
 
     # --- Results to interpret ------------------------------------------------
     for key in pending_notes:

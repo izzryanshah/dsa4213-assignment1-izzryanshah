@@ -485,6 +485,34 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 
 ---
 
+## M. Transformer language model (`src/models.py`, 2026-10-12)
+
+### M1. Size: blocks, heads, feed-forward width
+- **Value:** 2 decoder blocks, 4 attention heads (25 dims each), feed-forward width 256, dropout 0.3, embedding dimension 100 (random, trainable).
+- **Where:** `configs/train_transformer.json` lines 3-4 (`layers`, `hidden_size`), 11 (`dropout`) and `options.num_heads`.
+- **Chosen by:** User, prompt (2026-10-12), from options offered ("proceed with your recommended set"). **Alternatives considered:** blocks 1 / 4; heads 2 / 5; feed-forward 400 / 512.
+- **Status:** CONFIRMED
+
+### M2. Positional embedding table size
+- **Value:** `max_positions` 256 (learned positional embeddings), while training windows stay at `context_length` 64. Positions 64-255 are never updated in training (they stay at their random start values), but evaluation (`eval_max_length` 256) feeds sequences up to 256.
+- **Where:** `configs/train_transformer.json`, `options.max_positions`.
+- **Chosen by:** User, prompt (2026-10-12), from options offered (256 / 64 with sliding window / train at 256). **Alternatives considered:** 64 with a sliding window in evaluate/generate; context_length 256.
+- **Status:** CONFIRMED
+
+### M3. Block style and other defaults
+- **Value:** pre-norm blocks (LayerNorm before attention and feed-forward) plus one final LayerNorm; GELU activation; dropout after the embeddings and inside each block; positional embedding starts at PyTorch's default random values; no weight tying; causal mask built with `torch.triu` and passed to `nn.TransformerEncoder`.
+- **Where:** `src/models.py`, class `TransformerLanguageModel`.
+- **Chosen by:** Assistant default (shown in the design the user approved, not offered as options). **Alternatives:** post-norm blocks; ReLU; tied input/output embeddings.
+- **Status:** NEEDS REVIEW
+
+### M4. Training settings copied from the LSTM
+- **Value:** learning rate 0.001, batch size 64, epochs 20, context length 64, patience 3, grad clip 1.0, vocabulary 20000, seed 0.
+- **Where:** `configs/train_transformer.json`.
+- **Chosen by:** Assistant default (copied from `configs/train_lstm.json` so the comparison is matched; not offered as options). **Alternatives:** a smaller learning rate or warmup, which Transformers often prefer.
+- **Status:** NEEDS REVIEW
+
+---
+
 ## NEEDS REVIEW summary
 
 **All 24 items resolved 2026-10-10.** The user reviewed every one (2-3 options with trade-offs each, per CLAUDE.md's record-keeping rules) and confirmed every current value as-is: A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, B1, B3, C1, C2, C3, D2, D3, D4, D5, D6, D7, D8, E1, E3. See each entry above for the specific options offered and the reasoning. No reruns were needed since nothing changed.
@@ -504,3 +532,5 @@ One item (D4) was accepted rather than fixed: the n-gram discount grid was widen
 **2026-10-12, after reading the brief:** J1 and K1 were revised (parts now follow the brief).
 
 **New since that review (2026-10-12), pending the user:** L3 (dropout placement and layout), L4 (smoke-test data).
+
+**New since then (2026-10-12), pending the user:** M3, M4 (Transformer defaults).

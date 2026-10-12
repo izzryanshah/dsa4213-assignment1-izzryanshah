@@ -1,0 +1,25 @@
+{
+  "architecture": "transformer",
+  "layers": 2,
+  "hidden_size": 256,
+  "embedding_dim": 100,
+  "embedding_init": "random",
+  "context_length": 64,
+  "learning_rate": 0.001,
+  "batch_size": 64,
+  "epochs": 20,
+  "dropout": 0.3,
+  "vocab_size": 20000,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "processed_dir": "data/processed",
+    "checkpoint_dir": "checkpoints",
+    "patience": 3,
+    "grad_clip": 1.0,
+    "eval_max_length": 256,
+    "eval_batch_size": 64,
+    "num_heads": 4,
+    "max_positions": 256
+  }
+}

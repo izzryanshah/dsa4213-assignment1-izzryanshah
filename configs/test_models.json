@@ -13,6 +13,8 @@
   "subsample_size": null,
   "seed": 0,
   "options": {
-    "seq_len": 7
+    "seq_len": 7,
+    "num_heads": 4,
+    "max_positions": 16
   }
 }
