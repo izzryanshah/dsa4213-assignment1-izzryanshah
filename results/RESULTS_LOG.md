@@ -132,3 +132,13 @@ Before `prompts.txt` existed, `src/generate.py` was run end to end twice (n-gram
 - **Command:** `python3 src/update_results.py --config configs/update_results.json`
 - **Key numbers:** 10 run records; Checks: 3 PASS, 1 FAIL (all models scored on identical test targets: `ngram` 1,390,673 targets vs `train_bigram` 981,353 targets, different checksums), 3 NOT YET AVAILABLE. No new run record.
 - **File:** `RESULTS.md`, `MY_TASKS.md`
+
+### 2026-10-12 06:19 UTC — LSTM language model training (Colab)
+- **Script / command:** `src/train.py`; `python -u src/train.py --config configs/train_lstm.json --model lstm` (command from `notebooks/run_colab.ipynb`; seed 0; git commit `7b9bbe6`, `git_dirty: false`).
+- **Key numbers:** hidden 256, 2 layers, dropout 0.3; 20 epochs run (epoch cap), not stopped early; best epoch 20; best validation loss 4.3990; test cross-entropy 4.3876 nats, test perplexity 80.45; 8,033,999 trainable parameters; training time 3,849.7 s; Tesla T4.
+- **File:** `results/train_lstm.json`
+
+### 2026-10-12 07:16 UTC — RNN language model training (Colab)
+- **Script / command:** `src/train.py`; `python -u src/train.py --config configs/train_rnn.json --model rnn` (command from `notebooks/run_colab.ipynb`; seed 0; git commit `7b9bbe6`, `git_dirty: true`).
+- **Key numbers:** hidden 256, 2 layers, dropout 0.3; 20 epochs run (epoch cap), not stopped early; best epoch 20; best validation loss 4.7053; test cross-entropy 4.6947 nats, test perplexity 109.37; 7,364,303 trainable parameters; training time 3,387.6 s; Tesla T4.
+- **File:** `results/train_rnn.json`
