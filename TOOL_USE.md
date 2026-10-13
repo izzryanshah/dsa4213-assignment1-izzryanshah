@@ -261,3 +261,32 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 - `notebooks/run_colab.ipynb`: new "6. Generate text" cells (bigram re-run is now 7). `DECISIONS.md` section P (P1 confirmed, P2 NEEDS REVIEW).
 - Smoke test only (CPU, random-weight checkpoints in a scratch folder, output not in `results/`): the three loaders and the combiner ran; the combiner refused a file whose temperature differed. Not a result. The real neural generation is Colab-only (CLAUDE.md rule 9).
 - `configs/update_results.json`: removed the hand-written generations task (auto-generated "Run `generations_<model>`" and "Run `combine_generations`" tasks replace it).
+
+## 2026-10-13 (generation results imported)
+
+- Copied `results/generations_{rnn,lstm,transformer}.json`, `results/combine_generations.json` and `results/part1_generations.md` from the Colab results zip (scratch extraction, compared against local files first; only these five were new). Re-ran the combiner locally into a scratch folder: output identical to the Colab file. No code changed.
+- Ran `update_results.py`; added a `results/RESULTS_LOG.md` entry.
+
+## 2026-10-13 (own Skip-gram embeddings)
+
+- `src/train_word2vec.py` + `configs/word2vec_cost.json` (new): trains gensim Skip-gram (dim 100, seed 0, window 5, min_count 1, epochs 10) on the TRAINING split only, one sentence per review; times vocabulary build and training separately; writes `data/embeddings/w2v_100d.npy` (shape 20003 x 100, row i = vocabulary id i, `<pad>` row zeros; stops if any other word has no vector) and `results/word2vec_cost.json`.
+- Ran locally (allowed: word2vec is not Colab-only). Sanity check only: nearest neighbours of "good", "terrible", "actor", "boring" are sensible. gensim printed many "Exception ignored in our_dot_float" lines (not investigated; output looks fine). Reproducibility with a fixed seed was not tested by a second run.
+- `DECISIONS.md` section Q (Q1 confirmed, Q2 NEEDS REVIEW). Ran `summarise_runs.py` and `update_results.py`.
+
+## 2026-10-13 (Part II architecture)
+
+- `DECISIONS.md` section R: R1 records the user's choice of the LSTM for Part II. No code changed.
+
+## 2026-10-13 (word2vec: coverage and missing-word rule)
+
+- `src/embedding_utils.py` (new): `fill_missing_rows` (random normal at the real vectors' scale, `<pad>` zero, seeded) and `coverage` (% of vocabulary types and training tokens with a real vector). Shared so the GloVe script builds its table the same way.
+- `src/train_word2vec.py`: now reports coverage before filling, fills any word without a vector with that rule (previously it stopped), and saves the coverage and fill details to `results/word2vec_cost.json`. Trains on the same training token stream as the LMs (`train.npz`; `<unk>` is a token; no subsample configured).
+- Re-ran locally: coverage 20,002/20,002 types (100%), 100% of tokens, 0 rows filled; vectors identical to the previous run (same seed, one worker). Fill function checked on a small synthetic example only.
+- `DECISIONS.md`: Q2 confirmed (option A), R2 added. Ran `update_results.py`.
+
+## 2026-10-13 (public GloVe loader)
+
+- `src/load_glove.py` + `configs/glove_coverage.json` (new): reads `glove.6B.100d.txt`, keeps only words in our vocabulary, builds a (20,003 x 100) table in vocabulary order, reports coverage (% of types and % of training tokens, with and without `<unk>`/`<eos>`), fills missing rows with the shared R2 rule, lists the 20 most frequent missing words, and saves `data/embeddings/glove_100d.npy` and `results/glove_coverage.json`.
+- Not run on real GloVe: downloading GloVe is Colab-only (CLAUDE.md rule 9) and no file is on this machine, so there is no real coverage figure yet. Smoke test only, on a made-up GloVe-format file in a scratch folder (60% of words): the loader, coverage, fill and top-missing list ran; output not in `results/` or `data/embeddings/`. Not a result.
+- `notebooks/run_colab.ipynb`: new section 8 (download, `load_glove.py`, copy to Drive, restore `w2v_100d.npy`, `save_results()`).
+- `README.md`: new section "Public GloVe vectors" with download instructions and the citation. `configs/update_results.json`: the GloVe task now has its command and time. `DECISIONS.md`: S1 NEEDS REVIEW.

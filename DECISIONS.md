@@ -555,6 +555,45 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 
 ---
 
+## Q. Own word2vec embeddings (`src/train_word2vec.py`, 2026-10-13)
+
+### Q1. Algorithm
+- **Value:** Skip-gram (`sg=1`).
+- **Where:** `configs/word2vec_cost.json`, `options.sg`.
+- **Chosen by:** User, 2026-10-13, from Skip-gram / CBOW / config option. **Alternatives considered:** CBOW (faster, weaker on rare words).
+- **Status:** CONFIRMED
+
+### Q2. gensim settings and training text (confirmed by the user 2026-10-13; the repeat request re-affirmed Skip-gram as Q1)
+- **Value:** window 5; min_count 1; epochs 10; negative 5; sample 1e-3; workers 1 (for reproducibility with a seed); vector size 100; seed 0. One "sentence" per training review (including its `<eos>`; `<unk>` is a normal token). `<pad>` row is all zeros.
+- **Where:** `configs/word2vec_cost.json` (`epochs`, `embedding_dim`, `seed`, `options.*`); text built in `src/train_word2vec.py` (`reviews_as_word_lists`).
+- **Chosen by:** User, 2026-10-13 (second request), option A of three offered: A window 5 / min_count 1 / epochs 10 (chosen); B window 5 / min_count 20 / epochs 10 (coverage 87% of types, 99.6% of tokens); C window 10 / min_count 1 / epochs 20 (about 4x the cost). **Other alternatives:** several workers (faster, not reproducible); `<eos>` dropped from the text.
+- **Status:** CONFIRMED
+
+---
+
+## R. Part II setup (2026-10-13)
+
+### R1. Architecture for Part II
+- **Value:** LSTM (2 layers, hidden 256, context 64, dropout 0.3, lr 0.001, batch 64, up to 20 epochs, seed 0, as in `configs/train_lstm.json`). The random-embedding setting reuses the Part I run `train_lstm` (test perplexity 80.45, Colab T4); the two frozen-embedding runs must use exactly these settings except the embedding.
+- **Where:** `configs/train_lstm.json` (to be copied to `configs/p2_*.json`).
+- **Chosen by:** User, 2026-10-13. **Alternatives considered:** RNN; Transformer (not discussed in detail).
+- **Status:** CONFIRMED
+
+### R2. Initialising vocabulary words that have no vector (own word2vec and public GloVe)
+- **Value:** rows without a vector are drawn from a normal distribution, mean 0, standard deviation = that of all real vectors in the same table, seeded with the run's seed. The `<pad>` row is always zeros. The table is then kept fixed. The same function is used for both tables.
+- **Where:** `src/embedding_utils.py` (`fill_missing_rows`); called from `src/train_word2vec.py`. (The GloVe script, not yet written, must call it too.)
+- **Chosen by:** User, 2026-10-13, from three options. **Alternatives considered:** mean of the known vectors (all missing words identical); all zeros.
+- **Status:** CONFIRMED
+- **Note:** with the chosen word2vec settings no row needed filling (coverage 100%), so this rule has been tested only on a small synthetic example for word2vec; it will matter for GloVe.
+
+### S1. Which public GloVe file
+- **Value:** `glove.6B.100d.txt` (Wikipedia + Gigaword, 6B tokens, 400k lower-cased words, 100-d), matched to our tokens by exact string. Missing words (including `<unk>`, `<eos>`) follow R2 (seeded small random normal, `<pad>` zeros); coverage is reported with `<unk>`/`<eos>` counted as missing, and also without them.
+- **Where:** `configs/glove_coverage.json` (`options.glove_path`, `options.output_path`, `options.top_missing` = 20); `src/load_glove.py`.
+- **Chosen by:** Assistant default (the request said "GloVe 100d" and R2 fixed the missing-word rule). **Alternatives:** `glove.twitter.27B.100d` (cased-agnostic tweets, different domain, 1.2M words); `glove.840B.300d` (wrong dimension). 6B is the one that matches our lower-cased text and 100-d.
+- **Status:** NEEDS REVIEW
+
+---
+
 ## NEEDS REVIEW summary
 
 **All 24 items resolved 2026-10-10.** The user reviewed every one (2-3 options with trade-offs each, per CLAUDE.md's record-keeping rules) and confirmed every current value as-is: A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, B1, B3, C1, C2, C3, D2, D3, D4, D5, D6, D7, D8, E1, E3. See each entry above for the specific options offered and the reasoning. No reruns were needed since nothing changed.
@@ -582,3 +621,11 @@ One item (D4) was accepted rather than fixed: the n-gram discount grid was widen
 **New since then (2026-10-13), pending the user:** O2 (benchmark details).
 
 **New since then (2026-10-13), pending the user:** P2 (neural generation loading and combined file).
+
+**New since then (2026-10-13), pending the user:** Q2 (word2vec settings). Q1 (Skip-gram) confirmed.
+
+**2026-10-13:** R1 (Part II uses the LSTM) confirmed by the user.
+
+**2026-10-13:** Q2 (word2vec settings) confirmed; R2 (missing-word fill) confirmed. Nothing new pending.
+
+**New since then (2026-10-13), pending the user:** S1 (which GloVe file).

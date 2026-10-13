@@ -1,6 +1,6 @@
 # My tasks
 
-Rebuilt by `src/update_results.py` on Tue 13 Oct 2026, 02:01 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (3 day(s) left; today is Tue 13 Oct).
+Rebuilt by `src/update_results.py` on Tue 13 Oct 2026, 15:26 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (3 day(s) left; today is Tue 13 Oct).
 
 Tick a box yourself with `[x]`; this file never ticks anything for you, and keeps your ticks and anything you write between the marker lines. Do not delete the `<!--id:...-->` tags at the end of each line.
 
@@ -9,15 +9,12 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 ## Waiting on me now
 
 - [ ] Put your planned day for each task into `schedule` in `configs/update_results.json` (item id -> `YYYY-MM-DD`, or `section:<key>` -> date). Until then every item shows "Planned: not set" and nothing can be overdue *(Planned: not set)* <!--id:wait-schedule-->
-- [ ] Review 23 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
-- [ ] Start run `combine_generations`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-combine_generations-->
-- [ ] Start run `generations_lstm`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-generations_lstm-->
-- [ ] Start run `generations_rnn`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-generations_rnn-->
-- [ ] Start run `generations_transformer`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-generations_transformer-->
+- [ ] Review 24 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
+- [ ] Start run `glove_coverage`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-glove_coverage-->
 - [ ] Write your notes for Data, Part I: see [Results to interpret](#results-to-interpret) *(Planned: not set)* <!--id:wait-notes-->
 - [ ] Fix failing check: Test set used only for final evaluation: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-test-set-used-only-for-final-evaluation-->
 - [ ] Fix failing check: All models scored on identical test targets: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-all-models-scored-on-identical-test-targets-->
-- [ ] Commit and push: 12 uncommitted file(s), 0 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
+- [ ] Commit and push: 20 uncommitted file(s), 0 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
 - [ ] Choose your comparison question (brief, "Experimental Focus": e.g. how model families differ on your corpus, whether fixed embeddings help, or whether better next-token prediction leads to better classification). The report is organised around it *(Planned: not set)* <!--id:w-question-->
   - Tell Claude your question; it is then logged in `DECISIONS.md`
 
@@ -121,6 +118,10 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Options: model sizes typed into each generation config; one file per prompt; a table instead of block quotes.
   - Current value: the neural model's size settings come from its training record (`results/train_<name>.json`), not from the generation config; the checkpoint's parameter count m...
   - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry P2 (line 550), which sets `Chosen by` and `Status`
+- [ ] **S1** Which public GloVe file *(Planned: not set)* <!--id:dec-S1-->
+  - Options: `glove.twitter.27B.100d` (cased-agnostic tweets, different domain, 1.2M words); `glove.840B.300d` (wrong dimension). 6B is the one that matches our lower-cased text and 100-d.
+  - Current value: `glove.6B.100d.txt` (Wikipedia + Gigaword, 6B tokens, 400k lower-cased words, 100-d), matched to our tokens by exact string. Missing words (including `<unk>`, `...
+  - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry S1 (line 589), which sets `Chosen by` and `Status`
 - [ ] Part II: choose which one Part I architecture (RNN, LSTM or Transformer) gets the three embedding settings *(Planned: not set)* <!--id:dec-p2-arch-->
   - Decide after Part I results exist
 - [ ] Part III: choose the labeled task and dataset, and the two or more representation choices to compare (brief examples: LSTM vs Transformer, two embedding variants, two pooling methods) *(Planned: not set)* <!--id:dec-p3-task-->
@@ -134,30 +135,19 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 
 ## Runs to do
 
-- [ ] Run `combine_generations` *(Planned: not set)* <!--id:run-combine_generations-->
-  - Command: `python3 src/combine_generations.py --config configs/combine_generations.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+- [ ] Run `glove_coverage` *(Planned: not set)* <!--id:run-glove_coverage-->
+  - Command: `(no script known for configs/glove_coverage.json)` (in Colab: the same command with a leading `!`, from inside the repo folder)
   - Time: no earlier run of this script has a recorded time
-  - Produces: `results/combine_generations.json`, then a new section in `RESULTS.md` after `update_results.py`
-- [ ] Run `generations_lstm` *(Planned: not set)* <!--id:run-generations_lstm-->
-  - Command: `python3 src/generate.py --config configs/generations_lstm.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
-  - Time: no earlier run of this script has a recorded time
-  - Produces: `results/generations_lstm.json`, then a new section in `RESULTS.md` after `update_results.py`
-- [ ] Run `generations_rnn` *(Planned: not set)* <!--id:run-generations_rnn-->
-  - Command: `python3 src/generate.py --config configs/generations_rnn.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
-  - Time: no earlier run of this script has a recorded time
-  - Produces: `results/generations_rnn.json`, then a new section in `RESULTS.md` after `update_results.py`
-- [ ] Run `generations_transformer` *(Planned: not set)* <!--id:run-generations_transformer-->
-  - Command: `python3 src/generate.py --config configs/generations_transformer.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
-  - Time: no earlier run of this script has a recorded time
-  - Produces: `results/generations_transformer.json`, then a new section in `RESULTS.md` after `update_results.py`
+  - Produces: `results/glove_coverage.json`, then a new section in `RESULTS.md` after `update_results.py`
 - [ ] Download public GloVe 100d vectors (GloVe 6B, Stanford NLP: nlp.stanford.edu/projects/glove) in Colab, never on this machine *(Planned: not set)* <!--id:run-p2-glove-->
-  - Command: not available yet: the Colab cell is added together with the Part II code that loads the file; the vectors file must not be committed
-  - Produces: the vectors file on Colab/Drive; cite Pennington et al. (2014) in the report
+  - Command: `notebooks/run_colab.ipynb`, section 8 (downloads glove.6B.zip, then `python -u src/load_glove.py --config configs/glove_coverage.json`)
+  - Time: a few minutes (about 822 MB download)
+  - Produces: `data/embeddings/glove_100d.npy` (copied to Drive) and `results/glove_coverage.json` (coverage and 20 most frequent missing words); the GloVe file itself must not be committed; cite Pennington et al. (2014) in the report
   - Colab only (CLAUDE.md rule 9): never run on this machine
 - [ ] Train your own word embeddings on the training split (Skip-gram, CBOW or GloVe), then freeze them *(Planned: not set)* <!--id:run-p2-own-->
-  - Command: not available yet: no embedding-training script exists yet
-  - Time: not known yet; the brief wants this cost reported separately from LM training
-  - Produces: the vectors file and a `p2_` run record
+  - Command: `python3 src/train_word2vec.py --config configs/word2vec_cost.json` (already run once locally: `results/word2vec_cost.json`, `data/embeddings/w2v_100d.npy`)
+  - Time: about 5 minutes on the laptop CPU (cost recorded separately from LM training)
+  - Produces: the vectors file and `results/word2vec_cost.json`; still to do: copy `w2v_100d.npy` to Drive for the Colab LM runs
   - May run locally (word2vec/embedding training is not Colab-only)
 - [ ] Train the two new Part II language models (own frozen embeddings; public frozen embeddings), same architecture and procedure as the reused Part I model *(Planned: not set)* <!--id:run-p2-lms-->
   - Command: not available yet: `src/train.py` cannot load or freeze pretrained embeddings yet; name the runs `p2_*` so they land in Part II
@@ -182,7 +172,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Runs in this section: `data`, `inspect_data`, `show_batch`
   - Where: the empty *My notes* block at the end of the Data section of `RESULTS.md`
 - [ ] Write your notes for [Part I](RESULTS.md#part-i) *(Planned: not set)* <!--id:interp-part1-->
-  - Runs in this section: `generations_ngram`, `ngram`, `sanity_check`, `test_causality`, `test_evaluate`, `test_generate`, `test_models`, `test_train`, `train_bigram`, `train_bigram_colab`, `train_lstm`, `train_rnn`, `train_transformer`
+  - Runs in this section: `generations_lstm`, `generations_ngram`, `generations_rnn`, `generations_transformer`, `ngram`, `sanity_check`, `test_causality`, `test_evaluate`, `test_generate`, `test_models`, `test_train`, `train_bigram`, `train_bigram_colab`, `train_lstm`, `train_rnn`, `train_transformer`
   - Where: the empty *My notes* block at the end of the Part I section of `RESULTS.md`
 
 ### Added by me
@@ -247,7 +237,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 - [ ] Nothing submitted contains API keys, credentials or data you may not share (`data/` is git-ignored) *(Planned: not set)* <!--id:req-secrets-->
   - Status: not done (cannot be checked automatically; tick when finished)
 - [ ] Submit the PDF report and the code (a GitHub link the instructor can open, or a zip) *(Planned: not set)* <!--id:req-submit-->
-  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 12 uncommitted file(s); 0 unpushed commit(s). Whether the instructor has access cannot be checked from here)
+  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 20 uncommitted file(s); 0 unpushed commit(s). Whether the instructor has access cannot be checked from here)
 - [ ] Find out the late-submission policy and the submission platform (the brief says both are announced separately) *(Planned: not set)* <!--id:req-late-->
   - Status: not done (cannot be checked automatically; tick when finished)
 

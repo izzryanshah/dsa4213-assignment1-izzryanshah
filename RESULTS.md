@@ -1,6 +1,6 @@
 # Results
 
-Rebuilt by `src/update_results.py` on 2026-10-13T02:01:11+08:00 from 17 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-13T00:17:56+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
+Rebuilt by `src/update_results.py` on 2026-10-13T15:26:14+08:00 from 22 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-13T15:19:34+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
 
 Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III](#part-iii) · [Settings](#settings) · [Checks](#checks)
 
@@ -157,6 +157,81 @@ Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III
 
 ## Part I
 
+#### `generations_lstm`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/generate.py --config configs/generations_lstm.json` |
+| Script | `src/generate.py` |
+| Date | 2026-10-13T06:27:12+00:00 |
+| Git commit | `5771854` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/generations_lstm.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | lstm |
+| `layers` | 2 |
+| `hidden_size` | 256 |
+| `embedding_dim` | 100 |
+| `embedding_init` | random |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | 0.3000 |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.model` | lstm |
+| `options.processed_dir` | data/processed |
+| `options.prompts_path` | prompts.txt |
+| `options.temperature` | 1.0000 |
+| `options.top_k` | 40 |
+| `options.max_new_tokens` | 50 |
+| `options.num_samples` | 1 |
+| `options.banned_tokens` | `["&lt;pad&gt;", "&lt;unk&gt;"]` |
+| `options.stop_at_eos` | True |
+| `options.train_result` | results/train_lstm.json |
+| `options.checkpoint` | checkpoints/train_lstm.pt |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `num_prompts` | 3 |
+| `num_generations` | 3 |
+| `num_ended_with_eos` | 1 |
+| `mean_new_tokens` | 35.3333 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `model` | lstm |
+| `prompts_path` | prompts.txt |
+| `train_result` | results/train_lstm.json |
+| `train_run_date` | 2026-10-12T06:19:48+00:00 |
+| `train_run_git_commit` | 7b9bbe6758682f640994b57ac1efa86ba487c75d |
+| `checkpoint` | checkpoints/train_lstm.pt |
+| `num_parameters` | 8,033,999 |
+| `device` | cuda |
+
+**Decoding settings**
+
+| Setting | Value |
+|---|---|
+| `temperature` | 1.0000 |
+| `top_k` | 40 |
+| `max_tokens` | 50 |
+| `seed` | 0 |
+| `num_samples` | 1 |
+| `banned_tokens` | `["&lt;pad&gt;", "&lt;unk&gt;"]` |
+| `stop_at_eos` | True |
+
 #### `generations_ngram`
 
 | Field | Value |
@@ -218,6 +293,156 @@ Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III
 | `discounts.d3` | 0.9000 |
 | `discounts.d2` | 0.8000 |
 | `discounts.d1` | 0.1000 |
+
+**Decoding settings**
+
+| Setting | Value |
+|---|---|
+| `temperature` | 1.0000 |
+| `top_k` | 40 |
+| `max_tokens` | 50 |
+| `seed` | 0 |
+| `num_samples` | 1 |
+| `banned_tokens` | `["&lt;pad&gt;", "&lt;unk&gt;"]` |
+| `stop_at_eos` | True |
+
+#### `generations_rnn`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/generate.py --config configs/generations_rnn.json` |
+| Script | `src/generate.py` |
+| Date | 2026-10-13T06:27:04+00:00 |
+| Git commit | `5771854` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/generations_rnn.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | rnn |
+| `layers` | 2 |
+| `hidden_size` | 256 |
+| `embedding_dim` | 100 |
+| `embedding_init` | random |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | 0.3000 |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.model` | rnn |
+| `options.processed_dir` | data/processed |
+| `options.prompts_path` | prompts.txt |
+| `options.temperature` | 1.0000 |
+| `options.top_k` | 40 |
+| `options.max_new_tokens` | 50 |
+| `options.num_samples` | 1 |
+| `options.banned_tokens` | `["&lt;pad&gt;", "&lt;unk&gt;"]` |
+| `options.stop_at_eos` | True |
+| `options.train_result` | results/train_rnn.json |
+| `options.checkpoint` | checkpoints/train_rnn.pt |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `num_prompts` | 3 |
+| `num_generations` | 3 |
+| `num_ended_with_eos` | 0 |
+| `mean_new_tokens` | 50.0000 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `model` | rnn |
+| `prompts_path` | prompts.txt |
+| `train_result` | results/train_rnn.json |
+| `train_run_date` | 2026-10-12T07:16:34+00:00 |
+| `train_run_git_commit` | 7b9bbe6758682f640994b57ac1efa86ba487c75d |
+| `checkpoint` | checkpoints/train_rnn.pt |
+| `num_parameters` | 7,364,303 |
+| `device` | cuda |
+
+**Decoding settings**
+
+| Setting | Value |
+|---|---|
+| `temperature` | 1.0000 |
+| `top_k` | 40 |
+| `max_tokens` | 50 |
+| `seed` | 0 |
+| `num_samples` | 1 |
+| `banned_tokens` | `["&lt;pad&gt;", "&lt;unk&gt;"]` |
+| `stop_at_eos` | True |
+
+#### `generations_transformer`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/generate.py --config configs/generations_transformer.json` |
+| Script | `src/generate.py` |
+| Date | 2026-10-13T06:27:17+00:00 |
+| Git commit | `5771854` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/generations_transformer.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | transformer |
+| `layers` | 2 |
+| `hidden_size` | 256 |
+| `embedding_dim` | 100 |
+| `embedding_init` | random |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | 0.3000 |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.model` | transformer |
+| `options.processed_dir` | data/processed |
+| `options.prompts_path` | prompts.txt |
+| `options.temperature` | 1.0000 |
+| `options.top_k` | 40 |
+| `options.max_new_tokens` | 50 |
+| `options.num_samples` | 1 |
+| `options.banned_tokens` | `["&lt;pad&gt;", "&lt;unk&gt;"]` |
+| `options.stop_at_eos` | True |
+| `options.train_result` | results/train_transformer.json |
+| `options.checkpoint` | checkpoints/train_transformer.pt |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `num_prompts` | 3 |
+| `num_generations` | 3 |
+| `num_ended_with_eos` | 1 |
+| `mean_new_tokens` | 48.6667 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `model` | transformer |
+| `prompts_path` | prompts.txt |
+| `train_result` | results/train_transformer.json |
+| `train_run_date` | 2026-10-12T15:05:12+00:00 |
+| `train_run_git_commit` | b59b5edeba923436751d1a65b48aee466c30e47e |
+| `checkpoint` | checkpoints/train_transformer.pt |
+| `num_parameters` | 4,231,115 |
+| `device` | cuda |
 
 **Decoding settings**
 
@@ -1016,27 +1241,27 @@ Decoding settings for each column are in the run records above (`results/<run>.j
 
 **Prompt:** `this movie was one of the best`
 
-|  | `generations_ngram` |
-|---|---|
-| Continuation | way to end . it is the very end when she was always going to happen and then the final girl can ' t . a . i guess i was a little less that five or whatever , you need is a very strong and is very weak script |
-| New tokens | 50 |
-| Ended with `<eos>` | False |
+|  | `generations_lstm` | `generations_ngram` | `generations_rnn` | `generations_transformer` |
+|---|---|---|---|---|
+| Continuation | movies i have ever seen . | way to end . it is the very end when she was always going to happen and then the final girl can ' t . a . i guess i was a little less that five or whatever , you need is a very strong and is very weak script | movies ever made . it is the story of life " , there are no surprises it ( the word ' are the most of the " i guess that it ' s too much about the film , you need to do a bit as to what happened ! | films ever made . it was the only thing about as a kid who had read to say . my friend said , i ' m a big fan of the movie , like a bit of this movie and don ' t see how much of this show would |
+| New tokens | 6 | 50 | 50 | 50 |
+| Ended with `<eos>` | True | False | False | False |
 
 **Prompt:** `i was really disappointed by the acting and`
 
-|  | `generations_ngram` |
-|---|---|
-| Continuation | timing of the story lines for their lives in the same age as his wife and kid , and just plain sucks . |
-| New tokens | 23 |
-| Ended with `<eos>` | True |
+|  | `generations_lstm` | `generations_ngram` | `generations_rnn` | `generations_transformer` |
+|---|---|---|---|---|
+| Continuation | costumes and the cast didn ' t take me to get bored , but i had nothing to do with any actor as the other reviewer who didn ' t go in there on this . she was funny , but she didn ' t come , then i didn | timing of the story lines for their lives in the same age as his wife and kid , and just plain sucks . | directing , and it takes me out of some of the reviews and you see it if you ' re interested out with the most disgusting thing with a camera - - - up - the characters that do not seem like they do with some , which it would | directing this was so thin to make this film . i guess i think this was because to be sure why did they are in order to give it up in the whole cast and the dialogue is awful . but what could do with ! |
+| New tokens | 50 | 23 | 50 | 46 |
+| Ended with `<eos>` | False | True | False | True |
 
 **Prompt:** `the story follows a young man who`
 
-|  | `generations_ngram` |
-|---|---|
-| Continuation | played by the end , when his wife that it would look for the entire scenes and the acting is good and the ending , which is about the characters are either . this , i would have added to the original . unfortunately , this is the worst ever |
-| New tokens | 50 |
-| Ended with `<eos>` | False |
+|  | `generations_lstm` | `generations_ngram` | `generations_rnn` | `generations_transformer` |
+|---|---|---|---|---|
+| Continuation | lives on the island , when they get them and then finds it a complete disappointment . the plot is so slow , there ' s one scene in that scene where the kids , and , to begin with , was a hoot . i have the courage to | played by the end , when his wife that it would look for the entire scenes and the acting is good and the ending , which is about the characters are either . this , i would have added to the original . unfortunately , this is the worst ever | goes back to his house ( who was still a perfect villain , and she also is the best part of the movie ) . there is no no need to understand the show the character ' s personality , and he ' ll be that , the script has | gives him a woman a friend on a train . he tells to that she could have had been very much more of her , she was just a bit too predictable . he ' s not a shame that this movie is based on a very good actor on |
+| New tokens | 50 | 50 | 50 | 50 |
+| Ended with `<eos>` | False | False | False | False |
 
 ### My notes
 
@@ -1167,6 +1392,139 @@ These runs match no rule in `part_rules` (`configs/update_results.json`).
 | `torch_cpu_threads` | 1 |
 | `smoke_test` | False |
 
+#### `combine_generations`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/combine_generations.py --config configs/combine_generations.json` |
+| Script | `src/combine_generations.py` |
+| Date | 2026-10-13T06:27:18+00:00 |
+| Git commit | `5771854` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/combine_generations.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | — |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.models` | `["ngram", "rnn", "lstm", "transformer"]` |
+| `options.input_template` | results/generations_{model}.json |
+| `options.output_path` | results/part1_generations.md |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `num_prompts` | 3 |
+| `num_models` | 4 |
+| `generations_per_model` | 3 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `output_path` | results/part1_generations.md |
+| `decoding.temperature` | 1.0000 |
+| `decoding.top_k` | 40 |
+| `decoding.max_tokens` | 50 |
+| `decoding.seed` | 0 |
+| `decoding.num_samples` | 1 |
+| `decoding.banned_tokens` | `["&lt;pad&gt;", "&lt;unk&gt;"]` |
+| `decoding.stop_at_eos` | True |
+| `sources.ngram.git_commit` | ee7c0d9b0dc613607d2c1b6bc4e672e5a6697e8d |
+| `sources.ngram.hardware` | CPU: Apple M2 (Darwin arm64) |
+| `sources.ngram.date` | 2026-10-11T01:05:20+08:00 |
+| `sources.rnn.git_commit` | 5771854ab6f7cac600fa352f58a874f1fa3c4b6a |
+| `sources.rnn.hardware` | GPU: Tesla T4 |
+| `sources.rnn.date` | 2026-10-13T06:27:04+00:00 |
+| `sources.lstm.git_commit` | 5771854ab6f7cac600fa352f58a874f1fa3c4b6a |
+| `sources.lstm.hardware` | GPU: Tesla T4 |
+| `sources.lstm.date` | 2026-10-13T06:27:12+00:00 |
+| `sources.transformer.git_commit` | 5771854ab6f7cac600fa352f58a874f1fa3c4b6a |
+| `sources.transformer.hardware` | GPU: Tesla T4 |
+| `sources.transformer.date` | 2026-10-13T06:27:17+00:00 |
+
+#### `word2vec_cost`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/local/bin/python3 src/train_word2vec.py --config configs/word2vec_cost.json` |
+| Script | `src/train_word2vec.py` |
+| Date | 2026-10-13T15:19:34+08:00 |
+| Git commit | `5771854 (uncommitted changes at run time)` |
+| Hardware | CPU: Apple M2 (Darwin arm64) |
+| Seed | 0 |
+| Result file | `results/word2vec_cost.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | word2vec_skipgram |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | 100 |
+| `embedding_init` | own_skipgram |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | 10 |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.processed_dir` | data/processed |
+| `options.output_path` | data/embeddings/w2v_100d.npy |
+| `options.sg` | 1 |
+| `options.window` | 5 |
+| `options.min_count` | 1 |
+| `options.negative` | 5 |
+| `options.sample` | 0.0010 |
+| `options.workers` | 1 |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `train_seconds` | 273.8029 |
+| `build_vocab_seconds` | 0.6832 |
+| `total_seconds` | 274.4861 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `algorithm` | skipgram |
+| `gensim_version` | 4.4.0 |
+| `training_reviews` | 40,000 |
+| `training_tokens` | 11,067,213 |
+| `vectors_shape` | `[20003, 100]` |
+| `vectors_path` | data/embeddings/w2v_100d.npy |
+| `pad_row_zero` | True |
+| `words_learned` | 20,002 |
+| `coverage_types_percent` | 100.0000 |
+| `coverage_tokens_percent` | 100.0000 |
+| `vocab_types_excluding_pad` | 20,002 |
+| `vocab_types_with_vector` | 20,002 |
+| `rows_filled_randomly` | 0 |
+| `fill_rule` | N(0, std of real vectors), seeded; &lt;pad&gt; row zeros |
+| `fill_std` | 0.2788 |
+| `timing_note` | wall-clock, time.perf_counter; covers build_vocab and train only (not data loading or saving) |
+
 ### My notes
 
 <!-- my-notes:part3:start -->
@@ -1177,7 +1535,7 @@ These runs match no rule in `part_rules` (`configs/update_results.json`).
 
 Source: `DECISIONS.md` (copied as written there).
 
-### NEEDS REVIEW (23)
+### NEEDS REVIEW (24)
 
 | ID | Decision | Status |
 |---|---|---|
@@ -1204,8 +1562,9 @@ Source: `DECISIONS.md` (copied as written there).
 | N1 | Test settings | NEEDS REVIEW |
 | O2 | Other benchmark details | NEEDS REVIEW |
 | P2 | Loading neural models and the combined file | NEEDS REVIEW |
+| S1 | Which public GloVe file | NEEDS REVIEW |
 
-### All design choices (70)
+### All design choices (75)
 
 | ID | Decision | Value | Where | Chosen by | Status |
 |---|---|---|---|---|---|
@@ -1279,6 +1638,11 @@ Source: `DECISIONS.md` (copied as written there).
 | O2 | Other benchmark details | the timed region is the whole `evaluate()` call (sorting, padding and scoring included); the n-gram is refit from the training split with its saved discounts, untimed; the n-gram "parameters" are its stored counts, with a column saying so; n-gram training and tuning seconds are separate columns; a run stops if a model's perplexity differs from its saved test perplexity by more than 0.1% (neural models only; the n-gram was scored without the 256 cut) or if the scored targets differ between models. | `src/benchmark.py`; `configs/benchmark.json` (`options.perplexity_rel_tolerance`). | Assistant default (shown in the design the user approved, not offered as options). | NEEDS REVIEW |
 | P1 | Shared decoding settings for all four models | temperature 1.0; top-k 40; 50 new tokens; seed 0; 1 sample per prompt; `&lt;pad&gt;` and `&lt;unk&gt;` never sampled; stop at `&lt;eos&gt;`; prompts from `prompts.txt`. Identical in `configs/generations_{ngram,rnn,lstm,transformer}.json`, and `combine_generations.py` stops if they differ. | `configs/generations_*.json`, `options.temperature`, `options.top_k`, `options.max_new_tokens`, `options.num_samples`, `seed`. | User, prompt (2026-10-13), from options offered ("proceed with your recommended set"; the temperature, top-k and length also match the earlier choice in G3). | CONFIRMED |
 | P2 | Loading neural models and the combined file | the neural model's size settings come from its training record (`results/train_&lt;name&gt;.json`), not from the generation config; the checkpoint's parameter count must match that record; generation runs on the GPU when available; the combined file `results/part1_generations.md` lists the shared settings, each source file's commit, hardware and date, and one section per prompt with the models in the order n-gram, RNN, LSTM, Transformer; it adds no commentary. | `src/generate.py` (`build_neural`), `src/combine_generations.py`, `configs/combine_generations.json`. | Assistant default (shown in the design the user approved, not offered as options). | NEEDS REVIEW |
+| Q1 | Algorithm | Skip-gram (`sg=1`). | `configs/word2vec_cost.json`, `options.sg`. | User, 2026-10-13, from Skip-gram / CBOW / config option. | CONFIRMED |
+| Q2 | gensim settings and training text (confirmed by the user 2026-10-13; the repeat request re-affirmed Skip-gram as Q1) | window 5; min_count 1; epochs 10; negative 5; sample 1e-3; workers 1 (for reproducibility with a seed); vector size 100; seed 0. One "sentence" per training review (including its `&lt;eos&gt;`; `&lt;unk&gt;` is a normal token). `&lt;pad&gt;` row is all zeros. | `configs/word2vec_cost.json` (`epochs`, `embedding_dim`, `seed`, `options.*`); text built in `src/train_word2vec.py` (`reviews_as_word_lists`). | User, 2026-10-13 (second request), option A of three offered: A window 5 / min_count 1 / epochs 10 (chosen); B window 5 / min_count 20 / epochs 10 (coverage 87% of types, 99.6% of tokens); C window 10 / min_count 1 / epochs 20 (about 4x the cost). | CONFIRMED |
+| R1 | Architecture for Part II | LSTM (2 layers, hidden 256, context 64, dropout 0.3, lr 0.001, batch 64, up to 20 epochs, seed 0, as in `configs/train_lstm.json`). The random-embedding setting reuses the Part I run `train_lstm` (test perplexity 80.45, Colab T4); the two frozen-embedding runs must use exactly these settings except the embedding. | `configs/train_lstm.json` (to be copied to `configs/p2_*.json`). | User, 2026-10-13. | CONFIRMED |
+| R2 | Initialising vocabulary words that have no vector (own word2vec and public GloVe) | rows without a vector are drawn from a normal distribution, mean 0, standard deviation = that of all real vectors in the same table, seeded with the run's seed. The `&lt;pad&gt;` row is always zeros. The table is then kept fixed. The same function is used for both tables. | `src/embedding_utils.py` (`fill_missing_rows`); called from `src/train_word2vec.py`. (The GloVe script, not yet written, must call it too.) | User, 2026-10-13, from three options. | CONFIRMED |
+| S1 | Which public GloVe file | `glove.6B.100d.txt` (Wikipedia + Gigaword, 6B tokens, 400k lower-cased words, 100-d), matched to our tokens by exact string. Missing words (including `&lt;unk&gt;`, `&lt;eos&gt;`) follow R2 (seeded small random normal, `&lt;pad&gt;` zeros); coverage is reported with `&lt;unk&gt;`/`&lt;eos&gt;` counted as missing, and also without them. | `configs/glove_coverage.json` (`options.glove_path`, `options.output_path`, `options.top_missing` = 20); `src/load_glove.py`. | Assistant default (the request said "GloVe 100d" and R2 fixed the missing-word rule). | NEEDS REVIEW |
 
 ### My notes
 
@@ -1294,7 +1658,7 @@ Source: `DECISIONS.md` (copied as written there).
 | Test set used only for final evaluation | **FAIL** |
 | Padding excluded from the loss | **PASS** |
 | All models scored on identical test targets | **FAIL** |
-| Generation runs use matched decoding settings and prompts | **NOT YET AVAILABLE** |
+| Generation runs use matched decoding settings and prompts | **PASS** |
 | Causality test | **NOT YET AVAILABLE** |
 | Frozen embeddings unchanged | **NOT YET AVAILABLE** |
 
@@ -1326,9 +1690,12 @@ Source: `DECISIONS.md` (copied as written there).
 - `train_rnn`: 981,353 targets, checksum `4f77927a1cd9...`
 - `train_transformer`: 981,353 targets, checksum `4f77927a1cd9...`
 
-#### Generation runs use matched decoding settings and prompts: NOT YET AVAILABLE
+#### Generation runs use matched decoding settings and prompts: PASS
 
-- 1 generation run(s); at least two are needed to compare
+- `generations_lstm`: temperature=1.0, top_k=40, max_tokens=50, seed=0, num_samples=1; 3 prompts
+- `generations_ngram`: temperature=1.0, top_k=40, max_tokens=50, seed=0, num_samples=1; 3 prompts
+- `generations_rnn`: temperature=1.0, top_k=40, max_tokens=50, seed=0, num_samples=1; 3 prompts
+- `generations_transformer`: temperature=1.0, top_k=40, max_tokens=50, seed=0, num_samples=1; 3 prompts
 
 #### Causality test: NOT YET AVAILABLE
 
@@ -1336,7 +1703,7 @@ Source: `DECISIONS.md` (copied as written there).
 
 #### Frozen embeddings unchanged: NOT YET AVAILABLE
 
-- no run with a pretrained `embedding_init` (Part II has no such run yet)
+- `results/word2vec_cost.json`: details.frozen_embedding_max_abs_change not recorded
 
 ### My notes
 

@@ -1,0 +1,79 @@
+{
+  "run": "combine_generations",
+  "script": "src/combine_generations.py",
+  "command": "/usr/bin/python3 src/combine_generations.py --config configs/combine_generations.json",
+  "date": "2026-10-13T06:27:18+00:00",
+  "git_commit": "5771854ab6f7cac600fa352f58a874f1fa3c4b6a",
+  "git_dirty": false,
+  "gpu": "Tesla T4",
+  "hardware": "GPU: Tesla T4",
+  "seed": 0,
+  "config": {
+    "architecture": null,
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": null,
+    "embedding_init": null,
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": null,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "models": [
+        "ngram",
+        "rnn",
+        "lstm",
+        "transformer"
+      ],
+      "input_template": "results/generations_{model}.json",
+      "output_path": "results/part1_generations.md"
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "num_prompts": 3,
+    "num_models": 4,
+    "generations_per_model": 3
+  },
+  "details": {
+    "output_path": "results/part1_generations.md",
+    "decoding": {
+      "temperature": 1.0,
+      "top_k": 40,
+      "max_tokens": 50,
+      "seed": 0,
+      "num_samples": 1,
+      "banned_tokens": [
+        "<pad>",
+        "<unk>"
+      ],
+      "stop_at_eos": true
+    },
+    "sources": {
+      "ngram": {
+        "git_commit": "ee7c0d9b0dc613607d2c1b6bc4e672e5a6697e8d",
+        "hardware": "CPU: Apple M2 (Darwin arm64)",
+        "date": "2026-10-11T01:05:20+08:00"
+      },
+      "rnn": {
+        "git_commit": "5771854ab6f7cac600fa352f58a874f1fa3c4b6a",
+        "hardware": "GPU: Tesla T4",
+        "date": "2026-10-13T06:27:04+00:00"
+      },
+      "lstm": {
+        "git_commit": "5771854ab6f7cac600fa352f58a874f1fa3c4b6a",
+        "hardware": "GPU: Tesla T4",
+        "date": "2026-10-13T06:27:12+00:00"
+      },
+      "transformer": {
+        "git_commit": "5771854ab6f7cac600fa352f58a874f1fa3c4b6a",
+        "hardware": "GPU: Tesla T4",
+        "date": "2026-10-13T06:27:17+00:00"
+      }
+    }
+  }
+}

@@ -175,3 +175,18 @@ Before `prompts.txt` existed, `src/generate.py` was run end to end twice (n-gram
 - **Script / command:** `src/benchmark.py`; `python src/benchmark.py --config configs/benchmark.json` (seed 0; git commit `bd9eb67`, `git_dirty: false`; Tesla T4; torch CPU threads 1).
 - **Key numbers:** workload = test set, batch size 64, context length 256, 981,353 target tokens (same checksum `4f77927a1cd9...` for all models), 2 warm-up passes, 3 timed repeats. Tokens/second, mean (std): GPU: RNN 229,944 (1,200), LSTM 164,100 (2,997), Transformer 286,163 (7,950). CPU: n-gram 411,334 (73,730), RNN 4,291 (45), LSTM 4,027 (16), Transformer 4,960 (109). Perplexity on this workload: n-gram 111.31, RNN 109.37, LSTM 80.45, Transformer 156.94.
 - **Files:** `results/benchmark.json`, `results/part1_costs.csv`
+
+### 2026-10-13 06:27 UTC — Neural generation and combined file (Colab)
+- **Script / command:** `src/generate.py --config configs/generations_<model>.json` for `rnn`, `lstm`, `transformer`, then `src/combine_generations.py --config configs/combine_generations.json` (seed 0; git commit `5771854`, `git_dirty: false`; Tesla T4, generation on cuda).
+- **Key numbers:** decoding identical for all four models: temperature 1.0, top-k 40, 50 max new tokens, seed 0, 1 sample, banned `<pad>` and `<unk>`, stop at `<eos>`. 3 prompts each. Ended with `<eos>`: RNN 0 of 3 (mean 50.0 new tokens), LSTM 1 of 3 (35.3), Transformer 1 of 3 (48.7). The n-gram file is the earlier `results/generations_ngram.json` (CPU, commit `ee7c0d9`).
+- **Files:** `results/generations_rnn.json`, `results/generations_lstm.json`, `results/generations_transformer.json`, `results/combine_generations.json`, `results/part1_generations.md`
+
+### 2026-10-13 15:05 +08 — Own Skip-gram word2vec (local CPU)
+- **Script / command:** `src/train_word2vec.py`; `python3 src/train_word2vec.py --config configs/word2vec_cost.json` (seed 0; git commit `5771854`, `git_dirty: true`; Apple M2, workers 1).
+- **Key numbers:** training split only, 40,000 reviews, 11,067,213 tokens. Skip-gram, dim 100, window 5, min_count 1, epochs 10, negative 5, sample 1e-3. Vocabulary build 0.63 s; training 266.74 s; total 267.36 s. Vectors shape 20,003 x 100, `<pad>` row zero.
+- **Files:** `results/word2vec_cost.json`, `data/embeddings/w2v_100d.npy`
+
+### 2026-10-13 15:30 +08 — Own Skip-gram word2vec, re-run with coverage (local CPU)
+- **Script / command:** `src/train_word2vec.py`; `python3 src/train_word2vec.py --config configs/word2vec_cost.json` (seed 0; Apple M2, workers 1).
+- **Key numbers:** 40,000 training reviews, 11,067,213 tokens. Skip-gram, dim 100, window 5, min_count 1, epochs 10. Vocabulary build 0.7 s; training 273.8 s. Coverage: 20,002 of 20,002 vocabulary types (100.00%), 100.00% of training tokens; 0 rows filled randomly. Output identical to the previous run (np.array_equal True).
+- **Files:** `results/word2vec_cost.json` (replaces the earlier record), `data/embeddings/w2v_100d.npy`

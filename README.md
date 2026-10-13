@@ -109,6 +109,24 @@ The processed data and these numbers are deterministic: re-running reproduces th
 
 Output goes to `results/generations_ngram.json` with the decoding settings stored beside the text.
 
+## Public GloVe vectors (Part II)
+
+The public embeddings are **not included in this repository** (`data/` is git-ignored) and are not downloaded by any script. Downloading them is done in Colab (see `notebooks/run_colab.ipynb`, section 8).
+
+1. Download `glove.6B.zip` (about 822 MB) from the Stanford NLP page <https://nlp.stanford.edu/projects/glove/>, or directly: `wget https://nlp.stanford.edu/data/glove.6B.zip`.
+2. Unzip only the 100-d file into `data/embeddings/`: `unzip -j glove.6B.zip glove.6B.100d.txt -d data/embeddings`. The result must be `data/embeddings/glove.6B.100d.txt`.
+3. Build the table aligned to our vocabulary and report coverage:
+
+   ```
+   python src/load_glove.py --config configs/glove_coverage.json
+   ```
+
+   This writes `data/embeddings/glove_100d.npy` (shape 20,003 x 100, row *i* = vocabulary id *i*) and `results/glove_coverage.json` (coverage as % of vocabulary types and % of training tokens, and the 20 most frequent missing words). Words with no GloVe vector (including `<unk>` and `<eos>`) get small seeded random vectors; `<pad>` is zeros. The same rule is used for the own word2vec table.
+
+Own Skip-gram vectors, for comparison: `python src/train_word2vec.py --config configs/word2vec_cost.json` (about 5 minutes on a laptop CPU; writes `data/embeddings/w2v_100d.npy` and `results/word2vec_cost.json`).
+
+Citation: Pennington, J., Socher, R., & Manning, C. D. (2014). *GloVe: Global Vectors for Word Representation*. EMNLP 2014.
+
 ## 5. Configurations
 
 Every run reads one JSON file from `configs/` (no design values are hard-coded in scripts). Each config has the same keys: `architecture`, `layers`, `hidden_size`, `embedding_dim`, `embedding_init`, `context_length`, `learning_rate`, `batch_size`, `epochs`, `dropout`, `vocab_size`, `subsample_size`, `seed` (`null` where a key does not apply), plus an `options` block for settings that only one script uses.

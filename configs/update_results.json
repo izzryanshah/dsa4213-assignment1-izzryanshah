@@ -308,8 +308,9 @@
         "id": "run-p2-glove",
         "text": "Download public GloVe 100d vectors (GloVe 6B, Stanford NLP: nlp.stanford.edu/projects/glove) in Colab, never on this machine",
         "details": [
-          "Command: not available yet: the Colab cell is added together with the Part II code that loads the file; the vectors file must not be committed",
-          "Produces: the vectors file on Colab/Drive; cite Pennington et al. (2014) in the report",
+          "Command: `notebooks/run_colab.ipynb`, section 8 (downloads glove.6B.zip, then `python -u src/load_glove.py --config configs/glove_coverage.json`)",
+          "Time: a few minutes (about 822 MB download)",
+          "Produces: `data/embeddings/glove_100d.npy` (copied to Drive) and `results/glove_coverage.json` (coverage and 20 most frequent missing words); the GloVe file itself must not be committed; cite Pennington et al. (2014) in the report",
           "Colab only (CLAUDE.md rule 9): never run on this machine"
         ]
       },
@@ -318,9 +319,9 @@
         "id": "run-p2-own",
         "text": "Train your own word embeddings on the training split (Skip-gram, CBOW or GloVe), then freeze them",
         "details": [
-          "Command: not available yet: no embedding-training script exists yet",
-          "Time: not known yet; the brief wants this cost reported separately from LM training",
-          "Produces: the vectors file and a `p2_` run record",
+          "Command: `python3 src/train_word2vec.py --config configs/word2vec_cost.json` (already run once locally: `results/word2vec_cost.json`, `data/embeddings/w2v_100d.npy`)",
+          "Time: about 5 minutes on the laptop CPU (cost recorded separately from LM training)",
+          "Produces: the vectors file and `results/word2vec_cost.json`; still to do: copy `w2v_100d.npy` to Drive for the Colab LM runs",
           "May run locally (word2vec/embedding training is not Colab-only)"
         ]
       },

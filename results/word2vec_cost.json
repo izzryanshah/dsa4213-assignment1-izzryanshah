@@ -1,0 +1,63 @@
+{
+  "run": "word2vec_cost",
+  "script": "src/train_word2vec.py",
+  "command": "/usr/local/bin/python3 src/train_word2vec.py --config configs/word2vec_cost.json",
+  "date": "2026-10-13T15:19:34+08:00",
+  "git_commit": "5771854ab6f7cac600fa352f58a874f1fa3c4b6a",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
+  "seed": 0,
+  "config": {
+    "architecture": "word2vec_skipgram",
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": 100,
+    "embedding_init": "own_skipgram",
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": null,
+    "epochs": 10,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "processed_dir": "data/processed",
+      "output_path": "data/embeddings/w2v_100d.npy",
+      "sg": 1,
+      "window": 5,
+      "min_count": 1,
+      "negative": 5,
+      "sample": 0.001,
+      "workers": 1
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "train_seconds": 273.80291612498695,
+    "build_vocab_seconds": 0.6831672500120476,
+    "total_seconds": 274.486083374999
+  },
+  "details": {
+    "algorithm": "skipgram",
+    "gensim_version": "4.4.0",
+    "training_reviews": 40000,
+    "training_tokens": 11067213,
+    "vectors_shape": [
+      20003,
+      100
+    ],
+    "vectors_path": "data/embeddings/w2v_100d.npy",
+    "pad_row_zero": true,
+    "words_learned": 20002,
+    "coverage_types_percent": 100.0,
+    "coverage_tokens_percent": 100.0,
+    "vocab_types_excluding_pad": 20002,
+    "vocab_types_with_vector": 20002,
+    "rows_filled_randomly": 0,
+    "fill_rule": "N(0, std of real vectors), seeded; <pad> row zeros",
+    "fill_std": 0.2788160443305969,
+    "timing_note": "wall-clock, time.perf_counter; covers build_vocab and train only (not data loading or saving)"
+  }
+}
