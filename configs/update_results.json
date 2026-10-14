@@ -49,6 +49,10 @@
         "Part II"
       ],
       [
+        "^(word2vec_cost|glove_coverage)$",
+        "Part II"
+      ],
+      [
         "p3_",
         "Part III"
       ],
@@ -90,6 +94,10 @@
       [
         "^generations_",
         "src/generate.py"
+      ],
+      [
+        "^combine_generations",
+        "src/combine_generations.py"
       ],
       [
         "^test_",
@@ -240,8 +248,11 @@
       }
     ],
     "part_comparison_extra_runs": {
-      "Part II": []
+      "Part II": ["train_lstm", "generations_lstm"]
     },
+    "part2_baseline_run": "train_lstm",
+    "part2_own_embedding_run": "word2vec_cost",
+    "part2_public_embedding_run": "glove_coverage",
     "matched_decoding_keys": [
       "temperature",
       "top_k",

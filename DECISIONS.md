@@ -270,43 +270,43 @@ From now on, every new design choice is added here **after** the user picks from
 - **Where:** `configs/generations_ngram.json:19`; `src/generate.py:150-161` (`read_prompts`), `:164-170` (`encode_prompt`).
 - **Chosen by:** file name `prompts.txt` = User, prompt (2026-10-11). The line format and `#` comment rule = Assistant default (chosen so the file can carry `#` reason lines under each prompt; see F1).
 - **Alternatives:** JSON list of prompts; one prompt per paragraph.
-- **Status:** file name CONFIRMED; format NEEDS REVIEW. `prompts.txt` (the F1 prompts, renamed by the user from `prompt.txt`) exists and was used for `results/generations_ngram.json`.
+- **Status:** CONFIRMED (file name 2026-10-11; format reviewed by the user on 2026-10-14 and kept as is). `prompts.txt` (the F1 prompts, renamed by the user from `prompt.txt`) exists and was used for `results/generations_ngram.json`.
 
 ### G3. Random seed per generation
 - **Value:** each (prompt, sample number) gets its own random generator seeded from `[seed, sample number, CRC32 of the prompt text]`, so output depends only on those three things.
 - **Where:** `src/generate.py:144-146`.
 - **Chosen by:** Assistant default. **Alternatives:** one generator seeded once at the start (simpler, but adding or reordering prompts would change every other prompt's text).
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ### G4. Order of the sampling dials, and their edge cases
 - **Value:** banned words are removed first, then temperature is applied, then top-k (so top-k keeps the k likeliest *allowed* words), then the probabilities are rescaled. Temperature must be greater than 0 (0 would mean "always the likeliest word" and is not supported); top-k 0 means off.
 - **Where:** `src/generate.py:103-121`.
 - **Chosen by:** Assistant default. **Alternatives:** top-k before banning (could leave fewer than k usable words); support temperature 0 as greedy decoding.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ### G5. How generated text is stored
 - **Value:** the stopping `<eos>` is not included in the stored tokens (a flag `ended_with_eos` records it); text is the prompt tokens plus new tokens joined with single spaces, so punctuation is separate (e.g. `can ' t`); no detokenization.
 - **Where:** `src/generate.py:137-141` (eos), `:237-238` (text).
 - **Chosen by:** Assistant default. **Alternatives:** keep `<eos>` in the output; detokenize punctuation back onto words.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ### G6. How the n-gram model is prepared for generation
 - **Value:** the counts are re-fitted from the training split (about 1 second); the discounts are NOT re-tuned but read from the saved n-gram run (`results/ngram.json`, `details.best_discounts`), whose date and commit are stored in the generation record.
 - **Where:** `src/generate.py:174-191`; `configs/generations_ngram.json:18`.
 - **Chosen by:** Assistant default. **Alternatives:** save and load a fitted model file; re-tune on every generation run.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ### G7. How neural models plug in
 - **Value:** any `nn.Module` with `forward(ids) -> logits` is wrapped by `NeuralNextToken`, which feeds the whole context (prompt + generated so far) each step and reads the last position's logits. No neural model is loadable yet (`build_model` stops with a message).
 - **Where:** `src/generate.py:87-97`, `:174-190`.
 - **Chosen by:** Assistant default. **Alternatives:** require each model to define its own generation step (e.g. caching hidden states for speed).
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ### G8. Generation files are full run records
 - **Value:** `results/generations_<model>.json` is a normal run record (config, seed, commit, hardware, date, metrics) with the decoding settings (temperature, top_k, max_tokens, seed, plus the other settings) and the generated texts as extra top-level fields. The file name comes from the config file name (`configs/generations_ngram.json` -> `generations_ngram`).
 - **Where:** `src/generate.py:252-263`; `src/runconfig.py:189-225` (`extra`).
 - **Chosen by:** Assistant default (to satisfy both "every run saves its record" and "generation files store their decoding settings"). **Alternatives:** a separate, lighter file format for generations.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ---
 
@@ -391,42 +391,42 @@ The user's prompt of 2026-10-12 specified the document's sections, contents, the
 - **Where:** `configs/update_results.json`, `options.part_rules`, `options.part_comparison_extra_runs` (runs from another part to include in a part's comparison, e.g. the reused Part I model in Part II).
 - **Chosen by:** Parts: the brief (`Assignment1_2026.pdf`). Run-name convention and placing `train_bigram` in Part I: Assistant default.
 - **Alternatives considered:** a `part` field inside each config; a separate Part for baselines.
-- **Status:** NEEDS REVIEW (naming convention and bigram placement only)
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) (naming convention and bigram placement only)
 
 ### J2. "Close to the vocabulary size" threshold
 - **Value:** untrained validation perplexity divided by vocabulary size must be between 0.5 and 2.0 to PASS.
 - **Where:** `configs/update_results.json`, `options.untrained_ppl_to_vocab_ratio_range`.
 - **Chosen by:** Assistant default.
 - **Alternatives considered:** a tighter band (0.8 to 1.25); report the ratio with no pass/fail line.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ### J3. How the exact command of each run is known
 - **Value:** `save_run` now stores a `command` field (interpreter + arguments) in every new `results/<run>.json`. For older records, the command is copied from `results/RESULTS_LOG.md`; if not found there it is shown as "not recorded".
 - **Where:** `src/runconfig.py` (`save_run`); lookup in `src/update_results.py` (`find_command`).
 - **Chosen by:** Assistant default.
 - **Alternatives considered:** re-run old runs to get commands stored (slow, changes their dates); write commands by hand into a file.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ### J4. How the test-set and padding checks are evidenced
 - **Value:** static scan of the source with Python `ast`: in `src/ngram.py` and `src/train.py`, `data.test` must be used exactly once, on a line after the `tune_discounts(...)` / `fit(...)` call, and no other `src/` file may use it. Padding: every `CrossEntropyLoss` in `src/train.py` and `src/sanity_check.py` must pass `ignore_index`, and the recorded test `test_padding_is_ignored` must be `passed`. Frozen embeddings: PASS needs a run with a pretrained `embedding_init` whose `details.frozen_embedding_max_abs_change` equals 0; `src/train.py` does not write that key yet, so a future Part II change must add it. Causality: any recorded test with "causal" in its name.
 - **Where:** `configs/update_results.json` (`test_set_markers`, `padding_loss_files`, `padding_test_*`, `causality_test_keyword`, `frozen_embedding_detail_key`, `not_frozen_embedding_inits`); logic in `src/update_results.py` (`check_*`).
 - **Chosen by:** Assistant default.
 - **Alternatives considered:** run-time instrumentation of the data loader; only trusting the unit tests.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ### J5. How "My notes" are protected
 - **Value:** each section ends with `### My notes` and a pair of HTML-comment marker lines; text between the markers is copied back unchanged on every rebuild. If the markers are missing from the old file, the script stops (override with `--force`).
 - **Where:** `src/update_results.py` (`extract_notes`, `notes_block`).
 - **Chosen by:** Assistant default.
 - **Alternatives considered:** keep notes in a separate file linked from RESULTS.md.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ### J6. Figures, and `update_results.py` not saving a run record
 - **Value:** matplotlib PNGs in `results/figures/`: tokens per split, n-gram discount tuning (D3 axis, D2/D1 at their chosen values), train/validation loss per trained run, and validation loss of all trained runs when there are two or more. Colours are the first slots of the dataviz skill's validated categorical palette. Runs named `test_*` are not plotted. `update_results.py` writes `RESULTS.md` and the figures but no `results/update_results.json`, because it is not an experiment run.
 - **Where:** `configs/update_results.json` (`figure_colours`, `test_run_prefix`); `src/update_results.py` (`fig_*`).
 - **Chosen by:** Assistant default.
 - **Alternatives considered:** an interactive HTML report; saving a run record for each rebuild.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ---
 
@@ -439,21 +439,21 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 - **Where:** `configs/update_results.json`, `options.report_requirements`.
 - **Chosen by:** Content: the brief. Granularity: Assistant default.
 - **Alternatives considered:** one item per part.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ### K2. Schedule and planned days
 - **Value:** `options.schedule` is empty, so every item shows "Planned: not set" and nothing can be overdue. Deadline is Fri 16 Oct 2026, 23:59 Singapore time (from the user's prompt).
 - **Where:** `configs/update_results.json`, `options.schedule`, `options.deadline`, `options.timezone`.
 - **Chosen by:** Deadline: User, prompt (2026-10-12). Empty schedule: Assistant default (no schedule was available to read).
 - **Alternatives considered:** spread items evenly over the days left (would invent a schedule).
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ### K3. What counts as "waiting on me now", and how interpretation items are counted
 - **Value:** Waiting = empty schedule, unresolved NEEDS REVIEW decisions, configs with no results yet, sections with results but empty *My notes*, failing checks, uncommitted or unpushed git changes. "Results to interpret" has one item per section (Data, Part I, Part II, Part III), because *My notes* exist per section, not per run. "Runs to do" lists configs in `configs/` with no `results/<run>.json` plus `options.extra_items` (steps from the brief that no script can detect, such as scripts still to be written); time is taken from earlier runs of the same script.
 - **Where:** `src/my_tasks.py` (`build_items`); `configs/update_results.json` (`tasks_ignore_configs`, `run_script_rules`, `extra_items`).
 - **Chosen by:** Assistant default.
 - **Alternatives considered:** one interpretation item per run; treat every NEEDS REVIEW item as blocking.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ---
 
@@ -475,13 +475,13 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 - **Value:** dropout after the embedding, between stacked recurrent layers (PyTorch's `dropout=`, set to 0 when there is 1 layer) and before the output layer; unidirectional recurrent layers; no weight tying; the final hidden state is not carried between windows.
 - **Where:** `src/models.py` (`forward` of both classes).
 - **Chosen by:** Assistant default (shown in the design the user approved, not offered as options). **Alternatives:** no dropout on the embedding; tie the output layer to the embedding (needs hidden size = 100); carry the hidden state across consecutive windows.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ### L4. Smoke-test data
 - **Value:** the first 60 train / 40 val / 40 test reviews of the saved splits, copied to a scratch folder (not `data/processed`), 1 epoch, output to a scratch results folder.
 - **Where:** scratchpad only (not a repository file).
 - **Chosen by:** Assistant default for how to make the "small subset" (the user asked for a small subset). **Alternatives:** re-run `data.py` with `subsample_size` (would overwrite the saved splits).
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ---
 
@@ -503,13 +503,13 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 - **Value:** pre-norm blocks (LayerNorm before attention and feed-forward) plus one final LayerNorm; GELU activation; dropout after the embeddings and inside each block; positional embedding starts at PyTorch's default random values; no weight tying; causal mask built with `torch.triu` and passed to `nn.TransformerEncoder`.
 - **Where:** `src/models.py`, class `TransformerLanguageModel`.
 - **Chosen by:** Assistant default (shown in the design the user approved, not offered as options). **Alternatives:** post-norm blocks; ReLU; tied input/output embeddings.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ### M4. Training settings copied from the LSTM
 - **Value:** learning rate 0.001, batch size 64, epochs 20, context length 64, patience 3, grad clip 1.0, vocabulary 20000, seed 0.
 - **Where:** `configs/train_transformer.json`.
 - **Chosen by:** Assistant default (copied from `configs/train_lstm.json` so the comparison is matched; not offered as options). **Alternatives:** a smaller learning rate or warmup, which Transformers often prefer.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ---
 
@@ -519,7 +519,7 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 - **Value:** random sequences of length 12, batch 4, tolerance 1e-6 on the largest change in any probability; every position t from 0 to 11 is changed in turn; models are in eval mode (dropout off); every class in `models.py` is tested, found automatically. The bigram (in `sanity_check.py`) is not covered.
 - **Where:** `configs/test_causality.json` (`batch_size`, `options.seq_len`, `options.tolerance`).
 - **Chosen by:** Assistant default (the user specified what to check, not these values; not offered as options). **Alternatives:** longer sequences (up to 256); tolerance 1e-8 or exact equality; also testing in train mode with a fixed dropout seed.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ---
 
@@ -535,7 +535,7 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 - **Value:** the timed region is the whole `evaluate()` call (sorting, padding and scoring included); the n-gram is refit from the training split with its saved discounts, untimed; the n-gram "parameters" are its stored counts, with a column saying so; n-gram training and tuning seconds are separate columns; a run stops if a model's perplexity differs from its saved test perplexity by more than 0.1% (neural models only; the n-gram was scored without the 256 cut) or if the scored targets differ between models.
 - **Where:** `src/benchmark.py`; `configs/benchmark.json` (`options.perplexity_rel_tolerance`).
 - **Chosen by:** Assistant default (shown in the design the user approved, not offered as options). **Alternatives:** time only the model forward pass on pre-built batches; use parameter counts only for the neural models.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ---
 
@@ -551,7 +551,7 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 - **Value:** the neural model's size settings come from its training record (`results/train_<name>.json`), not from the generation config; the checkpoint's parameter count must match that record; generation runs on the GPU when available; the combined file `results/part1_generations.md` lists the shared settings, each source file's commit, hardware and date, and one section per prompt with the models in the order n-gram, RNN, LSTM, Transformer; it adds no commentary.
 - **Where:** `src/generate.py` (`build_neural`), `src/combine_generations.py`, `configs/combine_generations.json`.
 - **Chosen by:** Assistant default (shown in the design the user approved, not offered as options). **Alternatives:** model sizes typed into each generation config; one file per prompt; a table instead of block quotes.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ---
 
@@ -590,7 +590,7 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 - **Value:** `glove.6B.100d.txt` (Wikipedia + Gigaword, 6B tokens, 400k lower-cased words, 100-d), matched to our tokens by exact string. Missing words (including `<unk>`, `<eos>`) follow R2 (seeded small random normal, `<pad>` zeros); coverage is reported with `<unk>`/`<eos>` counted as missing, and also without them.
 - **Where:** `configs/glove_coverage.json` (`options.glove_path`, `options.output_path`, `options.top_missing` = 20); `src/load_glove.py`.
 - **Chosen by:** Assistant default (the request said "GloVe 100d" and R2 fixed the missing-word rule). **Alternatives:** `glove.twitter.27B.100d` (cased-agnostic tweets, different domain, 1.2M words); `glove.840B.300d` (wrong dimension). 6B is the one that matches our lower-cased text and 100-d.
-- **Status:** NEEDS REVIEW
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
 
 ## T. Frozen-embedding runs (`src/train.py --embedding`, 2026-10-14)
 
@@ -598,13 +598,37 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 - **Value:** `--embedding random|w2v|glove` overrides the config's `embedding_init`. For w2v/glove the saved table is copied into the model's embedding layer and the WHOLE table (all 20,003 rows, including `<pad>`, `<unk>`, `<eos>` and words filled by R2) gets `requires_grad=False`, so Adam never changes it. The positional/other parts of the model are unaffected (the LSTM has no other embedding). Model construction order and seed are unchanged, so the LSTM and output layers start from the same random values as in the Part I run. The run configs `configs/p2_lstm_w2v.json` and `configs/p2_lstm_glove.json` differ from `configs/train_lstm.json` only in `embedding_init` and the added `options.embedding_paths`. Optimiser: Adam on the trainable parameters only (for random runs that is every parameter, as before).
 - **Where:** `src/train.py` (`EMBEDDING_CHOICES`, `freeze_embedding_if_pretrained`, `load_embedding_matrix`, `check_embedding_unchanged`, `main`); `configs/p2_lstm_*.json`.
 - **Chosen by:** User asked for the option, the freezing and the check; the config layout and run names (`p2_lstm_w2v`, `p2_lstm_glove`) are assistant defaults. **Alternatives:** one shared config with `--embedding` only; a hard-coded path table in `train.py` (rejected: rule 1).
-- **Status:** NEEDS REVIEW (config layout, run names)
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) (config layout, run names)
 
 ### T2. The frozen-embedding check
 - **Value:** a copy of the table is taken right after loading; it must be exactly equal (`torch.equal`, no tolerance) after the last epoch and again after the best checkpoint is reloaded, and the table must still be non-trainable; otherwise the script raises an error and does NOT save results. The record stores `frozen_embedding_max_abs_change` (0.0), the file path and its SHA-256, `total_parameters`, and `embedding_table_trainable`. `num_parameters` stays the trainable count (so a frozen run reports 6,033,699, not 8,033,999; the total is in `details.total_parameters`).
 - **Where:** `src/train.py`; tested in `tests/test_frozen_embedding.py`.
 - **Chosen by:** User (asked for a check that fails loudly); exact-equality and the reported parameter counts are assistant defaults. **Alternatives:** tolerance of 1e-8; report total instead of trainable parameters as `num_parameters`.
-- **Status:** NEEDS REVIEW (parameter-count convention)
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) (parameter-count convention)
+
+## U. Part II audit, generation and RESULTS.md section (2026-10-14)
+
+### U1. Part II generation set-up
+- **Value:** the two frozen-embedding LSTMs are generated with `configs/generations_p2_lstm_w2v.json` and `configs/generations_p2_lstm_glove.json`, which equal `configs/generations_lstm.json` except `embedding_init` and the `train_result` / `checkpoint` they load (temperature 1.0, top-k 40, 50 new tokens, seed 0, 1 sample, same `prompts.txt`). The random-embedding column reuses the Part I file `results/generations_lstm.json` (no new generation). `configs/combine_generations_p2.json` merges the three into `results/part2_generations.md` and refuses to merge if decoding settings or prompts differ.
+- **Where:** `configs/generations_p2_lstm_*.json`, `configs/combine_generations_p2.json`; `src/combine_generations.py` (optional `options.title` and `options.labels`).
+- **Chosen by:** User asked for "same prompts.txt and decoding settings as Part I"; reuse of the Part I LSTM generation and the file names are assistant defaults. **Alternatives:** regenerate the Part I LSTM text inside Part II (same output, since seed and settings are fixed; it would only add a duplicate run).
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
+
+### U2. What the Part II section of RESULTS.md contains
+- **Value:** the Part II runs and their loss figures; a comparison table and generated-text table that include the reused Part I runs `train_lstm` and `generations_lstm`; the embedding-table records `word2vec_cost` and `glove_coverage` (now assigned to Part II); and a "Part II set-up facts" block (settings differences, provenance, frozen check, embedding tables with coverage and cost, per-epoch loss facts), all read from the run records.
+- **Where:** `configs/update_results.json` (`part_comparison_extra_runs`, `part_rules`, `part2_baseline_run`, `part2_own_embedding_run`, `part2_public_embedding_run`); `src/update_results.py` (`render_part2_facts`).
+- **Chosen by:** Assistant default (the user asked for "what exists so far, facts only"). **Alternatives:** a separate audit file; no per-epoch table.
+- **Status:** CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is)
+
+---
+
+## V. Audit follow-up (2026-10-14)
+
+### V1. Reruns after the Part II audit
+- **Value:** no reruns. A (clean-commit rerun of both Part II runs), B (rerun of the Part I LSTM on current code), C (all three at 40 epochs) and D (per-batch loss logging) were offered with Colab time estimates and consequences; the user chose none. Consequences accepted: the Part II records show `git_dirty: true` with the cause unknown; Part I LSTM ran on an older commit (equivalence rests on the code diff); all three runs stopped at the 20-epoch cap while still improving, so convergence is compared at a fixed 20-epoch budget; stability evidence is per-epoch only.
+- **Where:** nothing changed; `MY_TASKS.md` has no rerun items.
+- **Chosen by:** User, 2026-10-14. **Alternatives considered:** A, B, C, D (about 1.9 h, 64 min, 6 h, 3 h on a T4).
+- **Status:** CONFIRMED
 
 ---
 
@@ -645,3 +669,7 @@ One item (D4) was accepted rather than fixed: the n-gram discount grid was widen
 **New since then (2026-10-13), pending the user:** S1 (which GloVe file).
 
 **New since then (2026-10-14), pending the user:** T1 (frozen-embedding option and configs), T2 (check and parameter-count convention). S1 still pending.
+
+**New since then (2026-10-14), pending the user:** U1 (Part II generation set-up), U2 (Part II section of RESULTS.md).
+
+**2026-10-14:** every remaining NEEDS REVIEW item (G2-G8, J1-J6, K1-K3, L3, L4, M3, M4, N1, O2, P2, S1, T1, T2, U1, U2: 28 in total) was reviewed one by one and kept as is by the user. V1 (no reruns) added and confirmed. Nothing is pending. Open fact, not a decision: the "Test set used only for final evaluation" check still shows FAIL because `src/benchmark.py` reads `data.test` (J4 kept the static scan).

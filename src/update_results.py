@@ -319,6 +319,106 @@ def render_generation_comparison(gen_runs):
     return "\n".join(out)
 
 
+def render_part2_facts(runs, opts):
+    """Part II set-up facts, read from the run records (no interpretation).
+
+    1. Config differences between the reused Part I run and the Part II runs.
+    2. The frozen-embedding check values.
+    3. The embedding tables: how they were built (own word2vec, public GloVe) and their coverage.
+    4. Per-epoch loss facts for the three runs.
+    """
+    base_name = opts["part2_baseline_run"]
+    p2 = {r: rec for r, rec in runs.items()
+          if part_of(r, opts["part_rules"]) == "Part II" and rec.get("script") in opts["frozen_check_scripts"]}
+    if base_name not in runs or not p2:
+        return ""
+    base = runs[base_name]
+    compared = {base_name: base, **p2}
+    out = ["\n### Part II set-up facts\n",
+           "Read from the run records; nothing here is interpreted.\n"]
+
+    # 1. config differences ---------------------------------------------------------
+    flat = {}
+    for run, rec in compared.items():
+        f = {}
+        flatten("", rec["config"], f)
+        flat[run] = f
+    keys = sorted(set().union(*[f.keys() for f in flat.values()]))
+    differing = [k for k in keys if len({json.dumps(flat[r].get(k, "<absent>"), sort_keys=True) for r in compared}) > 1]
+    out.append(f"**Settings compared** (`config` saved in each record; {len(keys)} keys, {len(keys) - len(differing)} identical in all "
+               f"{len(compared)} runs). Keys that differ:\n")
+    rows = [[f"`{k}`"] + [cell(fmt(flat[r].get(k, "<absent>"))) for r in compared] for k in differing]
+    out.append(table(["Setting"] + [f"`{r}`" for r in compared], rows))
+    prov = [[f"`{r}`", f"`{rec['git_commit'][:7]}`", fmt(rec.get("git_dirty")), cell(rec.get("hardware")), cell(rec["date"]),
+             fmt(rec["seed"])] for r, rec in compared.items()]
+    out.append("\n**Provenance**\n")
+    out.append(table(["Run", "Git commit", "Uncommitted changes at run time", "Hardware", "Date", "Seed"], prov))
+
+    # 2. frozen check -----------------------------------------------------------------
+    key = opts["frozen_embedding_detail_key"]
+    rows = []
+    for r, rec in p2.items():
+        d, m = rec.get("details") or {}, rec.get("metrics") or {}
+        rows.append([f"`{r}`", fmt(d.get(key)), cell(d.get("embedding_source")), f"`{str(d.get('embedding_source_sha256'))[:16]}...`",
+                     fmt(m.get("num_parameters")), fmt(d.get("total_parameters")), fmt(d.get("embedding_table_trainable"))])
+    out.append("\n**Frozen-embedding check** (the script stops before saving a record if the table changed)\n")
+    out.append(table(["Run", "Max abs change of the table", "Table file", "File SHA-256 (first 16)", "Trainable parameters",
+                      "Total parameters", "Table trainable"], rows))
+
+    # 3. embedding tables -------------------------------------------------------------
+    own = runs.get(opts["part2_own_embedding_run"])
+    pub = runs.get(opts["part2_public_embedding_run"])
+    data_rec = runs.get("data")
+    rows = []
+    if own:
+        d, m, c = own.get("details") or {}, own.get("metrics") or {}, own["config"]
+        train_info = (data_rec["metrics"]["splits"]["train"] if data_rec else {})
+        match = ("yes" if train_info and d.get("training_tokens") == train_info.get("num_tokens")
+                 and d.get("training_reviews") == train_info.get("num_reviews") else "not checked")
+        rows.append([f"`{opts['part2_own_embedding_run']}`", f"{d.get('algorithm')} (gensim {d.get('gensim_version')})",
+                     f"window {c['options'].get('window')}, min_count {c['options'].get('min_count')}, epochs {c.get('epochs')}",
+                     f"{fmt(d.get('training_reviews'))} reviews, {fmt(d.get('training_tokens'))} tokens (subsample_size {fmt(c.get('subsample_size'))}); "
+                     f"same count as the language models' training split in `results/data.json`: {match}",
+                     f"{fmt(d.get('coverage_types_percent'))}% / {fmt(d.get('coverage_tokens_percent'))}%",
+                     fmt(d.get("rows_filled_randomly")), f"{fmt(m.get('total_seconds'))} s on {cell(own.get('hardware'))}"])
+    if pub:
+        d, m, c = pub.get("details") or {}, pub.get("metrics") or {}, pub["config"]
+        rows.append([f"`{opts['part2_public_embedding_run']}`", cell(d.get("glove_file")), "not trained here (public file)",
+                     f"{fmt(d.get('glove_lines_read'))} GloVe lines read; vocabulary matched on the training split's "
+                     f"{fmt(d.get('training_tokens'))} tokens",
+                     f"{fmt(m.get('coverage_types_percent'))}% / {fmt(m.get('coverage_tokens_percent'))}% "
+                     f"(real words only: {fmt(m.get('coverage_real_words_types_percent'))}% / {fmt(m.get('coverage_real_words_tokens_percent'))}%)",
+                     fmt(m.get("rows_filled_randomly")), "not timed (download only)"])
+    if rows:
+        out.append("\n**Embedding tables** (coverage = vocabulary types / training tokens with a real vector, `<pad>` excluded; "
+                   "rows without a vector are filled by the rule in decision R2)\n")
+        out.append(table(["Record", "Source", "Settings", "Text it was built from", "Coverage (types / tokens)",
+                          "Rows filled randomly", "Cost"], rows))
+
+    # 4. per-epoch loss facts ---------------------------------------------------------
+    rows = []
+    for r, rec in compared.items():
+        e = rec.get("epoch_losses") or []
+        if not e:
+            continue
+        tr, va = [x["train_loss"] for x in e], [x["val_loss"] for x in e]
+        rose_tr = [i + 2 for i in range(len(e) - 1) if tr[i + 1] > tr[i]]
+        rose_va = [i + 2 for i in range(len(e) - 1) if va[i + 1] > va[i]]
+        nan = any(x != x for x in tr + va)
+        steps = [va[i + 1] - va[i] for i in range(len(va) - 1)]
+        m = rec.get("metrics") or {}
+        rows.append([f"`{r}`", fmt(len(e)), fmt(m.get("best_epoch")), fmt(m.get("stopped_early")),
+                     ", ".join(map(str, rose_tr)) or "none", ", ".join(map(str, rose_va)) or "none", fmt(nan),
+                     fmt(va[0]), fmt(va[-1]), fmt(tr[-1]), fmt(min(steps)), fmt(steps[-1])])
+    if rows:
+        out.append("\n**Per-epoch losses** (the only training-stability record kept: one train and one validation loss per epoch; "
+                   "per-batch losses and gradient norms are not recorded)\n")
+        out.append(table(["Run", "Epochs run", "Best epoch", "Stopped early", "Epochs where train loss rose",
+                          "Epochs where validation loss rose", "NaN", "Val loss epoch 1", "Val loss last epoch",
+                          "Train loss last epoch", "Largest one-epoch val change", "Last-epoch val change"], rows))
+    return "\n".join(out)
+
+
 def render_model_summary(runs, test_prefix, keep=lambda run: True):
     """One row per language model: perplexity and cost numbers, as recorded in the run records."""
     rows = []
@@ -334,7 +434,9 @@ def render_model_summary(runs, test_prefix, keep=lambda run: True):
                          fmt(d.get("train_seconds")), throughput, cell(rec.get("hardware"))])
         elif "test_perplexity" in m:
             rows.append([f"`{run}`", arch, fmt(math.exp(m["best_val_loss"])), fmt(m["test_perplexity"]),
-                         f"{m['num_parameters']:,} parameters" if "num_parameters" in m else "—",
+                         (f"{m['num_parameters']:,} trainable ({d['total_parameters']:,} in total)" if "total_parameters" in d
+                          and d["total_parameters"] != m["num_parameters"]
+                          else f"{m['num_parameters']:,} parameters") if "num_parameters" in m else "—",
                          fmt(m.get("train_seconds")), throughput, cell(rec.get("hardware"))])
     if not rows:
         return "No trained language models yet.\n"
@@ -629,7 +731,7 @@ def main():
     body = {}
     body["data"] = render_group(groups["Data"])
     body["part1"] = render_group(groups["Part I"]) + part_comparison("Part I")
-    body["part2"] = render_group(groups["Part II"]) + (f"\n![val_loss_all_runs.png]({all_curves})\n" if all_curves else "") + part_comparison("Part II")
+    body["part2"] = render_group(groups["Part II"]) + (f"\n![val_loss_all_runs.png]({all_curves})\n" if all_curves else "") + part_comparison("Part II") + render_part2_facts(runs, opts)
     body["part3"] = render_group(groups["Part III"])
     if unassigned:
         body["part3"] += ("\n### Runs not assigned to a section\n\n"

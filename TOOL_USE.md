@@ -303,3 +303,22 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 - `tests/test_frozen_embedding.py` + `configs/test_frozen_embedding.json` (new): tiny-data test that the frozen table is unchanged, a random table does change, and the check fails on a one-number nudge or when unfrozen. Passed.
 - Smoke test only (CPU, first 60/40/40 reviews in a scratch folder, 1 epoch, output not in `results/`; GloVe run used a made-up table): both runs and a random-embedding run completed and the check passed. Not results. Real runs are Colab-only (rule 9).
 - `src/update_results.py` + `configs/update_results.json`: the frozen-embedding check now looks only at `src/train.py` runs (the word2vec and GloVe table builders were being flagged by mistake). `notebooks/run_colab.ipynb`: sections 9 and 10. `DECISIONS.md` section T. Ran `update_results.py`.
+
+## 2026-10-14 (embedding restore cell)
+
+- `notebooks/run_colab.ipynb`: new restore cell before section 9 that copies `w2v_100d.npy` and `glove_100d.npy` from Drive into `data/embeddings/` and stops with a clear message if either is missing (reported error: `w2v_100d.npy` not found in Colab). Before, only section 8 restored the w2v file, and nothing restored `glove_100d.npy` in a new session. No Python code changed.
+
+## 2026-10-14 (Part II runs imported)
+
+- Extracted the Colab results zip to a scratch folder and compared it with `results/`: new were `p2_lstm_w2v.json` and `p2_lstm_glove.json` (copied); the rest were Colab-rebuilt `all_runs.csv`/figures (not copied; rebuilt locally). Both records show commit `5d822d7` with `git_dirty: true` (not investigated). No code changed. Ran `update_results.py`; added a `results/RESULTS_LOG.md` entry.
+
+## 2026-10-14 (Part II audit, generation, RESULTS.md section)
+
+- Audit of `train_lstm`, `p2_lstm_w2v`, `p2_lstm_glove` and the word2vec record from the saved run records and git history only; nothing rerun. Findings were reported in the reply; no reruns were added to `MY_TASKS.md` (none approved yet).
+- `src/update_results.py` + `configs/update_results.json`: new `render_part2_facts` block in the Part II section; the Part II comparison tables now include the reused Part I `train_lstm` and `generations_lstm`; `word2vec_cost` and `glove_coverage` are assigned to Part II; the model-size column shows trainable and total parameters for frozen runs.
+- `configs/generations_p2_lstm_w2v.json`, `configs/generations_p2_lstm_glove.json`, `configs/combine_generations_p2.json` (new); `src/combine_generations.py` accepts optional `options.title` and `options.labels`. `notebooks/run_colab.ipynb`: section 11. Smoke test only (CPU, random-weight checkpoints and output in a scratch folder): generation, the parameter-count check for the frozen runs, and the merge ran; the text is meaningless and is not a result. Real generation is Colab-only (rule 9).
+- `DECISIONS.md` section U (NEEDS REVIEW). Ran `update_results.py`.
+
+## 2026-10-14 (decision review)
+
+- Asked the user about every NEEDS REVIEW item one by one (28 items, including G2); all were kept as is. `DECISIONS.md`: their status is now CONFIRMED, new section V (V1: no reruns after the Part II audit). No code changed. Ran `update_results.py`.

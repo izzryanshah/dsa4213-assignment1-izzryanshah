@@ -1,0 +1,30 @@
+{
+  "architecture": null,
+  "layers": null,
+  "hidden_size": null,
+  "embedding_dim": null,
+  "embedding_init": null,
+  "context_length": null,
+  "learning_rate": null,
+  "batch_size": null,
+  "epochs": null,
+  "dropout": null,
+  "vocab_size": 20000,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "models": [
+      "lstm",
+      "p2_lstm_w2v",
+      "p2_lstm_glove"
+    ],
+    "input_template": "results/generations_{model}.json",
+    "output_path": "results/part2_generations.md",
+    "title": "Part II generations: random vs own frozen vs public frozen embeddings (LSTM), identical decoding",
+    "labels": {
+      "lstm": "LSTM, random trainable embeddings (Part I run)",
+      "p2_lstm_w2v": "LSTM, own Skip-gram embeddings, frozen",
+      "p2_lstm_glove": "LSTM, public GloVe 100d embeddings, frozen"
+    }
+  }
+}

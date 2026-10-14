@@ -1,0 +1,160 @@
+{
+  "run": "p2_lstm_glove",
+  "script": "src/train.py",
+  "command": "/usr/bin/python3 src/train.py --config configs/p2_lstm_glove.json --model lstm --embedding glove",
+  "date": "2026-10-14T07:47:42+00:00",
+  "git_commit": "5d822d7526f54d5e7cceb64697568badc1968592",
+  "git_dirty": true,
+  "gpu": "Tesla T4",
+  "hardware": "GPU: Tesla T4",
+  "seed": 0,
+  "config": {
+    "architecture": "lstm",
+    "layers": 2,
+    "hidden_size": 256,
+    "embedding_dim": 100,
+    "embedding_init": "glove",
+    "context_length": 64,
+    "learning_rate": 0.001,
+    "batch_size": 64,
+    "epochs": 20,
+    "dropout": 0.3,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "processed_dir": "data/processed",
+      "checkpoint_dir": "checkpoints",
+      "patience": 3,
+      "grad_clip": 1.0,
+      "eval_max_length": 256,
+      "eval_batch_size": 64,
+      "embedding_paths": {
+        "w2v": "data/embeddings/w2v_100d.npy",
+        "glove": "data/embeddings/glove_100d.npy"
+      }
+    }
+  },
+  "epoch_losses": [
+    {
+      "epoch": 1,
+      "train_loss": 6.127084246753044,
+      "val_loss": 5.503428800499811
+    },
+    {
+      "epoch": 2,
+      "train_loss": 5.478454619505958,
+      "val_loss": 5.114667001595722
+    },
+    {
+      "epoch": 3,
+      "train_loss": 5.2562471102441135,
+      "val_loss": 4.9541335831964
+    },
+    {
+      "epoch": 4,
+      "train_loss": 5.144800015303791,
+      "val_loss": 4.8624851912208324
+    },
+    {
+      "epoch": 5,
+      "train_loss": 5.074914626567819,
+      "val_loss": 4.800460446035339
+    },
+    {
+      "epoch": 6,
+      "train_loss": 5.023846972395061,
+      "val_loss": 4.7552046291383085
+    },
+    {
+      "epoch": 7,
+      "train_loss": 4.983933008220717,
+      "val_loss": 4.721112411264141
+    },
+    {
+      "epoch": 8,
+      "train_loss": 4.949383931253038,
+      "val_loss": 4.685865607914613
+    },
+    {
+      "epoch": 9,
+      "train_loss": 4.921143025556396,
+      "val_loss": 4.661100248360765
+    },
+    {
+      "epoch": 10,
+      "train_loss": 4.896256074735811,
+      "val_loss": 4.640367058286559
+    },
+    {
+      "epoch": 11,
+      "train_loss": 4.874833202053223,
+      "val_loss": 4.617338730800659
+    },
+    {
+      "epoch": 12,
+      "train_loss": 4.855038059803212,
+      "val_loss": 4.598420806895242
+    },
+    {
+      "epoch": 13,
+      "train_loss": 4.837547295592295,
+      "val_loss": 4.58158126817106
+    },
+    {
+      "epoch": 14,
+      "train_loss": 4.821755779763255,
+      "val_loss": 4.568356535156019
+    },
+    {
+      "epoch": 15,
+      "train_loss": 4.807836404904924,
+      "val_loss": 4.556299383027136
+    },
+    {
+      "epoch": 16,
+      "train_loss": 4.79524136714927,
+      "val_loss": 4.545504666110412
+    },
+    {
+      "epoch": 17,
+      "train_loss": 4.783487188786772,
+      "val_loss": 4.535830263165757
+    },
+    {
+      "epoch": 18,
+      "train_loss": 4.773569666258737,
+      "val_loss": 4.527355007808266
+    },
+    {
+      "epoch": 19,
+      "train_loss": 4.763785753593428,
+      "val_loss": 4.519361606178551
+    },
+    {
+      "epoch": 20,
+      "train_loss": 4.754874652971745,
+      "val_loss": 4.513451299304932
+    }
+  ],
+  "metrics": {
+    "best_epoch": 20,
+    "best_val_loss": 4.513451299304932,
+    "test_cross_entropy": 4.502923891760985,
+    "test_perplexity": 90.28071680904144,
+    "train_seconds": 3397.8397241170005,
+    "num_parameters": 6033699,
+    "epochs_run": 20,
+    "stopped_early": false
+  },
+  "details": {
+    "checkpoint_path": "checkpoints/p2_lstm_glove.pt",
+    "test_num_targets": 981353,
+    "test_target_checksum": "4f77927a1cd952f56697be95540ea0fc002013d9f8278d3f95c1290e6c305605",
+    "total_parameters": 8033999,
+    "embedding_table_trainable": false,
+    "embedding_source": "data/embeddings/glove_100d.npy",
+    "embedding_source_sha256": "0755fa273a2c755c08830b6d5a1dbdfd152a008df0763d42440a225a0fea1d55",
+    "frozen_embedding_max_abs_change": 0.0
+  }
+}

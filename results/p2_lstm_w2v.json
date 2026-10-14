@@ -1,0 +1,160 @@
+{
+  "run": "p2_lstm_w2v",
+  "script": "src/train.py",
+  "command": "/usr/bin/python3 src/train.py --config configs/p2_lstm_w2v.json --model lstm --embedding w2v",
+  "date": "2026-10-14T06:50:49+00:00",
+  "git_commit": "5d822d7526f54d5e7cceb64697568badc1968592",
+  "git_dirty": true,
+  "gpu": "Tesla T4",
+  "hardware": "GPU: Tesla T4",
+  "seed": 0,
+  "config": {
+    "architecture": "lstm",
+    "layers": 2,
+    "hidden_size": 256,
+    "embedding_dim": 100,
+    "embedding_init": "w2v",
+    "context_length": 64,
+    "learning_rate": 0.001,
+    "batch_size": 64,
+    "epochs": 20,
+    "dropout": 0.3,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "processed_dir": "data/processed",
+      "checkpoint_dir": "checkpoints",
+      "patience": 3,
+      "grad_clip": 1.0,
+      "eval_max_length": 256,
+      "eval_batch_size": 64,
+      "embedding_paths": {
+        "w2v": "data/embeddings/w2v_100d.npy",
+        "glove": "data/embeddings/glove_100d.npy"
+      }
+    }
+  },
+  "epoch_losses": [
+    {
+      "epoch": 1,
+      "train_loss": 6.017909930886708,
+      "val_loss": 5.303518950488175
+    },
+    {
+      "epoch": 2,
+      "train_loss": 5.322661215376954,
+      "val_loss": 4.964371608402756
+    },
+    {
+      "epoch": 3,
+      "train_loss": 5.118634218111434,
+      "val_loss": 4.819193966458749
+    },
+    {
+      "epoch": 4,
+      "train_loss": 5.01423868258461,
+      "val_loss": 4.7330137691944065
+    },
+    {
+      "epoch": 5,
+      "train_loss": 4.946170541344996,
+      "val_loss": 4.670443345012709
+    },
+    {
+      "epoch": 6,
+      "train_loss": 4.896731520053433,
+      "val_loss": 4.6266679344708885
+    },
+    {
+      "epoch": 7,
+      "train_loss": 4.857752564104716,
+      "val_loss": 4.591239437690723
+    },
+    {
+      "epoch": 8,
+      "train_loss": 4.825235226206375,
+      "val_loss": 4.561322005752874
+    },
+    {
+      "epoch": 9,
+      "train_loss": 4.7988868594696985,
+      "val_loss": 4.536996275896621
+    },
+    {
+      "epoch": 10,
+      "train_loss": 4.776174606330412,
+      "val_loss": 4.517796920642506
+    },
+    {
+      "epoch": 11,
+      "train_loss": 4.756108507432396,
+      "val_loss": 4.4995878364954525
+    },
+    {
+      "epoch": 12,
+      "train_loss": 4.738688636662316,
+      "val_loss": 4.482778130958578
+    },
+    {
+      "epoch": 13,
+      "train_loss": 4.723665734302521,
+      "val_loss": 4.470547674408362
+    },
+    {
+      "epoch": 14,
+      "train_loss": 4.7102283794452156,
+      "val_loss": 4.457286212479124
+    },
+    {
+      "epoch": 15,
+      "train_loss": 4.698607930730357,
+      "val_loss": 4.448596225493215
+    },
+    {
+      "epoch": 16,
+      "train_loss": 4.687787107076365,
+      "val_loss": 4.437360167684141
+    },
+    {
+      "epoch": 17,
+      "train_loss": 4.677666319245563,
+      "val_loss": 4.431571493458757
+    },
+    {
+      "epoch": 18,
+      "train_loss": 4.668471363958845,
+      "val_loss": 4.422433542509655
+    },
+    {
+      "epoch": 19,
+      "train_loss": 4.660950775317448,
+      "val_loss": 4.415788363713827
+    },
+    {
+      "epoch": 20,
+      "train_loss": 4.653418235456184,
+      "val_loss": 4.410532291544139
+    }
+  ],
+  "metrics": {
+    "best_epoch": 20,
+    "best_val_loss": 4.410532291544139,
+    "test_cross_entropy": 4.399680832779483,
+    "test_perplexity": 81.4248763657732,
+    "train_seconds": 3394.095947494,
+    "num_parameters": 6033699,
+    "epochs_run": 20,
+    "stopped_early": false
+  },
+  "details": {
+    "checkpoint_path": "checkpoints/p2_lstm_w2v.pt",
+    "test_num_targets": 981353,
+    "test_target_checksum": "4f77927a1cd952f56697be95540ea0fc002013d9f8278d3f95c1290e6c305605",
+    "total_parameters": 8033999,
+    "embedding_table_trainable": false,
+    "embedding_source": "data/embeddings/w2v_100d.npy",
+    "embedding_source_sha256": "8205fcbe900b4611b44b9c4b4a58dad1a46ebf2312b0a7a729e5ae8c8b1ef5b7",
+    "frozen_embedding_max_abs_change": 0.0
+  }
+}

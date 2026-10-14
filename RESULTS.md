@@ -1,6 +1,6 @@
 # Results
 
-Rebuilt by `src/update_results.py` on 2026-10-14T13:42:05+08:00 from 24 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-14T13:41:10+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
+Rebuilt by `src/update_results.py` on 2026-10-14T16:41:08+08:00 from 26 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-14T13:42:08+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
 
 Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III](#part-iii) · [Settings](#settings) · [Checks](#checks)
 
@@ -671,7 +671,7 @@ Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III
 |---|---|
 | Command | `/usr/local/bin/python3 tests/test_frozen_embedding.py --config configs/test_frozen_embedding.json` |
 | Script | `tests/test_frozen_embedding.py` |
-| Date | 2026-10-14T13:41:10+08:00 |
+| Date | 2026-10-14T13:42:08+08:00 |
 | Git commit | `bd539e5 (uncommitted changes at run time)` |
 | Hardware | CPU: Apple M2 (Darwin arm64) |
 | Seed | 0 |
@@ -1312,17 +1312,400 @@ Decoding settings for each column are in the run records above (`results/<run>.j
 
 ## Part II
 
-No runs yet.
+#### `glove_coverage`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/load_glove.py --config configs/glove_coverage.json` |
+| Script | `src/load_glove.py` |
+| Date | 2026-10-13T07:41:32+00:00 |
+| Git commit | `bd539e5` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/glove_coverage.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | glove_public_lookup |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | 100 |
+| `embedding_init` | public_glove |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.processed_dir` | data/processed |
+| `options.glove_path` | data/embeddings/glove.6B.100d.txt |
+| `options.output_path` | data/embeddings/glove_100d.npy |
+| `options.top_missing` | 20 |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `coverage_types_percent` | 99.5600 |
+| `coverage_tokens_percent` | 97.5184 |
+| `coverage_real_words_types_percent` | 99.5700 |
+| `coverage_real_words_tokens_percent` | 99.9517 |
+| `vocab_types_excluding_pad` | 20,002 |
+| `vocab_types_with_vector` | 19,914 |
+| `rows_filled_randomly` | 88 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `glove_file` | glove.6B.100d.txt |
+| `glove_lines_read` | 400,000 |
+| `training_tokens` | 11,067,213 |
+| `vectors_shape` | `[20003, 100]` |
+| `vectors_path` | data/embeddings/glove_100d.npy |
+| `fill_rule` | N(0, std of real vectors), seeded; &lt;pad&gt; row zeros |
+| `fill_std` | 0.5027 |
+| `pad_row_zero` | True |
+| `most_frequent_missing_words` | (20 entries; see the run's JSON file) |
+
+#### `p2_lstm_glove`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/train.py --config configs/p2_lstm_glove.json --model lstm --embedding glove` |
+| Script | `src/train.py` |
+| Date | 2026-10-14T07:47:42+00:00 |
+| Git commit | `5d822d7 (uncommitted changes at run time)` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/p2_lstm_glove.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | lstm |
+| `layers` | 2 |
+| `hidden_size` | 256 |
+| `embedding_dim` | 100 |
+| `embedding_init` | glove |
+| `context_length` | 64 |
+| `learning_rate` | 0.0010 |
+| `batch_size` | 64 |
+| `epochs` | 20 |
+| `dropout` | 0.3000 |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.processed_dir` | data/processed |
+| `options.checkpoint_dir` | checkpoints |
+| `options.patience` | 3 |
+| `options.grad_clip` | 1.0000 |
+| `options.eval_max_length` | 256 |
+| `options.eval_batch_size` | 64 |
+| `options.embedding_paths.w2v` | data/embeddings/w2v_100d.npy |
+| `options.embedding_paths.glove` | data/embeddings/glove_100d.npy |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `best_epoch` | 20 |
+| `best_val_loss` | 4.5135 |
+| `test_cross_entropy` | 4.5029 |
+| `test_perplexity` | 90.2807 |
+| `train_seconds` | 3,397.84 |
+| `num_parameters` | 6,033,699 |
+| `epochs_run` | 20 |
+| `stopped_early` | False |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `checkpoint_path` | checkpoints/p2_lstm_glove.pt |
+| `test_num_targets` | 981,353 |
+| `test_target_checksum` | 4f77927a1cd952f56697be95540ea0fc002013d9f8278d3f95c1290e6c305605 |
+| `total_parameters` | 8,033,999 |
+| `embedding_table_trainable` | False |
+| `embedding_source` | data/embeddings/glove_100d.npy |
+| `embedding_source_sha256` | 0755fa273a2c755c08830b6d5a1dbdfd152a008df0763d42440a225a0fea1d55 |
+| `frozen_embedding_max_abs_change` | 0.0000 |
+
+**Loss per epoch**
+
+| Epoch | Train loss | Validation loss |
+|---|---|---|
+| 1 | 6.1271 | 5.5034 |
+| 2 | 5.4785 | 5.1147 |
+| 3 | 5.2562 | 4.9541 |
+| 4 | 5.1448 | 4.8625 |
+| 5 | 5.0749 | 4.8005 |
+| 6 | 5.0238 | 4.7552 |
+| 7 | 4.9839 | 4.7211 |
+| 8 | 4.9494 | 4.6859 |
+| 9 | 4.9211 | 4.6611 |
+| 10 | 4.8963 | 4.6404 |
+| 11 | 4.8748 | 4.6173 |
+| 12 | 4.8550 | 4.5984 |
+| 13 | 4.8375 | 4.5816 |
+| 14 | 4.8218 | 4.5684 |
+| 15 | 4.8078 | 4.5563 |
+| 16 | 4.7952 | 4.5455 |
+| 17 | 4.7835 | 4.5358 |
+| 18 | 4.7736 | 4.5274 |
+| 19 | 4.7638 | 4.5194 |
+| 20 | 4.7549 | 4.5135 |
+
+![p2_lstm_glove_loss.png](results/figures/p2_lstm_glove_loss.png)
+
+#### `p2_lstm_w2v`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/train.py --config configs/p2_lstm_w2v.json --model lstm --embedding w2v` |
+| Script | `src/train.py` |
+| Date | 2026-10-14T06:50:49+00:00 |
+| Git commit | `5d822d7 (uncommitted changes at run time)` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/p2_lstm_w2v.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | lstm |
+| `layers` | 2 |
+| `hidden_size` | 256 |
+| `embedding_dim` | 100 |
+| `embedding_init` | w2v |
+| `context_length` | 64 |
+| `learning_rate` | 0.0010 |
+| `batch_size` | 64 |
+| `epochs` | 20 |
+| `dropout` | 0.3000 |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.processed_dir` | data/processed |
+| `options.checkpoint_dir` | checkpoints |
+| `options.patience` | 3 |
+| `options.grad_clip` | 1.0000 |
+| `options.eval_max_length` | 256 |
+| `options.eval_batch_size` | 64 |
+| `options.embedding_paths.w2v` | data/embeddings/w2v_100d.npy |
+| `options.embedding_paths.glove` | data/embeddings/glove_100d.npy |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `best_epoch` | 20 |
+| `best_val_loss` | 4.4105 |
+| `test_cross_entropy` | 4.3997 |
+| `test_perplexity` | 81.4249 |
+| `train_seconds` | 3,394.10 |
+| `num_parameters` | 6,033,699 |
+| `epochs_run` | 20 |
+| `stopped_early` | False |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `checkpoint_path` | checkpoints/p2_lstm_w2v.pt |
+| `test_num_targets` | 981,353 |
+| `test_target_checksum` | 4f77927a1cd952f56697be95540ea0fc002013d9f8278d3f95c1290e6c305605 |
+| `total_parameters` | 8,033,999 |
+| `embedding_table_trainable` | False |
+| `embedding_source` | data/embeddings/w2v_100d.npy |
+| `embedding_source_sha256` | 8205fcbe900b4611b44b9c4b4a58dad1a46ebf2312b0a7a729e5ae8c8b1ef5b7 |
+| `frozen_embedding_max_abs_change` | 0.0000 |
+
+**Loss per epoch**
+
+| Epoch | Train loss | Validation loss |
+|---|---|---|
+| 1 | 6.0179 | 5.3035 |
+| 2 | 5.3227 | 4.9644 |
+| 3 | 5.1186 | 4.8192 |
+| 4 | 5.0142 | 4.7330 |
+| 5 | 4.9462 | 4.6704 |
+| 6 | 4.8967 | 4.6267 |
+| 7 | 4.8578 | 4.5912 |
+| 8 | 4.8252 | 4.5613 |
+| 9 | 4.7989 | 4.5370 |
+| 10 | 4.7762 | 4.5178 |
+| 11 | 4.7561 | 4.4996 |
+| 12 | 4.7387 | 4.4828 |
+| 13 | 4.7237 | 4.4705 |
+| 14 | 4.7102 | 4.4573 |
+| 15 | 4.6986 | 4.4486 |
+| 16 | 4.6878 | 4.4374 |
+| 17 | 4.6777 | 4.4316 |
+| 18 | 4.6685 | 4.4224 |
+| 19 | 4.6610 | 4.4158 |
+| 20 | 4.6534 | 4.4105 |
+
+![p2_lstm_w2v_loss.png](results/figures/p2_lstm_w2v_loss.png)
+
+#### `word2vec_cost`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/local/bin/python3 src/train_word2vec.py --config configs/word2vec_cost.json` |
+| Script | `src/train_word2vec.py` |
+| Date | 2026-10-13T15:19:34+08:00 |
+| Git commit | `5771854 (uncommitted changes at run time)` |
+| Hardware | CPU: Apple M2 (Darwin arm64) |
+| Seed | 0 |
+| Result file | `results/word2vec_cost.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | word2vec_skipgram |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | 100 |
+| `embedding_init` | own_skipgram |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | 10 |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.processed_dir` | data/processed |
+| `options.output_path` | data/embeddings/w2v_100d.npy |
+| `options.sg` | 1 |
+| `options.window` | 5 |
+| `options.min_count` | 1 |
+| `options.negative` | 5 |
+| `options.sample` | 0.0010 |
+| `options.workers` | 1 |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `train_seconds` | 273.8029 |
+| `build_vocab_seconds` | 0.6832 |
+| `total_seconds` | 274.4861 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `algorithm` | skipgram |
+| `gensim_version` | 4.4.0 |
+| `training_reviews` | 40,000 |
+| `training_tokens` | 11,067,213 |
+| `vectors_shape` | `[20003, 100]` |
+| `vectors_path` | data/embeddings/w2v_100d.npy |
+| `pad_row_zero` | True |
+| `words_learned` | 20,002 |
+| `coverage_types_percent` | 100.0000 |
+| `coverage_tokens_percent` | 100.0000 |
+| `vocab_types_excluding_pad` | 20,002 |
+| `vocab_types_with_vector` | 20,002 |
+| `rows_filled_randomly` | 0 |
+| `fill_rule` | N(0, std of real vectors), seeded; &lt;pad&gt; row zeros |
+| `fill_std` | 0.2788 |
+| `timing_note` | wall-clock, time.perf_counter; covers build_vocab and train only (not data loading or saving) |
 
 ![val_loss_all_runs.png](results/figures/val_loss_all_runs.png)
 
 ### Language-model comparison
 
-No trained language models yet.
+Validation perplexity of a neural run is exp(best validation loss); the n-gram figure is as recorded. Inference throughput shows — until a run records `inference_tokens_per_second`.
+
+| Run | Architecture | Validation perplexity | Test perplexity | Model size | Training seconds | Inference tokens/s | Hardware |
+|---|---|---|---|---|---|---|---|
+| `p2_lstm_glove` | lstm | 91.2362 | 90.2807 | 6,033,699 trainable (8,033,999 in total) | 3,397.84 | — | GPU: Tesla T4 |
+| `p2_lstm_w2v` | lstm | 82.3133 | 81.4249 | 6,033,699 trainable (8,033,999 in total) | 3,394.10 | — | GPU: Tesla T4 |
+| `train_lstm` | lstm | 81.3690 | 80.4494 | 8,033,999 parameters | 3,849.67 | — | GPU: Tesla T4 |
 
 ### Generated text by prompt
 
-No generation runs yet.
+Decoding settings for each column are in the run records above (`results/<run>.json`, field `decoding`).
+
+**Prompt:** `this movie was one of the best`
+
+|  | `generations_lstm` |
+|---|---|
+| Continuation | movies i have ever seen . |
+| New tokens | 6 |
+| Ended with `<eos>` | True |
+
+**Prompt:** `i was really disappointed by the acting and`
+
+|  | `generations_lstm` |
+|---|---|
+| Continuation | costumes and the cast didn ' t take me to get bored , but i had nothing to do with any actor as the other reviewer who didn ' t go in there on this . she was funny , but she didn ' t come , then i didn |
+| New tokens | 50 |
+| Ended with `<eos>` | False |
+
+**Prompt:** `the story follows a young man who`
+
+|  | `generations_lstm` |
+|---|---|
+| Continuation | lives on the island , when they get them and then finds it a complete disappointment . the plot is so slow , there ' s one scene in that scene where the kids , and , to begin with , was a hoot . i have the courage to |
+| New tokens | 50 |
+| Ended with `<eos>` | False |
+
+### Part II set-up facts
+
+Read from the run records; nothing here is interpreted.
+
+**Settings compared** (`config` saved in each record; 21 keys, 18 identical in all 3 runs). Keys that differ:
+
+| Setting | `train_lstm` | `p2_lstm_glove` | `p2_lstm_w2v` |
+|---|---|---|---|
+| `embedding_init` | random | glove | w2v |
+| `options.embedding_paths.glove` | &lt;absent&gt; | data/embeddings/glove_100d.npy | data/embeddings/glove_100d.npy |
+| `options.embedding_paths.w2v` | &lt;absent&gt; | data/embeddings/w2v_100d.npy | data/embeddings/w2v_100d.npy |
+
+
+**Provenance**
+
+| Run | Git commit | Uncommitted changes at run time | Hardware | Date | Seed |
+|---|---|---|---|---|---|
+| `train_lstm` | `7b9bbe6` | False | GPU: Tesla T4 | 2026-10-12T06:19:48+00:00 | 0 |
+| `p2_lstm_glove` | `5d822d7` | True | GPU: Tesla T4 | 2026-10-14T07:47:42+00:00 | 0 |
+| `p2_lstm_w2v` | `5d822d7` | True | GPU: Tesla T4 | 2026-10-14T06:50:49+00:00 | 0 |
+
+
+**Frozen-embedding check** (the script stops before saving a record if the table changed)
+
+| Run | Max abs change of the table | Table file | File SHA-256 (first 16) | Trainable parameters | Total parameters | Table trainable |
+|---|---|---|---|---|---|---|
+| `p2_lstm_glove` | 0.0000 | data/embeddings/glove_100d.npy | `0755fa273a2c755c...` | 6,033,699 | 8,033,999 | False |
+| `p2_lstm_w2v` | 0.0000 | data/embeddings/w2v_100d.npy | `8205fcbe900b4611...` | 6,033,699 | 8,033,999 | False |
+
+
+**Embedding tables** (coverage = vocabulary types / training tokens with a real vector, `<pad>` excluded; rows without a vector are filled by the rule in decision R2)
+
+| Record | Source | Settings | Text it was built from | Coverage (types / tokens) | Rows filled randomly | Cost |
+|---|---|---|---|---|---|---|
+| `word2vec_cost` | skipgram (gensim 4.4.0) | window 5, min_count 1, epochs 10 | 40,000 reviews, 11,067,213 tokens (subsample_size —); same count as the language models' training split in `results/data.json`: yes | 100.0000% / 100.0000% | 0 | 274.4861 s on CPU: Apple M2 (Darwin arm64) |
+| `glove_coverage` | glove.6B.100d.txt | not trained here (public file) | 400,000 GloVe lines read; vocabulary matched on the training split's 11,067,213 tokens | 99.5600% / 97.5184% (real words only: 99.5700% / 99.9517%) | 88 | not timed (download only) |
+
+
+**Per-epoch losses** (the only training-stability record kept: one train and one validation loss per epoch; per-batch losses and gradient norms are not recorded)
+
+| Run | Epochs run | Best epoch | Stopped early | Epochs where train loss rose | Epochs where validation loss rose | NaN | Val loss epoch 1 | Val loss last epoch | Train loss last epoch | Largest one-epoch val change | Last-epoch val change |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| `train_lstm` | 20 | 20 | False | none | none | False | 5.4246 | 4.3990 | 4.5779 | -0.3933 | -0.0068 |
+| `p2_lstm_glove` | 20 | 20 | False | none | none | False | 5.5034 | 4.5135 | 4.7549 | -0.3888 | -0.0059 |
+| `p2_lstm_w2v` | 20 | 20 | False | none | none | False | 5.3035 | 4.4105 | 4.6534 | -0.3391 | -0.0053 |
 
 ### My notes
 
@@ -1499,133 +1882,6 @@ These runs match no rule in `part_rules` (`configs/update_results.json`).
 | `sources.transformer.hardware` | GPU: Tesla T4 |
 | `sources.transformer.date` | 2026-10-13T06:27:17+00:00 |
 
-#### `glove_coverage`
-
-| Field | Value |
-|---|---|
-| Command | `/usr/bin/python3 src/load_glove.py --config configs/glove_coverage.json` |
-| Script | `src/load_glove.py` |
-| Date | 2026-10-13T07:41:32+00:00 |
-| Git commit | `bd539e5` |
-| Hardware | GPU: Tesla T4 |
-| Seed | 0 |
-| Result file | `results/glove_coverage.json` |
-
-**Settings used**
-
-| Setting | Value |
-|---|---|
-| `architecture` | glove_public_lookup |
-| `layers` | — |
-| `hidden_size` | — |
-| `embedding_dim` | 100 |
-| `embedding_init` | public_glove |
-| `context_length` | — |
-| `learning_rate` | — |
-| `batch_size` | — |
-| `epochs` | — |
-| `dropout` | — |
-| `vocab_size` | 20,000 |
-| `subsample_size` | — |
-| `seed` | 0 |
-| `options.processed_dir` | data/processed |
-| `options.glove_path` | data/embeddings/glove.6B.100d.txt |
-| `options.output_path` | data/embeddings/glove_100d.npy |
-| `options.top_missing` | 20 |
-
-**Key numbers**
-
-| Metric | Value |
-|---|---|
-| `coverage_types_percent` | 99.5600 |
-| `coverage_tokens_percent` | 97.5184 |
-| `coverage_real_words_types_percent` | 99.5700 |
-| `coverage_real_words_tokens_percent` | 99.9517 |
-| `vocab_types_excluding_pad` | 20,002 |
-| `vocab_types_with_vector` | 19,914 |
-| `rows_filled_randomly` | 88 |
-
-**Details**
-
-| Name | Value |
-|---|---|
-| `glove_file` | glove.6B.100d.txt |
-| `glove_lines_read` | 400,000 |
-| `training_tokens` | 11,067,213 |
-| `vectors_shape` | `[20003, 100]` |
-| `vectors_path` | data/embeddings/glove_100d.npy |
-| `fill_rule` | N(0, std of real vectors), seeded; &lt;pad&gt; row zeros |
-| `fill_std` | 0.5027 |
-| `pad_row_zero` | True |
-| `most_frequent_missing_words` | (20 entries; see the run's JSON file) |
-
-#### `word2vec_cost`
-
-| Field | Value |
-|---|---|
-| Command | `/usr/local/bin/python3 src/train_word2vec.py --config configs/word2vec_cost.json` |
-| Script | `src/train_word2vec.py` |
-| Date | 2026-10-13T15:19:34+08:00 |
-| Git commit | `5771854 (uncommitted changes at run time)` |
-| Hardware | CPU: Apple M2 (Darwin arm64) |
-| Seed | 0 |
-| Result file | `results/word2vec_cost.json` |
-
-**Settings used**
-
-| Setting | Value |
-|---|---|
-| `architecture` | word2vec_skipgram |
-| `layers` | — |
-| `hidden_size` | — |
-| `embedding_dim` | 100 |
-| `embedding_init` | own_skipgram |
-| `context_length` | — |
-| `learning_rate` | — |
-| `batch_size` | — |
-| `epochs` | 10 |
-| `dropout` | — |
-| `vocab_size` | 20,000 |
-| `subsample_size` | — |
-| `seed` | 0 |
-| `options.processed_dir` | data/processed |
-| `options.output_path` | data/embeddings/w2v_100d.npy |
-| `options.sg` | 1 |
-| `options.window` | 5 |
-| `options.min_count` | 1 |
-| `options.negative` | 5 |
-| `options.sample` | 0.0010 |
-| `options.workers` | 1 |
-
-**Key numbers**
-
-| Metric | Value |
-|---|---|
-| `train_seconds` | 273.8029 |
-| `build_vocab_seconds` | 0.6832 |
-| `total_seconds` | 274.4861 |
-
-**Details**
-
-| Name | Value |
-|---|---|
-| `algorithm` | skipgram |
-| `gensim_version` | 4.4.0 |
-| `training_reviews` | 40,000 |
-| `training_tokens` | 11,067,213 |
-| `vectors_shape` | `[20003, 100]` |
-| `vectors_path` | data/embeddings/w2v_100d.npy |
-| `pad_row_zero` | True |
-| `words_learned` | 20,002 |
-| `coverage_types_percent` | 100.0000 |
-| `coverage_tokens_percent` | 100.0000 |
-| `vocab_types_excluding_pad` | 20,002 |
-| `vocab_types_with_vector` | 20,002 |
-| `rows_filled_randomly` | 0 |
-| `fill_rule` | N(0, std of real vectors), seeded; &lt;pad&gt; row zeros |
-| `fill_std` | 0.2788 |
-| `timing_note` | wall-clock, time.perf_counter; covers build_vocab and train only (not data loading or saving) |
-
 ### My notes
 
 <!-- my-notes:part3:start -->
@@ -1636,38 +1892,11 @@ These runs match no rule in `part_rules` (`configs/update_results.json`).
 
 Source: `DECISIONS.md` (copied as written there).
 
-### NEEDS REVIEW (26)
+### NEEDS REVIEW (0)
 
-| ID | Decision | Status |
-|---|---|---|
-| G2 | Prompts file and its format | file name CONFIRMED; format NEEDS REVIEW. `prompts.txt` (the F1 prompts, renamed by the user from `prompt.txt`) exists and was used for `results/generations_ngram.json`. |
-| G3 | Random seed per generation | NEEDS REVIEW |
-| G4 | Order of the sampling dials, and their edge cases | NEEDS REVIEW |
-| G5 | How generated text is stored | NEEDS REVIEW |
-| G6 | How the n-gram model is prepared for generation | NEEDS REVIEW |
-| G7 | How neural models plug in | NEEDS REVIEW |
-| G8 | Generation files are full run records | NEEDS REVIEW |
-| J1 | Which runs belong to Data / Part I / Part II / Part III (revised 2026-10-12 after reading the assignment brief) | NEEDS REVIEW (naming convention and bigram placement only) |
-| J2 | "Close to the vocabulary size" threshold | NEEDS REVIEW |
-| J3 | How the exact command of each run is known | NEEDS REVIEW |
-| J4 | How the test-set and padding checks are evidenced | NEEDS REVIEW |
-| J5 | How "My notes" are protected | NEEDS REVIEW |
-| J6 | Figures, and `update_results.py` not saving a run record | NEEDS REVIEW |
-| K1 | Report and submission requirement list (revised 2026-10-12 from the brief) | NEEDS REVIEW |
-| K2 | Schedule and planned days | NEEDS REVIEW |
-| K3 | What counts as "waiting on me now", and how interpretation items are counted | NEEDS REVIEW |
-| L3 | Dropout placement and layout | NEEDS REVIEW |
-| L4 | Smoke-test data | NEEDS REVIEW |
-| M3 | Block style and other defaults | NEEDS REVIEW |
-| M4 | Training settings copied from the LSTM | NEEDS REVIEW |
-| N1 | Test settings | NEEDS REVIEW |
-| O2 | Other benchmark details | NEEDS REVIEW |
-| P2 | Loading neural models and the combined file | NEEDS REVIEW |
-| S1 | Which public GloVe file | NEEDS REVIEW |
-| T1 | How the option works and what stays identical | NEEDS REVIEW (config layout, run names) |
-| T2 | The frozen-embedding check | NEEDS REVIEW (parameter-count convention) |
+None.
 
-### All design choices (77)
+### All design choices (80)
 
 | ID | Decision | Value | Where | Chosen by | Status |
 |---|---|---|---|---|---|
@@ -1702,13 +1931,13 @@ Source: `DECISIONS.md` (copied as written there).
 | E3 | Python used to run scripts | `/usr/local/bin/python3` (the default `python` on this machine, from Anaconda, has no PyTorch). | not stated | Assistant default (environment workaround), originally; User, prompt (2026-10-10, reviewing NEEDS REVIEW) confirmed "keep using /usr/local/bin/python3 as-is" over setting up a dedicated project virtual environment. | CONFIRMED |
 | F1 | Generation prompts | three prompts: `this movie was one of the best` / `i was really disappointed by the acting and` / `the story follows a young man who`. | `prompts.txt:5`, `:8`, `:11` (reasons are in the `#` comment line under each prompt). | User, prompt (2026-10-10). The prompts were suggested in a chat response that the user pasted and adopted; no prompt-reading or generation script exists yet. | CONFIRMED |
 | G1 | Default decoding settings (2026-10-11) | temperature 1.0; top-k 40; maximum new tokens 50; 1 sample per prompt; never sample `&lt;pad&gt;` or `&lt;unk&gt;`; stop when the model produces `&lt;eos&gt;`; seed 0 (the project seed, see A11). | `configs/generations_ngram.json:20-25`; used in `src/generate.py:103-142`. The same values are meant to be used for every model so outputs are comparable. | User, prompt (2026-10-11), each picked from options offered. | CONFIRMED |
-| G2 | Prompts file and its format | prompts are read from `prompts.txt` (a file the user is writing); one prompt per line; blank lines and lines starting with `#` are skipped. The prompts are cleaned and tokenized with the same function as the training data; words not in the vocabulary become `&lt;unk&gt;`. | `configs/generations_ngram.json:19`; `src/generate.py:150-161` (`read_prompts`), `:164-170` (`encode_prompt`). | file name `prompts.txt` = User, prompt (2026-10-11). The line format and `#` comment rule = Assistant default (chosen so the file can carry `#` reason lines under each prompt; see F1). | file name CONFIRMED; format NEEDS REVIEW. `prompts.txt` (the F1 prompts, renamed by the user from `prompt.txt`) exists and was used for `results/generations_ngram.json`. |
-| G3 | Random seed per generation | each (prompt, sample number) gets its own random generator seeded from `[seed, sample number, CRC32 of the prompt text]`, so output depends only on those three things. | `src/generate.py:144-146`. | Assistant default. | NEEDS REVIEW |
-| G4 | Order of the sampling dials, and their edge cases | banned words are removed first, then temperature is applied, then top-k (so top-k keeps the k likeliest *allowed* words), then the probabilities are rescaled. Temperature must be greater than 0 (0 would mean "always the likeliest word" and is not supported); top-k 0 means off. | `src/generate.py:103-121`. | Assistant default. | NEEDS REVIEW |
-| G5 | How generated text is stored | the stopping `&lt;eos&gt;` is not included in the stored tokens (a flag `ended_with_eos` records it); text is the prompt tokens plus new tokens joined with single spaces, so punctuation is separate (e.g. `can ' t`); no detokenization. | `src/generate.py:137-141` (eos), `:237-238` (text). | Assistant default. | NEEDS REVIEW |
-| G6 | How the n-gram model is prepared for generation | the counts are re-fitted from the training split (about 1 second); the discounts are NOT re-tuned but read from the saved n-gram run (`results/ngram.json`, `details.best_discounts`), whose date and commit are stored in the generation record. | `src/generate.py:174-191`; `configs/generations_ngram.json:18`. | Assistant default. | NEEDS REVIEW |
-| G7 | How neural models plug in | any `nn.Module` with `forward(ids) -&gt; logits` is wrapped by `NeuralNextToken`, which feeds the whole context (prompt + generated so far) each step and reads the last position's logits. No neural model is loadable yet (`build_model` stops with a message). | `src/generate.py:87-97`, `:174-190`. | Assistant default. | NEEDS REVIEW |
-| G8 | Generation files are full run records | `results/generations_&lt;model&gt;.json` is a normal run record (config, seed, commit, hardware, date, metrics) with the decoding settings (temperature, top_k, max_tokens, seed, plus the other settings) and the generated texts as extra top-level fields. The file name comes from the config file name (`configs/generations_ngram.json` -&gt; `generations_ngram`). | `src/generate.py:252-263`; `src/runconfig.py:189-225` (`extra`). | Assistant default (to satisfy both "every run saves its record" and "generation files store their decoding settings"). | NEEDS REVIEW |
+| G2 | Prompts file and its format | prompts are read from `prompts.txt` (a file the user is writing); one prompt per line; blank lines and lines starting with `#` are skipped. The prompts are cleaned and tokenized with the same function as the training data; words not in the vocabulary become `&lt;unk&gt;`. | `configs/generations_ngram.json:19`; `src/generate.py:150-161` (`read_prompts`), `:164-170` (`encode_prompt`). | file name `prompts.txt` = User, prompt (2026-10-11). The line format and `#` comment rule = Assistant default (chosen so the file can carry `#` reason lines under each prompt; see F1). | CONFIRMED (file name 2026-10-11; format reviewed by the user on 2026-10-14 and kept as is). `prompts.txt` (the F1 prompts, renamed by the user from `prompt.txt`) exists and was used for `results/generations_ngram.json`. |
+| G3 | Random seed per generation | each (prompt, sample number) gets its own random generator seeded from `[seed, sample number, CRC32 of the prompt text]`, so output depends only on those three things. | `src/generate.py:144-146`. | Assistant default. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| G4 | Order of the sampling dials, and their edge cases | banned words are removed first, then temperature is applied, then top-k (so top-k keeps the k likeliest *allowed* words), then the probabilities are rescaled. Temperature must be greater than 0 (0 would mean "always the likeliest word" and is not supported); top-k 0 means off. | `src/generate.py:103-121`. | Assistant default. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| G5 | How generated text is stored | the stopping `&lt;eos&gt;` is not included in the stored tokens (a flag `ended_with_eos` records it); text is the prompt tokens plus new tokens joined with single spaces, so punctuation is separate (e.g. `can ' t`); no detokenization. | `src/generate.py:137-141` (eos), `:237-238` (text). | Assistant default. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| G6 | How the n-gram model is prepared for generation | the counts are re-fitted from the training split (about 1 second); the discounts are NOT re-tuned but read from the saved n-gram run (`results/ngram.json`, `details.best_discounts`), whose date and commit are stored in the generation record. | `src/generate.py:174-191`; `configs/generations_ngram.json:18`. | Assistant default. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| G7 | How neural models plug in | any `nn.Module` with `forward(ids) -&gt; logits` is wrapped by `NeuralNextToken`, which feeds the whole context (prompt + generated so far) each step and reads the last position's logits. No neural model is loadable yet (`build_model` stops with a message). | `src/generate.py:87-97`, `:174-190`. | Assistant default. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| G8 | Generation files are full run records | `results/generations_&lt;model&gt;.json` is a normal run record (config, seed, commit, hardware, date, metrics) with the decoding settings (temperature, top_k, max_tokens, seed, plus the other settings) and the generated texts as extra top-level fields. The file name comes from the config file name (`configs/generations_ngram.json` -&gt; `generations_ngram`). | `src/generate.py:252-263`; `src/runconfig.py:189-225` (`extra`). | Assistant default (to satisfy both "every run saves its record" and "generation files store their decoding settings"). | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
 | H1 | Context length | 64 tokens per window. | `configs/show_batch.json:7` (`context_length`); future training configs must set their own. | User, prompt (2026-10-11), from options offered. | CONFIRMED |
 | H2 | Window stride | non-overlapping windows (stride = context length): window i starts at token i*L; each token is a target exactly once. | `src/data.py:255-296` (`WindowDataset`, `start = i * self.context_length`). | User, prompt (2026-10-11), from options offered. | CONFIRMED |
 | H3 | Leftover tail of a split's token stream | the tail shorter than L+1 tokens is dropped (no padding); windows run across review boundaries (reviews are separated by `&lt;eos&gt;`). | `src/data.py:276-278` (`num_windows = (N - 1) // L`). | User, prompt (2026-10-11), from options offered. | CONFIRMED |
@@ -1719,35 +1948,38 @@ Source: `DECISIONS.md` (copied as written there).
 | I3 | Models behind `--model` | only `bigram` (the existing `BigramLM`) for now; others are added with one line in `MODELS`. | `src/train.py` (`MODELS`). | User, prompt (2026-10-11), from options offered. | CONFIRMED |
 | I4 | Validation/test review length | reviews cut to their first 256 tokens before scoring with `evaluate()`; eval batch size 64. | `configs/train_bigram.json:22-23` (`options.eval_max_length` = user's choice; `options.eval_batch_size` = assistant default, affects speed only). | `eval_max_length`: User, prompt (2026-10-11), from options offered. | CONFIRMED |
 | I5 | Training-script defaults | (a) the reported training loss is the token-weighted running average over the epoch's batches (computed while the weights are changing, dropout on), so it is not directly comparable to validation loss; (b) a checkpoint is saved only when validation loss is strictly lower than the best so far; (c) the best weights go to `checkpoints/&lt;run&gt;.pt` (git-ignored); (d) device is CUDA if available, else CPU; (e) training time is wall-clock seconds around the epoch loop (including validation, excluding data loading and the final test). | `src/train.py` (`train_one_epoch`, `fit`, `main`); `configs/train_bigram.json:19` (`options.checkpoint_dir`). | Assistant default (shown in the design the user approved, not offered as options); User, prompt (2026-10-11, reviewing NEEDS REVIEW) confirmed "keep those". | CONFIRMED |
-| J1 | Which runs belong to Data / Part I / Part II / Part III (revised 2026-10-12 after reading the assignment brief) | the brief defines the parts: Part I = n-gram, RNN, LSTM, Transformer comparison; Part II = three embedding settings on one architecture; Part III = downstream classifier on representations. Rules in order: `data`, `inspect_data`, `show_batch` -&gt; Data; any run name containing `p2_` -&gt; Part II; containing `p3_` -&gt; Part III; `sanity_check`, `ngram`, `train_*`, `test_*`, `generations_*` -&gt; Part I. **Naming convention for later runs: Part II runs start with `p2_`, Part III runs with `p3_`.** The bigram run (`train_bigram`) is not required by the brief; it is listed in Part I as a baseline. Each of Parts I and II shows its own perplexity/cost table and side-by-side generated text; Part III shows its run records. | `configs/update_results.json`, `options.part_rules`, `options.part_comparison_extra_runs` (runs from another part to include in a part's comparison, e.g. the reused Part I model in Part II). | Parts: the brief (`Assignment1_2026.pdf`). Run-name convention and placing `train_bigram` in Part I: Assistant default. | NEEDS REVIEW (naming convention and bigram placement only) |
-| J2 | "Close to the vocabulary size" threshold | untrained validation perplexity divided by vocabulary size must be between 0.5 and 2.0 to PASS. | `configs/update_results.json`, `options.untrained_ppl_to_vocab_ratio_range`. | Assistant default. | NEEDS REVIEW |
-| J3 | How the exact command of each run is known | `save_run` now stores a `command` field (interpreter + arguments) in every new `results/&lt;run&gt;.json`. For older records, the command is copied from `results/RESULTS_LOG.md`; if not found there it is shown as "not recorded". | `src/runconfig.py` (`save_run`); lookup in `src/update_results.py` (`find_command`). | Assistant default. | NEEDS REVIEW |
-| J4 | How the test-set and padding checks are evidenced | static scan of the source with Python `ast`: in `src/ngram.py` and `src/train.py`, `data.test` must be used exactly once, on a line after the `tune_discounts(...)` / `fit(...)` call, and no other `src/` file may use it. Padding: every `CrossEntropyLoss` in `src/train.py` and `src/sanity_check.py` must pass `ignore_index`, and the recorded test `test_padding_is_ignored` must be `passed`. Frozen embeddings: PASS needs a run with a pretrained `embedding_init` whose `details.frozen_embedding_max_abs_change` equals 0; `src/train.py` does not write that key yet, so a future Part II change must add it. Causality: any recorded test with "causal" in its name. | `configs/update_results.json` (`test_set_markers`, `padding_loss_files`, `padding_test_*`, `causality_test_keyword`, `frozen_embedding_detail_key`, `not_frozen_embedding_inits`); logic in `src/update_results.py` (`check_*`). | Assistant default. | NEEDS REVIEW |
-| J5 | How "My notes" are protected | each section ends with `### My notes` and a pair of HTML-comment marker lines; text between the markers is copied back unchanged on every rebuild. If the markers are missing from the old file, the script stops (override with `--force`). | `src/update_results.py` (`extract_notes`, `notes_block`). | Assistant default. | NEEDS REVIEW |
-| J6 | Figures, and `update_results.py` not saving a run record | matplotlib PNGs in `results/figures/`: tokens per split, n-gram discount tuning (D3 axis, D2/D1 at their chosen values), train/validation loss per trained run, and validation loss of all trained runs when there are two or more. Colours are the first slots of the dataviz skill's validated categorical palette. Runs named `test_*` are not plotted. `update_results.py` writes `RESULTS.md` and the figures but no `results/update_results.json`, because it is not an experiment run. | `configs/update_results.json` (`figure_colours`, `test_run_prefix`); `src/update_results.py` (`fig_*`). | Assistant default. | NEEDS REVIEW |
-| K1 | Report and submission requirement list (revised 2026-10-12 from the brief) | 23 requirements taken from `Assignment1_2026.pdf` (Part I, II, III bullets, the report contents list, 6-page limit, citations, README, no credentials, submission, late policy), each tagged with the brief's points where known. Automatic evidence only for: the four Part I model families being present, the frozen-embedding check, README keywords, repo state. Everything else shows "not done" until the user ticks it. The split of each part's bullets into separate items is the assistant's. | `configs/update_results.json`, `options.report_requirements`. | Content: the brief. Granularity: Assistant default. | NEEDS REVIEW |
-| K2 | Schedule and planned days | `options.schedule` is empty, so every item shows "Planned: not set" and nothing can be overdue. Deadline is Fri 16 Oct 2026, 23:59 Singapore time (from the user's prompt). | `configs/update_results.json`, `options.schedule`, `options.deadline`, `options.timezone`. | Deadline: User, prompt (2026-10-12). Empty schedule: Assistant default (no schedule was available to read). | NEEDS REVIEW |
-| K3 | What counts as "waiting on me now", and how interpretation items are counted | Waiting = empty schedule, unresolved NEEDS REVIEW decisions, configs with no results yet, sections with results but empty *My notes*, failing checks, uncommitted or unpushed git changes. "Results to interpret" has one item per section (Data, Part I, Part II, Part III), because *My notes* exist per section, not per run. "Runs to do" lists configs in `configs/` with no `results/&lt;run&gt;.json` plus `options.extra_items` (steps from the brief that no script can detect, such as scripts still to be written); time is taken from earlier runs of the same script. | `src/my_tasks.py` (`build_items`); `configs/update_results.json` (`tasks_ignore_configs`, `run_script_rules`, `extra_items`). | Assistant default. | NEEDS REVIEW |
+| J1 | Which runs belong to Data / Part I / Part II / Part III (revised 2026-10-12 after reading the assignment brief) | the brief defines the parts: Part I = n-gram, RNN, LSTM, Transformer comparison; Part II = three embedding settings on one architecture; Part III = downstream classifier on representations. Rules in order: `data`, `inspect_data`, `show_batch` -&gt; Data; any run name containing `p2_` -&gt; Part II; containing `p3_` -&gt; Part III; `sanity_check`, `ngram`, `train_*`, `test_*`, `generations_*` -&gt; Part I. **Naming convention for later runs: Part II runs start with `p2_`, Part III runs with `p3_`.** The bigram run (`train_bigram`) is not required by the brief; it is listed in Part I as a baseline. Each of Parts I and II shows its own perplexity/cost table and side-by-side generated text; Part III shows its run records. | `configs/update_results.json`, `options.part_rules`, `options.part_comparison_extra_runs` (runs from another part to include in a part's comparison, e.g. the reused Part I model in Part II). | Parts: the brief (`Assignment1_2026.pdf`). Run-name convention and placing `train_bigram` in Part I: Assistant default. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) (naming convention and bigram placement only) |
+| J2 | "Close to the vocabulary size" threshold | untrained validation perplexity divided by vocabulary size must be between 0.5 and 2.0 to PASS. | `configs/update_results.json`, `options.untrained_ppl_to_vocab_ratio_range`. | Assistant default. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| J3 | How the exact command of each run is known | `save_run` now stores a `command` field (interpreter + arguments) in every new `results/&lt;run&gt;.json`. For older records, the command is copied from `results/RESULTS_LOG.md`; if not found there it is shown as "not recorded". | `src/runconfig.py` (`save_run`); lookup in `src/update_results.py` (`find_command`). | Assistant default. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| J4 | How the test-set and padding checks are evidenced | static scan of the source with Python `ast`: in `src/ngram.py` and `src/train.py`, `data.test` must be used exactly once, on a line after the `tune_discounts(...)` / `fit(...)` call, and no other `src/` file may use it. Padding: every `CrossEntropyLoss` in `src/train.py` and `src/sanity_check.py` must pass `ignore_index`, and the recorded test `test_padding_is_ignored` must be `passed`. Frozen embeddings: PASS needs a run with a pretrained `embedding_init` whose `details.frozen_embedding_max_abs_change` equals 0; `src/train.py` does not write that key yet, so a future Part II change must add it. Causality: any recorded test with "causal" in its name. | `configs/update_results.json` (`test_set_markers`, `padding_loss_files`, `padding_test_*`, `causality_test_keyword`, `frozen_embedding_detail_key`, `not_frozen_embedding_inits`); logic in `src/update_results.py` (`check_*`). | Assistant default. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| J5 | How "My notes" are protected | each section ends with `### My notes` and a pair of HTML-comment marker lines; text between the markers is copied back unchanged on every rebuild. If the markers are missing from the old file, the script stops (override with `--force`). | `src/update_results.py` (`extract_notes`, `notes_block`). | Assistant default. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| J6 | Figures, and `update_results.py` not saving a run record | matplotlib PNGs in `results/figures/`: tokens per split, n-gram discount tuning (D3 axis, D2/D1 at their chosen values), train/validation loss per trained run, and validation loss of all trained runs when there are two or more. Colours are the first slots of the dataviz skill's validated categorical palette. Runs named `test_*` are not plotted. `update_results.py` writes `RESULTS.md` and the figures but no `results/update_results.json`, because it is not an experiment run. | `configs/update_results.json` (`figure_colours`, `test_run_prefix`); `src/update_results.py` (`fig_*`). | Assistant default. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| K1 | Report and submission requirement list (revised 2026-10-12 from the brief) | 23 requirements taken from `Assignment1_2026.pdf` (Part I, II, III bullets, the report contents list, 6-page limit, citations, README, no credentials, submission, late policy), each tagged with the brief's points where known. Automatic evidence only for: the four Part I model families being present, the frozen-embedding check, README keywords, repo state. Everything else shows "not done" until the user ticks it. The split of each part's bullets into separate items is the assistant's. | `configs/update_results.json`, `options.report_requirements`. | Content: the brief. Granularity: Assistant default. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| K2 | Schedule and planned days | `options.schedule` is empty, so every item shows "Planned: not set" and nothing can be overdue. Deadline is Fri 16 Oct 2026, 23:59 Singapore time (from the user's prompt). | `configs/update_results.json`, `options.schedule`, `options.deadline`, `options.timezone`. | Deadline: User, prompt (2026-10-12). Empty schedule: Assistant default (no schedule was available to read). | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| K3 | What counts as "waiting on me now", and how interpretation items are counted | Waiting = empty schedule, unresolved NEEDS REVIEW decisions, configs with no results yet, sections with results but empty *My notes*, failing checks, uncommitted or unpushed git changes. "Results to interpret" has one item per section (Data, Part I, Part II, Part III), because *My notes* exist per section, not per run. "Runs to do" lists configs in `configs/` with no `results/&lt;run&gt;.json` plus `options.extra_items` (steps from the brief that no script can detect, such as scripts still to be written); time is taken from earlier runs of the same script. | `src/my_tasks.py` (`build_items`); `configs/update_results.json` (`tasks_ignore_configs`, `run_script_rules`, `extra_items`). | Assistant default. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
 | L1 | Default size of the RNN and LSTM | hidden size 256, 2 recurrent layers, dropout 0.3, embedding dimension 100 (randomly initialised, trainable). | `configs/train_rnn.json` and `configs/train_lstm.json`, lines 3-4 (`layers`, `hidden_size`) and 11 (`dropout`); overridable with `--hidden-size`, `--layers`, `--dropout`. | User, prompt (2026-10-12), from options offered. | CONFIRMED |
 | L2 | RNN nonlinearity | tanh. | `src/models.py` (`RNNLanguageModel`, `nonlinearity="tanh"`). | User, prompt (2026-10-12), from options offered. | CONFIRMED |
-| L3 | Dropout placement and layout | dropout after the embedding, between stacked recurrent layers (PyTorch's `dropout=`, set to 0 when there is 1 layer) and before the output layer; unidirectional recurrent layers; no weight tying; the final hidden state is not carried between windows. | `src/models.py` (`forward` of both classes). | Assistant default (shown in the design the user approved, not offered as options). | NEEDS REVIEW |
-| L4 | Smoke-test data | the first 60 train / 40 val / 40 test reviews of the saved splits, copied to a scratch folder (not `data/processed`), 1 epoch, output to a scratch results folder. | scratchpad only (not a repository file). | Assistant default for how to make the "small subset" (the user asked for a small subset). | NEEDS REVIEW |
+| L3 | Dropout placement and layout | dropout after the embedding, between stacked recurrent layers (PyTorch's `dropout=`, set to 0 when there is 1 layer) and before the output layer; unidirectional recurrent layers; no weight tying; the final hidden state is not carried between windows. | `src/models.py` (`forward` of both classes). | Assistant default (shown in the design the user approved, not offered as options). | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| L4 | Smoke-test data | the first 60 train / 40 val / 40 test reviews of the saved splits, copied to a scratch folder (not `data/processed`), 1 epoch, output to a scratch results folder. | scratchpad only (not a repository file). | Assistant default for how to make the "small subset" (the user asked for a small subset). | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
 | M1 | Size: blocks, heads, feed-forward width | 2 decoder blocks, 4 attention heads (25 dims each), feed-forward width 256, dropout 0.3, embedding dimension 100 (random, trainable). | `configs/train_transformer.json` lines 3-4 (`layers`, `hidden_size`), 11 (`dropout`) and `options.num_heads`. | User, prompt (2026-10-12), from options offered ("proceed with your recommended set"). | CONFIRMED |
 | M2 | Positional embedding table size | `max_positions` 256 (learned positional embeddings), while training windows stay at `context_length` 64. Positions 64-255 are never updated in training (they stay at their random start values), but evaluation (`eval_max_length` 256) feeds sequences up to 256. | `configs/train_transformer.json`, `options.max_positions`. | User, prompt (2026-10-12), from options offered (256 / 64 with sliding window / train at 256). | CONFIRMED |
-| M3 | Block style and other defaults | pre-norm blocks (LayerNorm before attention and feed-forward) plus one final LayerNorm; GELU activation; dropout after the embeddings and inside each block; positional embedding starts at PyTorch's default random values; no weight tying; causal mask built with `torch.triu` and passed to `nn.TransformerEncoder`. | `src/models.py`, class `TransformerLanguageModel`. | Assistant default (shown in the design the user approved, not offered as options). | NEEDS REVIEW |
-| M4 | Training settings copied from the LSTM | learning rate 0.001, batch size 64, epochs 20, context length 64, patience 3, grad clip 1.0, vocabulary 20000, seed 0. | `configs/train_transformer.json`. | Assistant default (copied from `configs/train_lstm.json` so the comparison is matched; not offered as options). | NEEDS REVIEW |
-| N1 | Test settings | random sequences of length 12, batch 4, tolerance 1e-6 on the largest change in any probability; every position t from 0 to 11 is changed in turn; models are in eval mode (dropout off); every class in `models.py` is tested, found automatically. The bigram (in `sanity_check.py`) is not covered. | `configs/test_causality.json` (`batch_size`, `options.seq_len`, `options.tolerance`). | Assistant default (the user specified what to check, not these values; not offered as options). | NEEDS REVIEW |
+| M3 | Block style and other defaults | pre-norm blocks (LayerNorm before attention and feed-forward) plus one final LayerNorm; GELU activation; dropout after the embeddings and inside each block; positional embedding starts at PyTorch's default random values; no weight tying; causal mask built with `torch.triu` and passed to `nn.TransformerEncoder`. | `src/models.py`, class `TransformerLanguageModel`. | Assistant default (shown in the design the user approved, not offered as options). | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| M4 | Training settings copied from the LSTM | learning rate 0.001, batch size 64, epochs 20, context length 64, patience 3, grad clip 1.0, vocabulary 20000, seed 0. | `configs/train_transformer.json`. | Assistant default (copied from `configs/train_lstm.json` so the comparison is matched; not offered as options). | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| N1 | Test settings | random sequences of length 12, batch 4, tolerance 1e-6 on the largest change in any probability; every position t from 0 to 11 is changed in turn; models are in eval mode (dropout off); every class in `models.py` is tested, found automatically. The bigram (in `sanity_check.py`) is not covered. | `configs/test_causality.json` (`batch_size`, `options.seq_len`, `options.tolerance`). | Assistant default (the user specified what to check, not these values; not offered as options). | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
 | O1 | Workload, warm-up and devices | batch size 64 and context length 256 (the same as the evaluation settings, so the speed is for the exact scoring that gave the perplexities); 2 full warm-up passes; 3 timed repeats (mean and standard deviation); every neural model timed on the GPU and on the CPU, the n-gram on the CPU only (NumPy). | `configs/benchmark.json` (`batch_size`, `context_length`, `options.warmup_passes`, `options.repeats`, `options.devices`). | User, prompt (2026-10-13): 3 repeats; the rest from options offered ("proceed with your recommended set"). | CONFIRMED |
-| O2 | Other benchmark details | the timed region is the whole `evaluate()` call (sorting, padding and scoring included); the n-gram is refit from the training split with its saved discounts, untimed; the n-gram "parameters" are its stored counts, with a column saying so; n-gram training and tuning seconds are separate columns; a run stops if a model's perplexity differs from its saved test perplexity by more than 0.1% (neural models only; the n-gram was scored without the 256 cut) or if the scored targets differ between models. | `src/benchmark.py`; `configs/benchmark.json` (`options.perplexity_rel_tolerance`). | Assistant default (shown in the design the user approved, not offered as options). | NEEDS REVIEW |
+| O2 | Other benchmark details | the timed region is the whole `evaluate()` call (sorting, padding and scoring included); the n-gram is refit from the training split with its saved discounts, untimed; the n-gram "parameters" are its stored counts, with a column saying so; n-gram training and tuning seconds are separate columns; a run stops if a model's perplexity differs from its saved test perplexity by more than 0.1% (neural models only; the n-gram was scored without the 256 cut) or if the scored targets differ between models. | `src/benchmark.py`; `configs/benchmark.json` (`options.perplexity_rel_tolerance`). | Assistant default (shown in the design the user approved, not offered as options). | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
 | P1 | Shared decoding settings for all four models | temperature 1.0; top-k 40; 50 new tokens; seed 0; 1 sample per prompt; `&lt;pad&gt;` and `&lt;unk&gt;` never sampled; stop at `&lt;eos&gt;`; prompts from `prompts.txt`. Identical in `configs/generations_{ngram,rnn,lstm,transformer}.json`, and `combine_generations.py` stops if they differ. | `configs/generations_*.json`, `options.temperature`, `options.top_k`, `options.max_new_tokens`, `options.num_samples`, `seed`. | User, prompt (2026-10-13), from options offered ("proceed with your recommended set"; the temperature, top-k and length also match the earlier choice in G3). | CONFIRMED |
-| P2 | Loading neural models and the combined file | the neural model's size settings come from its training record (`results/train_&lt;name&gt;.json`), not from the generation config; the checkpoint's parameter count must match that record; generation runs on the GPU when available; the combined file `results/part1_generations.md` lists the shared settings, each source file's commit, hardware and date, and one section per prompt with the models in the order n-gram, RNN, LSTM, Transformer; it adds no commentary. | `src/generate.py` (`build_neural`), `src/combine_generations.py`, `configs/combine_generations.json`. | Assistant default (shown in the design the user approved, not offered as options). | NEEDS REVIEW |
+| P2 | Loading neural models and the combined file | the neural model's size settings come from its training record (`results/train_&lt;name&gt;.json`), not from the generation config; the checkpoint's parameter count must match that record; generation runs on the GPU when available; the combined file `results/part1_generations.md` lists the shared settings, each source file's commit, hardware and date, and one section per prompt with the models in the order n-gram, RNN, LSTM, Transformer; it adds no commentary. | `src/generate.py` (`build_neural`), `src/combine_generations.py`, `configs/combine_generations.json`. | Assistant default (shown in the design the user approved, not offered as options). | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
 | Q1 | Algorithm | Skip-gram (`sg=1`). | `configs/word2vec_cost.json`, `options.sg`. | User, 2026-10-13, from Skip-gram / CBOW / config option. | CONFIRMED |
 | Q2 | gensim settings and training text (confirmed by the user 2026-10-13; the repeat request re-affirmed Skip-gram as Q1) | window 5; min_count 1; epochs 10; negative 5; sample 1e-3; workers 1 (for reproducibility with a seed); vector size 100; seed 0. One "sentence" per training review (including its `&lt;eos&gt;`; `&lt;unk&gt;` is a normal token). `&lt;pad&gt;` row is all zeros. | `configs/word2vec_cost.json` (`epochs`, `embedding_dim`, `seed`, `options.*`); text built in `src/train_word2vec.py` (`reviews_as_word_lists`). | User, 2026-10-13 (second request), option A of three offered: A window 5 / min_count 1 / epochs 10 (chosen); B window 5 / min_count 20 / epochs 10 (coverage 87% of types, 99.6% of tokens); C window 10 / min_count 1 / epochs 20 (about 4x the cost). | CONFIRMED |
 | R1 | Architecture for Part II | LSTM (2 layers, hidden 256, context 64, dropout 0.3, lr 0.001, batch 64, up to 20 epochs, seed 0, as in `configs/train_lstm.json`). The random-embedding setting reuses the Part I run `train_lstm` (test perplexity 80.45, Colab T4); the two frozen-embedding runs must use exactly these settings except the embedding. | `configs/train_lstm.json` (to be copied to `configs/p2_*.json`). | User, 2026-10-13. | CONFIRMED |
 | R2 | Initialising vocabulary words that have no vector (own word2vec and public GloVe) | rows without a vector are drawn from a normal distribution, mean 0, standard deviation = that of all real vectors in the same table, seeded with the run's seed. The `&lt;pad&gt;` row is always zeros. The table is then kept fixed. The same function is used for both tables. | `src/embedding_utils.py` (`fill_missing_rows`); called from `src/train_word2vec.py`. (The GloVe script, not yet written, must call it too.) | User, 2026-10-13, from three options. | CONFIRMED |
-| S1 | Which public GloVe file | `glove.6B.100d.txt` (Wikipedia + Gigaword, 6B tokens, 400k lower-cased words, 100-d), matched to our tokens by exact string. Missing words (including `&lt;unk&gt;`, `&lt;eos&gt;`) follow R2 (seeded small random normal, `&lt;pad&gt;` zeros); coverage is reported with `&lt;unk&gt;`/`&lt;eos&gt;` counted as missing, and also without them. | `configs/glove_coverage.json` (`options.glove_path`, `options.output_path`, `options.top_missing` = 20); `src/load_glove.py`. | Assistant default (the request said "GloVe 100d" and R2 fixed the missing-word rule). | NEEDS REVIEW |
-| T1 | How the option works and what stays identical | `--embedding random\|w2v\|glove` overrides the config's `embedding_init`. For w2v/glove the saved table is copied into the model's embedding layer and the WHOLE table (all 20,003 rows, including `&lt;pad&gt;`, `&lt;unk&gt;`, `&lt;eos&gt;` and words filled by R2) gets `requires_grad=False`, so Adam never changes it. The positional/other parts of the model are unaffected (the LSTM has no other embedding). Model construction order and seed are unchanged, so the LSTM and output layers start from the same random values as in the Part I run. The run configs `configs/p2_lstm_w2v.json` and `configs/p2_lstm_glove.json` differ from `configs/train_lstm.json` only in `embedding_init` and the added `options.embedding_paths`. Optimiser: Adam on the trainable parameters only (for random runs that is every parameter, as before). | `src/train.py` (`EMBEDDING_CHOICES`, `freeze_embedding_if_pretrained`, `load_embedding_matrix`, `check_embedding_unchanged`, `main`); `configs/p2_lstm_*.json`. | User asked for the option, the freezing and the check; the config layout and run names (`p2_lstm_w2v`, `p2_lstm_glove`) are assistant defaults. | NEEDS REVIEW (config layout, run names) |
-| T2 | The frozen-embedding check | a copy of the table is taken right after loading; it must be exactly equal (`torch.equal`, no tolerance) after the last epoch and again after the best checkpoint is reloaded, and the table must still be non-trainable; otherwise the script raises an error and does NOT save results. The record stores `frozen_embedding_max_abs_change` (0.0), the file path and its SHA-256, `total_parameters`, and `embedding_table_trainable`. `num_parameters` stays the trainable count (so a frozen run reports 6,033,699, not 8,033,999; the total is in `details.total_parameters`). | `src/train.py`; tested in `tests/test_frozen_embedding.py`. | User (asked for a check that fails loudly); exact-equality and the reported parameter counts are assistant defaults. | NEEDS REVIEW (parameter-count convention) |
+| S1 | Which public GloVe file | `glove.6B.100d.txt` (Wikipedia + Gigaword, 6B tokens, 400k lower-cased words, 100-d), matched to our tokens by exact string. Missing words (including `&lt;unk&gt;`, `&lt;eos&gt;`) follow R2 (seeded small random normal, `&lt;pad&gt;` zeros); coverage is reported with `&lt;unk&gt;`/`&lt;eos&gt;` counted as missing, and also without them. | `configs/glove_coverage.json` (`options.glove_path`, `options.output_path`, `options.top_missing` = 20); `src/load_glove.py`. | Assistant default (the request said "GloVe 100d" and R2 fixed the missing-word rule). | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| T1 | How the option works and what stays identical | `--embedding random\|w2v\|glove` overrides the config's `embedding_init`. For w2v/glove the saved table is copied into the model's embedding layer and the WHOLE table (all 20,003 rows, including `&lt;pad&gt;`, `&lt;unk&gt;`, `&lt;eos&gt;` and words filled by R2) gets `requires_grad=False`, so Adam never changes it. The positional/other parts of the model are unaffected (the LSTM has no other embedding). Model construction order and seed are unchanged, so the LSTM and output layers start from the same random values as in the Part I run. The run configs `configs/p2_lstm_w2v.json` and `configs/p2_lstm_glove.json` differ from `configs/train_lstm.json` only in `embedding_init` and the added `options.embedding_paths`. Optimiser: Adam on the trainable parameters only (for random runs that is every parameter, as before). | `src/train.py` (`EMBEDDING_CHOICES`, `freeze_embedding_if_pretrained`, `load_embedding_matrix`, `check_embedding_unchanged`, `main`); `configs/p2_lstm_*.json`. | User asked for the option, the freezing and the check; the config layout and run names (`p2_lstm_w2v`, `p2_lstm_glove`) are assistant defaults. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) (config layout, run names) |
+| T2 | The frozen-embedding check | a copy of the table is taken right after loading; it must be exactly equal (`torch.equal`, no tolerance) after the last epoch and again after the best checkpoint is reloaded, and the table must still be non-trainable; otherwise the script raises an error and does NOT save results. The record stores `frozen_embedding_max_abs_change` (0.0), the file path and its SHA-256, `total_parameters`, and `embedding_table_trainable`. `num_parameters` stays the trainable count (so a frozen run reports 6,033,699, not 8,033,999; the total is in `details.total_parameters`). | `src/train.py`; tested in `tests/test_frozen_embedding.py`. | User (asked for a check that fails loudly); exact-equality and the reported parameter counts are assistant defaults. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) (parameter-count convention) |
+| U1 | Part II generation set-up | the two frozen-embedding LSTMs are generated with `configs/generations_p2_lstm_w2v.json` and `configs/generations_p2_lstm_glove.json`, which equal `configs/generations_lstm.json` except `embedding_init` and the `train_result` / `checkpoint` they load (temperature 1.0, top-k 40, 50 new tokens, seed 0, 1 sample, same `prompts.txt`). The random-embedding column reuses the Part I file `results/generations_lstm.json` (no new generation). `configs/combine_generations_p2.json` merges the three into `results/part2_generations.md` and refuses to merge if decoding settings or prompts differ. | `configs/generations_p2_lstm_*.json`, `configs/combine_generations_p2.json`; `src/combine_generations.py` (optional `options.title` and `options.labels`). | User asked for "same prompts.txt and decoding settings as Part I"; reuse of the Part I LSTM generation and the file names are assistant defaults. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| U2 | What the Part II section of RESULTS.md contains | the Part II runs and their loss figures; a comparison table and generated-text table that include the reused Part I runs `train_lstm` and `generations_lstm`; the embedding-table records `word2vec_cost` and `glove_coverage` (now assigned to Part II); and a "Part II set-up facts" block (settings differences, provenance, frozen check, embedding tables with coverage and cost, per-epoch loss facts), all read from the run records. | `configs/update_results.json` (`part_comparison_extra_runs`, `part_rules`, `part2_baseline_run`, `part2_own_embedding_run`, `part2_public_embedding_run`); `src/update_results.py` (`render_part2_facts`). | Assistant default (the user asked for "what exists so far, facts only"). | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
+| V1 | Reruns after the Part II audit | no reruns. A (clean-commit rerun of both Part II runs), B (rerun of the Part I LSTM on current code), C (all three at 40 epochs) and D (per-batch loss logging) were offered with Colab time estimates and consequences; the user chose none. Consequences accepted: the Part II records show `git_dirty: true` with the cause unknown; Part I LSTM ran on an older commit (equivalence rests on the code diff); all three runs stopped at the 20-epoch cap while still improving, so convergence is compared at a fixed 20-epoch budget; stability evidence is per-epoch only. | nothing changed; `MY_TASKS.md` has no rerun items. | User, 2026-10-14. | CONFIRMED |
 
 ### My notes
 
@@ -1765,7 +1997,7 @@ Source: `DECISIONS.md` (copied as written there).
 | All models scored on identical test targets | **FAIL** |
 | Generation runs use matched decoding settings and prompts | **PASS** |
 | Causality test | **NOT YET AVAILABLE** |
-| Frozen embeddings unchanged | **NOT YET AVAILABLE** |
+| Frozen embeddings unchanged | **PASS** |
 
 #### Untrained perplexity is close to the vocabulary size: PASS
 
@@ -1789,6 +2021,8 @@ Source: `DECISIONS.md` (copied as written there).
 #### All models scored on identical test targets: FAIL
 
 - `ngram`: 1,390,673 targets, checksum `fd778f4c313d...`
+- `p2_lstm_glove`: 981,353 targets, checksum `4f77927a1cd9...`
+- `p2_lstm_w2v`: 981,353 targets, checksum `4f77927a1cd9...`
 - `train_bigram`: 981,353 targets, checksum `4f77927a1cd9...`
 - `train_bigram_colab`: 981,353 targets, checksum `4f77927a1cd9...`
 - `train_lstm`: 981,353 targets, checksum `4f77927a1cd9...`
@@ -1806,9 +2040,10 @@ Source: `DECISIONS.md` (copied as written there).
 
 - no recorded test with 'causal' in its name
 
-#### Frozen embeddings unchanged: NOT YET AVAILABLE
+#### Frozen embeddings unchanged: PASS
 
-- no run with a pretrained `embedding_init` (Part II has no such run yet)
+- `results/p2_lstm_glove.json`: details.frozen_embedding_max_abs_change = 0.0
+- `results/p2_lstm_w2v.json`: details.frozen_embedding_max_abs_change = 0.0
 
 ### My notes
 
