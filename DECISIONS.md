@@ -632,6 +632,41 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 
 ---
 
+## W. Part III classification data (2026-10-14)
+
+### W1. Maximum review length and truncation side
+- **Value:** `max_length` 256, keep the FIRST 256 tokens ("head" truncation), pad on the right with `<pad>`. 37.0% of train, 37.0% of val and 38.2% of test reviews are truncated.
+- **Where:** `configs/p3_prepare_classification.json` (`options.max_length`, `options.truncate`); used in `src/prepare_classification.py`.
+- **Chosen by:** User, prompt (2026-10-14), from options offered. **Alternatives considered:** 128 (cheaper, about 85% truncated); 512 (fewer truncated, but beyond the Transformer's 256 positions); last-N tokens instead of first-N.
+- **Reason (user):** option 1 as offered (matches the Transformer's 256 positions and the existing `eval_max_length`).
+- **Status:** CONFIRMED
+
+### W2. Details not covered by the user's choice
+- **Value:** (a) the `<eos>` marker data.py appended to each review is dropped (it separates documents for the language models; it is not part of a review, and truncated reviews would lose it anyway); (b) `<unk>` rate is reported over real tokens only (no `<pad>`, no `<eos>`), both for the full review and for the kept part; (c) the saved files also store `lengths` (real tokens per row) so later code can ignore padding.
+- **Where:** `src/prepare_classification.py` (`prepare_split`).
+- **Chosen by:** Assistant default. **Alternatives considered:** keep `<eos>` when the review fits (then short and long reviews end differently).
+- **Status:** NEEDS REVIEW
+
+---
+
+## X. Feature extraction (2026-10-14)
+
+### X1. Which vector is pooled, and how padding is excluded
+- **Value:** the pooled vector is the one fed to the model's output layer: output of the last recurrent layer (RNN/LSTM, size 256) or of the final LayerNorm (Transformer, size 100). `last` = hidden state at position `length - 1`; `mean` = sum over real positions (0/1 mask) divided by `length`. Padding is on the right and all models are causal, so real positions never depend on padding (checked by `tests/test_extract_features.py`). Models are put in eval mode (dropout off), all parameters set to `requires_grad False`, and the run stops if any weight changed. Only `hidden_states()` was added to `src/models.py`; `forward` computes the same numbers as before.
+- **Where:** `src/extract_features.py` (`pool`, `extract_split`); `src/models.py` (`hidden_states` in each class).
+- **Chosen by:** Assistant default (pooling methods themselves: user's request). **Alternatives considered:** pooling an earlier layer; pooling before the Transformer's final LayerNorm; concatenating last and mean.
+- **Status:** NEEDS REVIEW
+
+---
+
+### X2. Part III comparison and pooling
+- **Value:** compare the Part I LSTM and Part I Transformer (both random trainable embeddings, as trained), same pooling for both: `mean`. Runs: `p3_feat_lstm_mean`, `p3_feat_transformer_mean`; batch size 64 (speed only). Feature sizes: LSTM 256, Transformer 100.
+- **Where:** `configs/p3_feat_lstm_mean.json`, `configs/p3_feat_transformer_mean.json` (`options.pooling`, `batch_size`); Colab section 12.
+- **Chosen by:** comparison: User, prompt (2026-10-14), option 1 of 3. Pooling `mean`: Assistant default (it was named as the usual default in the options; the user did not specify). **Alternatives considered:** last vs mean on one model; full 2x2 grid; adding the Part II frozen-embedding LSTMs.
+- **Status:** NEEDS REVIEW (pooling choice)
+
+---
+
 ## NEEDS REVIEW summary
 
 **All 24 items resolved 2026-10-10.** The user reviewed every one (2-3 options with trade-offs each, per CLAUDE.md's record-keeping rules) and confirmed every current value as-is: A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, B1, B3, C1, C2, C3, D2, D3, D4, D5, D6, D7, D8, E1, E3. See each entry above for the specific options offered and the reasoning. No reruns were needed since nothing changed.
@@ -673,3 +708,7 @@ One item (D4) was accepted rather than fixed: the n-gram discount grid was widen
 **New since then (2026-10-14), pending the user:** U1 (Part II generation set-up), U2 (Part II section of RESULTS.md).
 
 **2026-10-14:** every remaining NEEDS REVIEW item (G2-G8, J1-J6, K1-K3, L3, L4, M3, M4, N1, O2, P2, S1, T1, T2, U1, U2: 28 in total) was reviewed one by one and kept as is by the user. V1 (no reruns) added and confirmed. Nothing is pending. Open fact, not a decision: the "Test set used only for final evaluation" check still shows FAIL because `src/benchmark.py` reads `data.test` (J4 kept the static scan).
+
+**New since then (2026-10-14), pending the user:** W2 (classification data details). W1 confirmed.
+
+**New since then (2026-10-14), pending the user:** W2 (above), X1 (feature extraction details), X2 (pooling `mean` for the LSTM vs Transformer comparison).

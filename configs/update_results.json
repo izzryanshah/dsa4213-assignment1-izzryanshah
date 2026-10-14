@@ -92,6 +92,14 @@
         "src/train.py"
       ],
       [
+        "^p3_feat_",
+        "src/extract_features.py"
+      ],
+      [
+        "^p3_prepare_classification$",
+        "src/prepare_classification.py"
+      ],
+      [
         "^generations_",
         "src/generate.py"
       ],

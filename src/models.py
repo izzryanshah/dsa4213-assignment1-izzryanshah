@@ -71,10 +71,15 @@ class RNNLanguageModel(nn.Module):
                           batch_first=True, dropout=dropout if num_layers > 1 else 0.0)
         self.output = nn.Linear(hidden_size, vocab_size)
 
-    def forward(self, input_ids):
+    def hidden_states(self, input_ids):
+        """The vector at every position just before the output layer: (batch, seq_len, hidden_size).
+        Used by extract_features.py (Part III); forward() below is built on it."""
         x = self.dropout(self.embedding(input_ids))  # (batch, seq_len, embedding_dim)
         x, _ = self.rnn(x)                           # (batch, seq_len, hidden_size); _ is the final state, unused
-        return self.output(self.dropout(x))          # (batch, seq_len, vocab_size)
+        return x
+
+    def forward(self, input_ids):
+        return self.output(self.dropout(self.hidden_states(input_ids)))  # (batch, seq_len, vocab_size)
 
 
 class LSTMLanguageModel(nn.Module):
@@ -88,10 +93,14 @@ class LSTMLanguageModel(nn.Module):
                             batch_first=True, dropout=dropout if num_layers > 1 else 0.0)
         self.output = nn.Linear(hidden_size, vocab_size)
 
-    def forward(self, input_ids):
+    def hidden_states(self, input_ids):
+        """The vector at every position just before the output layer: (batch, seq_len, hidden_size)."""
         x = self.dropout(self.embedding(input_ids))  # (batch, seq_len, embedding_dim)
         x, _ = self.lstm(x)                          # _ is the final (hidden, cell) state, unused
-        return self.output(self.dropout(x))          # (batch, seq_len, vocab_size)
+        return x
+
+    def forward(self, input_ids):
+        return self.output(self.dropout(self.hidden_states(input_ids)))  # (batch, seq_len, vocab_size)
 
 
 class TransformerLanguageModel(nn.Module):
@@ -133,7 +142,9 @@ class TransformerLanguageModel(nn.Module):
         self.final_norm = nn.LayerNorm(embedding_dim)  # pre-norm blocks need one last LayerNorm
         self.output = nn.Linear(embedding_dim, vocab_size)
 
-    def forward(self, input_ids):
+    def hidden_states(self, input_ids):
+        """The vector at every position just before the output layer (after the final LayerNorm):
+        (batch, seq_len, embedding_dim)."""
         seq_len = input_ids.size(1)
         if seq_len > self.max_positions:
             raise ValueError(f"sequence length {seq_len} is longer than max_positions "
@@ -157,4 +168,7 @@ class TransformerLanguageModel(nn.Module):
         future = torch.triu(torch.ones(seq_len, seq_len, dtype=torch.bool, device=input_ids.device),
                             diagonal=1)
         x = self.blocks(x, mask=future)  # (batch, seq_len, 100)
-        return self.output(self.final_norm(x))  # (batch, seq_len, vocab_size)
+        return self.final_norm(x)
+
+    def forward(self, input_ids):
+        return self.output(self.hidden_states(input_ids))  # (batch, seq_len, vocab_size)

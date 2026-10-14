@@ -1,0 +1,83 @@
+{
+  "run": "p3_prepare_classification",
+  "script": "src/prepare_classification.py",
+  "command": "/usr/local/bin/python3 src/prepare_classification.py --config configs/p3_prepare_classification.json",
+  "date": "2026-10-14T16:51:55+08:00",
+  "git_commit": "54c5b04a9b4c0d6eb37f52327845af581f760031",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
+  "seed": 0,
+  "config": {
+    "architecture": null,
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": null,
+    "embedding_init": null,
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": null,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "processed_dir": "data/processed",
+      "output_dir": "data/classification",
+      "max_length": 256,
+      "truncate": "head"
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "splits": {
+      "train": {
+        "num_reviews": 40000,
+        "num_negative": 20000,
+        "num_positive": 20000,
+        "fraction_positive": 0.5,
+        "num_truncated": 14802,
+        "fraction_truncated": 0.37005,
+        "mean_length_kept": 196.139375,
+        "tokens_full": 11027213,
+        "unk_rate_full": 0.020805347643144283,
+        "tokens_kept": 7845575,
+        "unk_rate_kept": 0.019964247362366683
+      },
+      "val": {
+        "num_reviews": 5000,
+        "num_negative": 2500,
+        "num_positive": 2500,
+        "fraction_positive": 0.5,
+        "num_truncated": 1849,
+        "fraction_truncated": 0.3698,
+        "mean_length_kept": 197.0612,
+        "tokens_full": 1383412,
+        "unk_rate_full": 0.022336802051738745,
+        "tokens_kept": 985306,
+        "unk_rate_kept": 0.02121675905759226
+      },
+      "test": {
+        "num_reviews": 5000,
+        "num_negative": 2500,
+        "num_positive": 2500,
+        "fraction_positive": 0.5,
+        "num_truncated": 1910,
+        "fraction_truncated": 0.382,
+        "mean_length_kept": 196.6548,
+        "tokens_full": 1390673,
+        "unk_rate_full": 0.02246897725058299,
+        "tokens_kept": 983274,
+        "unk_rate_kept": 0.021507738433030874
+      }
+    }
+  },
+  "details": {
+    "output_dir": "data/classification",
+    "max_length": 256,
+    "truncate": "head",
+    "eos_dropped": true,
+    "padding": "right, <pad> id 0"
+  }
+}

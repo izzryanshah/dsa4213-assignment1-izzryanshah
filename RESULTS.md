@@ -1,6 +1,6 @@
 # Results
 
-Rebuilt by `src/update_results.py` on 2026-10-14T16:41:08+08:00 from 26 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-14T13:42:08+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
+Rebuilt by `src/update_results.py` on 2026-10-14T17:23:44+08:00 from 27 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-14T17:07:58+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
 
 Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III](#part-iii) · [Settings](#settings) · [Checks](#checks)
 
@@ -574,8 +574,8 @@ Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III
 |---|---|
 | Command | `/usr/local/bin/python3 tests/test_causality.py --config configs/test_causality.json` |
 | Script | `tests/test_causality.py` |
-| Date | 2026-10-13T00:17:56+08:00 |
-| Git commit | `66bc88f (uncommitted changes at run time)` |
+| Date | 2026-10-14T17:07:48+08:00 |
+| Git commit | `54c5b04 (uncommitted changes at run time)` |
 | Hardware | CPU: Apple M2 (Darwin arm64) |
 | Seed | 0 |
 | Result file | `results/test_causality.json` |
@@ -763,10 +763,10 @@ Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III
 
 | Field | Value |
 |---|---|
-| Command | `/usr/local/bin/python3 tests/test_models.py --config configs/test_models.json` |
+| Command | `/usr/local/bin/python3 tests/test_models.py --config configs/test_models.json --results-dir /var/folders/_t/7m824dzs4rd779xcck1jw61h0000gn/T//x` |
 | Script | `tests/test_models.py` |
-| Date | 2026-10-12T21:57:48+08:00 |
-| Git commit | `9afc2c8 (uncommitted changes at run time)` |
+| Date | 2026-10-14T17:07:58+08:00 |
+| Git commit | `54c5b04 (uncommitted changes at run time)` |
 | Hardware | CPU: Apple M2 (Darwin arm64) |
 | Seed | 0 |
 | Result file | `results/test_models.json` |
@@ -1715,7 +1715,87 @@ Read from the run records; nothing here is interpreted.
 
 ## Part III
 
-No runs yet.
+#### `p3_prepare_classification`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/local/bin/python3 src/prepare_classification.py --config configs/p3_prepare_classification.json` |
+| Script | `src/prepare_classification.py` |
+| Date | 2026-10-14T16:51:55+08:00 |
+| Git commit | `54c5b04 (uncommitted changes at run time)` |
+| Hardware | CPU: Apple M2 (Darwin arm64) |
+| Seed | 0 |
+| Result file | `results/p3_prepare_classification.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | — |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.processed_dir` | data/processed |
+| `options.output_dir` | data/classification |
+| `options.max_length` | 256 |
+| `options.truncate` | head |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `splits.train.num_reviews` | 40,000 |
+| `splits.train.num_negative` | 20,000 |
+| `splits.train.num_positive` | 20,000 |
+| `splits.train.fraction_positive` | 0.5000 |
+| `splits.train.num_truncated` | 14,802 |
+| `splits.train.fraction_truncated` | 0.3700 |
+| `splits.train.mean_length_kept` | 196.1394 |
+| `splits.train.tokens_full` | 11,027,213 |
+| `splits.train.unk_rate_full` | 0.0208 |
+| `splits.train.tokens_kept` | 7,845,575 |
+| `splits.train.unk_rate_kept` | 0.0200 |
+| `splits.val.num_reviews` | 5,000 |
+| `splits.val.num_negative` | 2,500 |
+| `splits.val.num_positive` | 2,500 |
+| `splits.val.fraction_positive` | 0.5000 |
+| `splits.val.num_truncated` | 1,849 |
+| `splits.val.fraction_truncated` | 0.3698 |
+| `splits.val.mean_length_kept` | 197.0612 |
+| `splits.val.tokens_full` | 1,383,412 |
+| `splits.val.unk_rate_full` | 0.0223 |
+| `splits.val.tokens_kept` | 985,306 |
+| `splits.val.unk_rate_kept` | 0.0212 |
+| `splits.test.num_reviews` | 5,000 |
+| `splits.test.num_negative` | 2,500 |
+| `splits.test.num_positive` | 2,500 |
+| `splits.test.fraction_positive` | 0.5000 |
+| `splits.test.num_truncated` | 1,910 |
+| `splits.test.fraction_truncated` | 0.3820 |
+| `splits.test.mean_length_kept` | 196.6548 |
+| `splits.test.tokens_full` | 1,390,673 |
+| `splits.test.unk_rate_full` | 0.0225 |
+| `splits.test.tokens_kept` | 983,274 |
+| `splits.test.unk_rate_kept` | 0.0215 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `output_dir` | data/classification |
+| `max_length` | 256 |
+| `truncate` | head |
+| `eos_dropped` | True |
+| `padding` | right, &lt;pad&gt; id 0 |
 
 ### Runs not assigned to a section
 
@@ -1892,11 +1972,15 @@ These runs match no rule in `part_rules` (`configs/update_results.json`).
 
 Source: `DECISIONS.md` (copied as written there).
 
-### NEEDS REVIEW (0)
+### NEEDS REVIEW (3)
 
-None.
+| ID | Decision | Status |
+|---|---|---|
+| W2 | Details not covered by the user's choice | NEEDS REVIEW |
+| X1 | Which vector is pooled, and how padding is excluded | NEEDS REVIEW |
+| X2 | Part III comparison and pooling | NEEDS REVIEW (pooling choice) |
 
-### All design choices (80)
+### All design choices (84)
 
 | ID | Decision | Value | Where | Chosen by | Status |
 |---|---|---|---|---|---|
@@ -1980,6 +2064,10 @@ None.
 | U1 | Part II generation set-up | the two frozen-embedding LSTMs are generated with `configs/generations_p2_lstm_w2v.json` and `configs/generations_p2_lstm_glove.json`, which equal `configs/generations_lstm.json` except `embedding_init` and the `train_result` / `checkpoint` they load (temperature 1.0, top-k 40, 50 new tokens, seed 0, 1 sample, same `prompts.txt`). The random-embedding column reuses the Part I file `results/generations_lstm.json` (no new generation). `configs/combine_generations_p2.json` merges the three into `results/part2_generations.md` and refuses to merge if decoding settings or prompts differ. | `configs/generations_p2_lstm_*.json`, `configs/combine_generations_p2.json`; `src/combine_generations.py` (optional `options.title` and `options.labels`). | User asked for "same prompts.txt and decoding settings as Part I"; reuse of the Part I LSTM generation and the file names are assistant defaults. | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
 | U2 | What the Part II section of RESULTS.md contains | the Part II runs and their loss figures; a comparison table and generated-text table that include the reused Part I runs `train_lstm` and `generations_lstm`; the embedding-table records `word2vec_cost` and `glove_coverage` (now assigned to Part II); and a "Part II set-up facts" block (settings differences, provenance, frozen check, embedding tables with coverage and cost, per-epoch loss facts), all read from the run records. | `configs/update_results.json` (`part_comparison_extra_runs`, `part_rules`, `part2_baseline_run`, `part2_own_embedding_run`, `part2_public_embedding_run`); `src/update_results.py` (`render_part2_facts`). | Assistant default (the user asked for "what exists so far, facts only"). | CONFIRMED (user reviewed each item one by one on 2026-10-14 and kept it as is) |
 | V1 | Reruns after the Part II audit | no reruns. A (clean-commit rerun of both Part II runs), B (rerun of the Part I LSTM on current code), C (all three at 40 epochs) and D (per-batch loss logging) were offered with Colab time estimates and consequences; the user chose none. Consequences accepted: the Part II records show `git_dirty: true` with the cause unknown; Part I LSTM ran on an older commit (equivalence rests on the code diff); all three runs stopped at the 20-epoch cap while still improving, so convergence is compared at a fixed 20-epoch budget; stability evidence is per-epoch only. | nothing changed; `MY_TASKS.md` has no rerun items. | User, 2026-10-14. | CONFIRMED |
+| W1 | Maximum review length and truncation side | `max_length` 256, keep the FIRST 256 tokens ("head" truncation), pad on the right with `&lt;pad&gt;`. 37.0% of train, 37.0% of val and 38.2% of test reviews are truncated. | `configs/p3_prepare_classification.json` (`options.max_length`, `options.truncate`); used in `src/prepare_classification.py`. | User, prompt (2026-10-14), from options offered. | CONFIRMED |
+| W2 | Details not covered by the user's choice | (a) the `&lt;eos&gt;` marker data.py appended to each review is dropped (it separates documents for the language models; it is not part of a review, and truncated reviews would lose it anyway); (b) `&lt;unk&gt;` rate is reported over real tokens only (no `&lt;pad&gt;`, no `&lt;eos&gt;`), both for the full review and for the kept part; (c) the saved files also store `lengths` (real tokens per row) so later code can ignore padding. | `src/prepare_classification.py` (`prepare_split`). | Assistant default. | NEEDS REVIEW |
+| X1 | Which vector is pooled, and how padding is excluded | the pooled vector is the one fed to the model's output layer: output of the last recurrent layer (RNN/LSTM, size 256) or of the final LayerNorm (Transformer, size 100). `last` = hidden state at position `length - 1`; `mean` = sum over real positions (0/1 mask) divided by `length`. Padding is on the right and all models are causal, so real positions never depend on padding (checked by `tests/test_extract_features.py`). Models are put in eval mode (dropout off), all parameters set to `requires_grad False`, and the run stops if any weight changed. Only `hidden_states()` was added to `src/models.py`; `forward` computes the same numbers as before. | `src/extract_features.py` (`pool`, `extract_split`); `src/models.py` (`hidden_states` in each class). | Assistant default (pooling methods themselves: user's request). | NEEDS REVIEW |
+| X2 | Part III comparison and pooling | compare the Part I LSTM and Part I Transformer (both random trainable embeddings, as trained), same pooling for both: `mean`. Runs: `p3_feat_lstm_mean`, `p3_feat_transformer_mean`; batch size 64 (speed only). Feature sizes: LSTM 256, Transformer 100. | `configs/p3_feat_lstm_mean.json`, `configs/p3_feat_transformer_mean.json` (`options.pooling`, `batch_size`); Colab section 12. | comparison: User, prompt (2026-10-14), option 1 of 3. Pooling `mean`: Assistant default (it was named as the usual default in the options; the user did not specify). | NEEDS REVIEW (pooling choice) |
 
 ### My notes
 

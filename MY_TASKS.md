@@ -1,6 +1,6 @@
 # My tasks
 
-Rebuilt by `src/update_results.py` on Wed 14 Oct 2026, 16:41 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (2 day(s) left; today is Wed 14 Oct).
+Rebuilt by `src/update_results.py` on Wed 14 Oct 2026, 17:23 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (2 day(s) left; today is Wed 14 Oct).
 
 Tick a box yourself with `[x]`; this file never ticks anything for you, and keeps your ticks and anything you write between the marker lines. Do not delete the `<!--id:...-->` tags at the end of each line.
 
@@ -9,10 +9,13 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 ## Waiting on me now
 
 - [ ] Put your planned day for each task into `schedule` in `configs/update_results.json` (item id -> `YYYY-MM-DD`, or `section:<key>` -> date). Until then every item shows "Planned: not set" and nothing can be overdue *(Planned: not set)* <!--id:wait-schedule-->
+- [ ] Review 3 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
 - [ ] Start run `combine_generations_p2`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-combine_generations_p2-->
 - [ ] Start run `generations_p2_lstm_glove`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-generations_p2_lstm_glove-->
 - [ ] Start run `generations_p2_lstm_w2v`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-generations_p2_lstm_w2v-->
-- [ ] Write your notes for Data, Part I, Part II: see [Results to interpret](#results-to-interpret) *(Planned: not set)* <!--id:wait-notes-->
+- [ ] Start run `p3_feat_lstm_mean`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p3_feat_lstm_mean-->
+- [ ] Start run `p3_feat_transformer_mean`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p3_feat_transformer_mean-->
+- [ ] Write your notes for Data, Part I, Part II, Part III: see [Results to interpret](#results-to-interpret) *(Planned: not set)* <!--id:wait-notes-->
 - [ ] Fix failing check: Test set used only for final evaluation: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-test-set-used-only-for-final-evaluation-->
 - [ ] Fix failing check: All models scored on identical test targets: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-all-models-scored-on-identical-test-targets-->
 - [ ] Commit and push: 18 uncommitted file(s), 0 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
@@ -27,6 +30,18 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 
 ## Decisions to review
 
+- [ ] **W2** Details not covered by the user's choice *(Planned: not set)* <!--id:dec-W2-->
+  - Options: keep `<eos>` when the review fits (then short and long reviews end differently).
+  - Current value: (a) the `<eos>` marker data.py appended to each review is dropped (it separates documents for the language models; it is not part of a review, and truncated rev...
+  - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry W2 (line 644), which sets `Chosen by` and `Status`
+- [ ] **X1** Which vector is pooled, and how padding is excluded *(Planned: not set)* <!--id:dec-X1-->
+  - Options: pooling an earlier layer; pooling before the Transformer's final LayerNorm; concatenating last and mean.
+  - Current value: the pooled vector is the one fed to the model's output layer: output of the last recurrent layer (RNN/LSTM, size 256) or of the final LayerNorm (Transformer, si...
+  - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry X1 (line 654), which sets `Chosen by` and `Status`
+- [ ] **X2** Part III comparison and pooling *(Planned: not set)* <!--id:dec-X2-->
+  - Options: last vs mean on one model; full 2x2 grid; adding the Part II frozen-embedding LSTMs.
+  - Current value: compare the Part I LSTM and Part I Transformer (both random trainable embeddings, as trained), same pooling for both: `mean`. Runs: `p3_feat_lstm_mean`, `p3_fea...
+  - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry X2 (line 662), which sets `Chosen by` and `Status`
 - [ ] Part II: choose which one Part I architecture (RNN, LSTM or Transformer) gets the three embedding settings *(Planned: not set)* <!--id:dec-p2-arch-->
   - Decide after Part I results exist
 - [ ] Part III: choose the labeled task and dataset, and the two or more representation choices to compare (brief examples: LSTM vs Transformer, two embedding variants, two pooling methods) *(Planned: not set)* <!--id:dec-p3-task-->
@@ -52,6 +67,14 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Command: `python3 src/generate.py --config configs/generations_p2_lstm_w2v.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
   - Time: no earlier run of this script has a recorded time
   - Produces: `results/generations_p2_lstm_w2v.json`, then a new section in `RESULTS.md` after `update_results.py`
+- [ ] Run `p3_feat_lstm_mean` *(Planned: not set)* <!--id:run-p3_feat_lstm_mean-->
+  - Command: `python3 src/extract_features.py --config configs/p3_feat_lstm_mean.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+  - Time: no earlier run of this script has a recorded time
+  - Produces: `results/p3_feat_lstm_mean.json`, then a new section in `RESULTS.md` after `update_results.py`
+- [ ] Run `p3_feat_transformer_mean` *(Planned: not set)* <!--id:run-p3_feat_transformer_mean-->
+  - Command: `python3 src/extract_features.py --config configs/p3_feat_transformer_mean.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+  - Time: no earlier run of this script has a recorded time
+  - Produces: `results/p3_feat_transformer_mean.json`, then a new section in `RESULTS.md` after `update_results.py`
 - [ ] Download public GloVe 100d vectors (GloVe 6B, Stanford NLP: nlp.stanford.edu/projects/glove) in Colab, never on this machine *(Planned: not set)* <!--id:run-p2-glove-->
   - Command: `notebooks/run_colab.ipynb`, section 8 (downloads glove.6B.zip, then `python -u src/load_glove.py --config configs/glove_coverage.json`)
   - Time: a few minutes (about 822 MB download)
@@ -90,6 +113,9 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 - [ ] Write your notes for [Part II](RESULTS.md#part-ii) *(Planned: not set)* <!--id:interp-part2-->
   - Runs in this section: `glove_coverage`, `p2_lstm_glove`, `p2_lstm_w2v`, `word2vec_cost`
   - Where: the empty *My notes* block at the end of the Part II section of `RESULTS.md`
+- [ ] Write your notes for [Part III](RESULTS.md#part-iii) *(Planned: not set)* <!--id:interp-part3-->
+  - Runs in this section: `p3_prepare_classification`
+  - Where: the empty *My notes* block at the end of the Part III section of `RESULTS.md`
 
 ### Added by me
 

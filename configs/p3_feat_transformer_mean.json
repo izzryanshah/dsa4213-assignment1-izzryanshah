@@ -1,0 +1,24 @@
+{
+  "architecture": "transformer",
+  "layers": null,
+  "hidden_size": null,
+  "embedding_dim": null,
+  "embedding_init": null,
+  "context_length": null,
+  "learning_rate": null,
+  "batch_size": 64,
+  "epochs": null,
+  "dropout": null,
+  "vocab_size": 20000,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "model": "transformer",
+    "processed_dir": "data/processed",
+    "classification_dir": "data/classification",
+    "output_dir": "data/features",
+    "pooling": "mean",
+    "train_result": "results/train_transformer.json",
+    "checkpoint": "checkpoints/train_transformer.pt"
+  }
+}

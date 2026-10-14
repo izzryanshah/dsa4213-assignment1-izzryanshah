@@ -322,3 +322,20 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 ## 2026-10-14 (decision review)
 
 - Asked the user about every NEEDS REVIEW item one by one (28 items, including G2); all were kept as is. `DECISIONS.md`: their status is now CONFIRMED, new section V (V1: no reruns after the Part II audit). No code changed. Ran `update_results.py`.
+
+## 2026-10-14 (Part III labelled data)
+
+- `src/prepare_classification.py` + `configs/p3_prepare_classification.json` (new): reads the saved language-model splits (no re-split), drops `<eos>`, keeps the first 256 tokens, pads right, saves `data/classification/{train,val,test}.npz` (ids, lengths, labels, original_indices) and `results/p3_prepare_classification.json` (class balance, truncation share, `<unk>` rate per split).
+- `tests/test_prepare_classification.py` (new): tiny made-up split, plus a check that the real files have the same reviews and labels as the language-model splits and the raw CSV. Passed.
+- `DECISIONS.md` section W (W1 confirmed, W2 NEEDS REVIEW). Ran `update_results.py`.
+
+## 2026-10-14 (Part III feature extraction code)
+
+- `src/extract_features.py` (new): loads a frozen LM (via `generate.build_neural`), pools per-token hidden states with `--pooling last|mean` (padding excluded, explained in the file docstring), saves `data/features/<run>/{train,val,test}.npz` and `results/<run>.json`. Colab-only; no config or Colab cell yet because the comparison has not been chosen.
+- `src/models.py`: each model got a `hidden_states()` method; `forward` now calls it (same numbers; `test_models` and `test_causality` still pass).
+- `tests/test_extract_features.py` (new): hand-made pooling check, plus for tiny RNN/LSTM/Transformer: padded review == unpadded review, padding content ignored. Passed. Smoke run of the script on 40 reviews per split with random-weight checkpoints in a scratch folder (not a result, nothing saved to `results/`).
+- `DECISIONS.md` section X (X1, NEEDS REVIEW). Ran `update_results.py`.
+
+## 2026-10-14 (Part III extraction runs set up)
+
+- `configs/p3_feat_lstm_mean.json`, `configs/p3_feat_transformer_mean.json` (new): the LSTM vs Transformer comparison with mean pooling (user chose option 1). `notebooks/run_colab.ipynb`: section 12 (restore `data/classification/` from Drive, run both extractions, copy `data/features/` to Drive). Nothing run for real (Colab-only). `DECISIONS.md` X2 (NEEDS REVIEW, pooling). Ran `update_results.py`.

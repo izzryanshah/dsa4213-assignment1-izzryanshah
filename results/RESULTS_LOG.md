@@ -200,3 +200,8 @@ Before `prompts.txt` existed, `src/generate.py` was run end to end twice (n-gram
 - **Script / command:** `src/train.py`; `python -u src/train.py --config configs/p2_lstm_w2v.json --model lstm --embedding w2v` and `... configs/p2_lstm_glove.json --model lstm --embedding glove` (seed 0; git commit `5d822d7`, `git_dirty: true` on both; Tesla T4).
 - **Key numbers:** both ran all 20 epochs (no early stop; best epoch 20). Test perplexity / cross-entropy / best validation loss / training seconds: w2v 81.42 / 4.3997 / 4.4105 / 3,394; GloVe 90.28 / 4.5029 / 4.5135 / 3,398. Trainable parameters 6,033,699 of 8,033,999 in total. `frozen_embedding_max_abs_change` 0.0 for both. Test targets 981,353, checksum `4f77927a1cd9...` (same as Part I). For reference, Part I `train_lstm` (random, trainable): 80.45 / 4.3876 / 4.3990 / 3,850.
 - **Files:** `results/p2_lstm_w2v.json`, `results/p2_lstm_glove.json`
+
+### 2026-10-14 — Part III labelled classification data
+- **Script / command:** `src/prepare_classification.py`; `python3 src/prepare_classification.py --config configs/p3_prepare_classification.json` (seed 0, no randomness; local CPU). Max length 256, first-N truncation, `<eos>` dropped.
+- **Key numbers (train / val / test):** reviews 40,000 / 5,000 / 5,000; positive 50.00% / 50.00% / 50.00%; truncated 37.0% / 37.0% / 38.2%; mean kept length 196.1 / 197.1 / 196.7; `<unk>` rate of kept tokens 1.996% / 2.122% / 2.151%; of full reviews 2.081% / 2.234% / 2.247%.
+- **Files:** `results/p3_prepare_classification.json`, `data/classification/{train,val,test}.npz`
