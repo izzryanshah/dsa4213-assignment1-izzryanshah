@@ -1,6 +1,6 @@
 # Results
 
-Rebuilt by `src/update_results.py` on 2026-10-14T18:47:39+08:00 from 34 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-14T18:38:42+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
+Rebuilt by `src/update_results.py` on 2026-10-14T21:47:53+08:00 from 35 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-14T21:47:37+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
 
 Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III](#part-iii) · [Settings](#settings) · [Checks](#checks)
 
@@ -2432,6 +2432,67 @@ These runs match no rule in `part_rules` (`configs/update_results.json`).
 | `sources.p2_lstm_glove.git_commit` | 1e38d0ac9b7381342ba4c36f262d4d25a91a5cbb |
 | `sources.p2_lstm_glove.hardware` | GPU: Tesla T4 |
 | `sources.p2_lstm_glove.date` | 2026-10-14T09:36:21+00:00 |
+
+#### `make_figures`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/local/bin/python3 src/make_figures.py --config configs/make_figures.json` |
+| Script | `src/make_figures.py` |
+| Date | 2026-10-14T21:47:37+08:00 |
+| Git commit | `f3ac536 (uncommitted changes at run time)` |
+| Hardware | CPU: Apple M2 (Darwin arm64) |
+| Seed | 0 |
+| Result file | `results/make_figures.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | — |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.results_dir` | results |
+| `options.tables_dir` | results/tables |
+| `options.figures_dir` | results/figures |
+| `options.part1_costs_csv` | results/part1_costs.csv |
+| `options.part1_runs.ngram` | ngram |
+| `options.part1_runs.rnn` | train_rnn |
+| `options.part1_runs.lstm` | train_lstm |
+| `options.part1_runs.transformer` | train_transformer |
+| `options.part1_curve_models` | `["rnn", "lstm", "transformer"]` |
+| `options.part2_runs.random (learned)` | train_lstm |
+| `options.part2_runs.own Skip-gram (frozen)` | p2_lstm_w2v |
+| `options.part2_runs.public GloVe 100d (frozen)` | p2_lstm_glove |
+| `options.part2_coverage_runs.own Skip-gram (frozen)` | word2vec_cost |
+| `options.part2_coverage_runs.public GloVe 100d (frozen)` | glove_coverage |
+| `options.part2_prep_time_runs.own Skip-gram (frozen)` | word2vec_cost |
+| `options.part3_run` | p3_classify |
+| `options.figure_width_in` | 6.5000 |
+| `options.figure_height_in` | 2.3000 |
+| `options.font_size` | 8 |
+| `options.colors.rnn` | #0072B2 |
+| `options.colors.lstm` | #E69F00 |
+| `options.colors.transformer` | #009E73 |
+| `options.colors.random (learned)` | #0072B2 |
+| `options.colors.own Skip-gram (frozen)` | #D55E00 |
+| `options.colors.public GloVe 100d (frozen)` | #009E73 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `files_written` | (11 entries; see the run's JSON file) |
 
 ### My notes
 

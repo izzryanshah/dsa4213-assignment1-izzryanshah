@@ -225,3 +225,8 @@ Before `prompts.txt` existed, `src/generate.py` was run end to end twice (n-gram
 - **Script / command:** `src/error_sample.py`; `python3 src/error_sample.py --config configs/p3_error_sample.json` (seed 0; local CPU).
 - **Key numbers:** `p3_feat_lstm_mean`: errors 904 (mean 203.8 tokens, 45.0% truncated, mean `<unk>` rate 2.34%, 87.7% with a negation word) vs correct 4,096 (195.1, 37.0%, 2.02%, 87.4%). `p3_feat_transformer_mean`: errors 1,128 (202.0, 41.8%, 2.29%, 89.3%) vs correct 3,872 (195.1, 37.5%, 2.02%, 87.0%). Ranking: LSTM perplexity 80.45 (rank 1), accuracy 0.8192 (rank 1); Transformer perplexity 156.94 (rank 2), accuracy 0.7744 (rank 2).
 - **Files:** `results/part3_error_sample_p3_feat_lstm_mean.csv`, `results/part3_error_sample_p3_feat_transformer_mean.csv`, `results/part3_error_stats.csv`, `results/part3_ranking.csv`, `results/p3_error_sample.json`
+
+### 2026-10-14 — Report tables and loss-curve figures
+- **Script / command:** `src/make_figures.py`; `python3 src/make_figures.py --config configs/make_figures.json` (local CPU; reads existing results only).
+- **Key numbers:** Part I test perplexity (same 981,353 targets): n-gram 111.31, RNN 109.37, LSTM 80.45, Transformer 156.94. Part II test perplexity: random 80.45, own Skip-gram 81.42, GloVe 90.28; GloVe coverage 99.56% of types / 97.52% of tokens; word2vec training 273.8 s (local CPU). Part III test accuracy / macro-F1: LSTM features 0.8192 / 0.8192, Transformer features 0.7744 / 0.7744.
+- **Files:** `results/tables/part{1,2,3}_table.{csv,tex,md}`, `results/figures/part1_loss_curves.pdf`, `results/figures/part2_loss_curves.pdf`, `results/make_figures.json`

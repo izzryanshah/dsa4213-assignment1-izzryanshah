@@ -1,0 +1,3 @@
+variant,feature_size,best_C,val_accuracy,val_macro_f1,test_accuracy,test_macro_f1,n_test,n_test_errors,seed
+p3_feat_lstm_mean,256,0.01,0.8154,0.8153983385850473,0.8192,0.8191916394214068,5000,904,0
+p3_feat_transformer_mean,100,0.1,0.7624,0.7623902675053571,0.7744,0.774371697185695,5000,1128,0

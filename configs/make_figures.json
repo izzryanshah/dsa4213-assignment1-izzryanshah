@@ -1,0 +1,32 @@
+{
+  "architecture": null,
+  "layers": null,
+  "hidden_size": null,
+  "embedding_dim": null,
+  "embedding_init": null,
+  "context_length": null,
+  "learning_rate": null,
+  "batch_size": null,
+  "epochs": null,
+  "dropout": null,
+  "vocab_size": 20000,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "results_dir": "results",
+    "tables_dir": "results/tables",
+    "figures_dir": "results/figures",
+    "part1_costs_csv": "results/part1_costs.csv",
+    "part1_runs": {"ngram": "ngram", "rnn": "train_rnn", "lstm": "train_lstm", "transformer": "train_transformer"},
+    "part1_curve_models": ["rnn", "lstm", "transformer"],
+    "part2_runs": {"random (learned)": "train_lstm", "own Skip-gram (frozen)": "p2_lstm_w2v", "public GloVe 100d (frozen)": "p2_lstm_glove"},
+    "part2_coverage_runs": {"own Skip-gram (frozen)": "word2vec_cost", "public GloVe 100d (frozen)": "glove_coverage"},
+    "part2_prep_time_runs": {"own Skip-gram (frozen)": "word2vec_cost"},
+    "part3_run": "p3_classify",
+    "figure_width_in": 6.5,
+    "figure_height_in": 2.3,
+    "font_size": 8,
+    "colors": {"rnn": "#0072B2", "lstm": "#E69F00", "transformer": "#009E73",
+               "random (learned)": "#0072B2", "own Skip-gram (frozen)": "#D55E00", "public GloVe 100d (frozen)": "#009E73"}
+  }
+}

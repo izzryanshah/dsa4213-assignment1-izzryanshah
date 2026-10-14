@@ -1,0 +1,4 @@
+embedding_setting,run,test_perplexity,best_val_loss,best_epoch,trainable_parameters,total_parameters,train_seconds,train_hardware,coverage_types_percent,coverage_tokens_percent,word2vec_train_seconds,word2vec_total_seconds,word2vec_hardware
+random (learned),train_lstm,80.44937180664519,4.398993946867976,20,8033999,8033999,3849.6727192549997,GPU: Tesla T4,,,,,
+own Skip-gram (frozen),p2_lstm_w2v,81.4248763657732,4.410532291544139,20,6033699,8033999,3394.095947494,GPU: Tesla T4,100.0,100.0,273.80291612498695,274.486083374999,CPU: Apple M2 (Darwin arm64)
+public GloVe 100d (frozen),p2_lstm_glove,90.28071680904144,4.513451299304932,20,6033699,8033999,3397.8397241170005,GPU: Tesla T4,99.56004399560044,97.51843576155984,,,

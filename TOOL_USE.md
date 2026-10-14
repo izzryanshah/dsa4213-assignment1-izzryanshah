@@ -363,3 +363,7 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 ## 2026-10-14 (Part III error notes, user exception)
 
 - `results/part3_error_notes.md` (new): assistant-drafted notes from reading the 30 sampled misclassified reviews, plus the perplexity vs accuracy ranking facts. Written because the user explicitly asked for an exception to the "never interpret results" rule; the *My notes* block in `RESULTS.md` was not touched. Ran `update_results.py`.
+
+## 2026-10-14 (report tables and loss-curve figures)
+
+- `src/make_figures.py` + `configs/make_figures.json` (new): reads `results/*.json` and `results/part1_costs.csv` and writes Part I, II and III tables (`results/tables/part{1,2,3}_table.{csv,tex,md}`) and two loss-curve PDFs (`results/figures/part{1,2}_loss_curves.pdf`, 6.5 x 2.3 in, one panel per model/setting). Numbers only, no interpretation. Part I test perplexity comes from the benchmark column (same 981,353 targets for all four models). Runs locally (reads files only). No `DECISIONS.md` entry added yet; the layout choices (panel per model, solid = train / dashed = validation, colour palette, which perplexity column) are the assistant's defaults, to be reviewed. Ran `update_results.py`.
