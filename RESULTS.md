@@ -1,6 +1,6 @@
 # Results
 
-Rebuilt by `src/update_results.py` on 2026-10-14T17:23:44+08:00 from 27 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-14T17:07:58+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
+Rebuilt by `src/update_results.py` on 2026-10-14T17:59:05+08:00 from 32 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-14T17:07:58+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
 
 Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III](#part-iii) · [Settings](#settings) · [Checks](#checks)
 
@@ -1312,6 +1312,156 @@ Decoding settings for each column are in the run records above (`results/<run>.j
 
 ## Part II
 
+#### `generations_p2_lstm_glove`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/generate.py --config configs/generations_p2_lstm_glove.json` |
+| Script | `src/generate.py` |
+| Date | 2026-10-14T09:36:21+00:00 |
+| Git commit | `1e38d0a` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/generations_p2_lstm_glove.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | lstm |
+| `layers` | 2 |
+| `hidden_size` | 256 |
+| `embedding_dim` | 100 |
+| `embedding_init` | glove |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | 0.3000 |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.model` | lstm |
+| `options.processed_dir` | data/processed |
+| `options.prompts_path` | prompts.txt |
+| `options.temperature` | 1.0000 |
+| `options.top_k` | 40 |
+| `options.max_new_tokens` | 50 |
+| `options.num_samples` | 1 |
+| `options.banned_tokens` | `["&lt;pad&gt;", "&lt;unk&gt;"]` |
+| `options.stop_at_eos` | True |
+| `options.train_result` | results/p2_lstm_glove.json |
+| `options.checkpoint` | checkpoints/p2_lstm_glove.pt |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `num_prompts` | 3 |
+| `num_generations` | 3 |
+| `num_ended_with_eos` | 2 |
+| `mean_new_tokens` | 34.3333 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `model` | lstm |
+| `prompts_path` | prompts.txt |
+| `train_result` | results/p2_lstm_glove.json |
+| `train_run_date` | 2026-10-14T07:47:42+00:00 |
+| `train_run_git_commit` | 5d822d7526f54d5e7cceb64697568badc1968592 |
+| `checkpoint` | checkpoints/p2_lstm_glove.pt |
+| `num_parameters` | 6,033,699 |
+| `device` | cuda |
+
+**Decoding settings**
+
+| Setting | Value |
+|---|---|
+| `temperature` | 1.0000 |
+| `top_k` | 40 |
+| `max_tokens` | 50 |
+| `seed` | 0 |
+| `num_samples` | 1 |
+| `banned_tokens` | `["&lt;pad&gt;", "&lt;unk&gt;"]` |
+| `stop_at_eos` | True |
+
+#### `generations_p2_lstm_w2v`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/generate.py --config configs/generations_p2_lstm_w2v.json` |
+| Script | `src/generate.py` |
+| Date | 2026-10-14T09:36:13+00:00 |
+| Git commit | `1e38d0a` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/generations_p2_lstm_w2v.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | lstm |
+| `layers` | 2 |
+| `hidden_size` | 256 |
+| `embedding_dim` | 100 |
+| `embedding_init` | w2v |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | 0.3000 |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.model` | lstm |
+| `options.processed_dir` | data/processed |
+| `options.prompts_path` | prompts.txt |
+| `options.temperature` | 1.0000 |
+| `options.top_k` | 40 |
+| `options.max_new_tokens` | 50 |
+| `options.num_samples` | 1 |
+| `options.banned_tokens` | `["&lt;pad&gt;", "&lt;unk&gt;"]` |
+| `options.stop_at_eos` | True |
+| `options.train_result` | results/p2_lstm_w2v.json |
+| `options.checkpoint` | checkpoints/p2_lstm_w2v.pt |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `num_prompts` | 3 |
+| `num_generations` | 3 |
+| `num_ended_with_eos` | 1 |
+| `mean_new_tokens` | 35.3333 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `model` | lstm |
+| `prompts_path` | prompts.txt |
+| `train_result` | results/p2_lstm_w2v.json |
+| `train_run_date` | 2026-10-14T06:50:49+00:00 |
+| `train_run_git_commit` | 5d822d7526f54d5e7cceb64697568badc1968592 |
+| `checkpoint` | checkpoints/p2_lstm_w2v.pt |
+| `num_parameters` | 6,033,699 |
+| `device` | cuda |
+
+**Decoding settings**
+
+| Setting | Value |
+|---|---|
+| `temperature` | 1.0000 |
+| `top_k` | 40 |
+| `max_tokens` | 50 |
+| `seed` | 0 |
+| `num_samples` | 1 |
+| `banned_tokens` | `["&lt;pad&gt;", "&lt;unk&gt;"]` |
+| `stop_at_eos` | True |
+
 #### `glove_coverage`
 
 | Field | Value |
@@ -1639,27 +1789,27 @@ Decoding settings for each column are in the run records above (`results/<run>.j
 
 **Prompt:** `this movie was one of the best`
 
-|  | `generations_lstm` |
-|---|---|
-| Continuation | movies i have ever seen . |
-| New tokens | 6 |
-| Ended with `<eos>` | True |
+|  | `generations_lstm` | `generations_p2_lstm_glove` | `generations_p2_lstm_w2v` |
+|---|---|---|---|
+| Continuation | movies i have ever seen . | movies i have ever seen . | movies i have ever seen . |
+| New tokens | 6 | 6 | 6 |
+| Ended with `<eos>` | True | True | True |
 
 **Prompt:** `i was really disappointed by the acting and`
 
-|  | `generations_lstm` |
-|---|---|
-| Continuation | costumes and the cast didn ' t take me to get bored , but i had nothing to do with any actor as the other reviewer who didn ' t go in there on this . she was funny , but she didn ' t come , then i didn |
-| New tokens | 50 |
-| Ended with `<eos>` | False |
+|  | `generations_lstm` | `generations_p2_lstm_glove` | `generations_p2_lstm_w2v` |
+|---|---|---|---|
+| Continuation | costumes and the cast didn ' t take me to get bored , but i had nothing to do with any actor as the other reviewer who didn ' t go in there on this . she was funny , but she didn ' t come , then i didn | lighting and a lot more than so much that , for instance , i could have gotten a little bit better because this is a sequel with some very slow moments . this one was the second one with a script from one one and his movie career . this | directing , and it took me too long to see this series . i don ' t think it had got worse but the most surprising parts were , they were so obvious that you ' ll just remember it for those who want to show the kids and get |
+| New tokens | 50 | 50 | 50 |
+| Ended with `<eos>` | False | False | False |
 
 **Prompt:** `the story follows a young man who`
 
-|  | `generations_lstm` |
-|---|---|
-| Continuation | lives on the island , when they get them and then finds it a complete disappointment . the plot is so slow , there ' s one scene in that scene where the kids , and , to begin with , was a hoot . i have the courage to |
-| New tokens | 50 |
-| Ended with `<eos>` | False |
+|  | `generations_lstm` | `generations_p2_lstm_glove` | `generations_p2_lstm_w2v` |
+|---|---|---|---|
+| Continuation | lives on the island , when they get them and then finds it a complete disappointment . the plot is so slow , there ' s one scene in that scene where the kids , and , to begin with , was a hoot . i have the courage to | becomes determined to find a mental breakdown and has a couple of people and then they are and his son ' s wife has a certain problem is . but he gives the girl the same way , because he is about the truth of that . | becomes unable to become a soldier ( this film is about two people and then his own ) , but in this film he is always to see the real world ( the scene the character is of course of the director , whom was not a " hero " |
+| New tokens | 50 | 47 | 50 |
+| Ended with `<eos>` | False | True | False |
 
 ### Part II set-up facts
 
@@ -1714,6 +1864,150 @@ Read from the run records; nothing here is interpreted.
 <!-- my-notes:part2:end -->
 
 ## Part III
+
+#### `p3_feat_lstm_mean`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/extract_features.py --config configs/p3_feat_lstm_mean.json` |
+| Script | `src/extract_features.py` |
+| Date | 2026-10-14T09:37:03+00:00 |
+| Git commit | `1e38d0a` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/p3_feat_lstm_mean.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | lstm |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | 64 |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.model` | lstm |
+| `options.processed_dir` | data/processed |
+| `options.classification_dir` | data/classification |
+| `options.output_dir` | data/features |
+| `options.pooling` | mean |
+| `options.train_result` | results/train_lstm.json |
+| `options.checkpoint` | checkpoints/train_lstm.pt |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `pooling` | mean |
+| `splits.train.num_reviews` | 40,000 |
+| `splits.train.feature_size` | 256 |
+| `splits.train.feature_mean` | 0.0207 |
+| `splits.train.feature_std` | 0.1299 |
+| `splits.val.num_reviews` | 5,000 |
+| `splits.val.feature_size` | 256 |
+| `splits.val.feature_mean` | 0.0207 |
+| `splits.val.feature_std` | 0.1297 |
+| `splits.test.num_reviews` | 5,000 |
+| `splits.test.feature_size` | 256 |
+| `splits.test.feature_mean` | 0.0206 |
+| `splits.test.feature_std` | 0.1296 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `train_result` | results/train_lstm.json |
+| `train_run_date` | 2026-10-12T06:19:48+00:00 |
+| `train_run_git_commit` | 7b9bbe6758682f640994b57ac1efa86ba487c75d |
+| `checkpoint` | checkpoints/train_lstm.pt |
+| `num_parameters` | 8,033,999 |
+| `device` | cuda |
+| `timing_seconds.train` | 9.8460 |
+| `timing_seconds.val` | 1.2067 |
+| `timing_seconds.test` | 1.2154 |
+| `output_dir` | data/features/p3_feat_lstm_mean |
+| `weights_unchanged` | True |
+| `padding` | excluded: see src/extract_features.py docstring |
+
+#### `p3_feat_transformer_mean`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/extract_features.py --config configs/p3_feat_transformer_mean.json` |
+| Script | `src/extract_features.py` |
+| Date | 2026-10-14T09:37:14+00:00 |
+| Git commit | `1e38d0a` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/p3_feat_transformer_mean.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | transformer |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | 64 |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.model` | transformer |
+| `options.processed_dir` | data/processed |
+| `options.classification_dir` | data/classification |
+| `options.output_dir` | data/features |
+| `options.pooling` | mean |
+| `options.train_result` | results/train_transformer.json |
+| `options.checkpoint` | checkpoints/train_transformer.pt |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `pooling` | mean |
+| `splits.train.num_reviews` | 40,000 |
+| `splits.train.feature_size` | 100 |
+| `splits.train.feature_mean` | 0.0106 |
+| `splits.train.feature_std` | 0.3800 |
+| `splits.val.num_reviews` | 5,000 |
+| `splits.val.feature_size` | 100 |
+| `splits.val.feature_mean` | 0.0107 |
+| `splits.val.feature_std` | 0.3791 |
+| `splits.test.num_reviews` | 5,000 |
+| `splits.test.feature_size` | 100 |
+| `splits.test.feature_mean` | 0.0104 |
+| `splits.test.feature_std` | 0.3791 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `train_result` | results/train_transformer.json |
+| `train_run_date` | 2026-10-12T15:05:12+00:00 |
+| `train_run_git_commit` | b59b5edeba923436751d1a65b48aee466c30e47e |
+| `checkpoint` | checkpoints/train_transformer.pt |
+| `num_parameters` | 4,231,115 |
+| `device` | cuda |
+| `timing_seconds.train` | 6.0280 |
+| `timing_seconds.val` | 0.7198 |
+| `timing_seconds.test` | 0.7201 |
+| `output_dir` | data/features/p3_feat_transformer_mean |
+| `weights_unchanged` | True |
+| `padding` | excluded: see src/extract_features.py docstring |
 
 #### `p3_prepare_classification`
 
@@ -1962,6 +2256,73 @@ These runs match no rule in `part_rules` (`configs/update_results.json`).
 | `sources.transformer.hardware` | GPU: Tesla T4 |
 | `sources.transformer.date` | 2026-10-13T06:27:17+00:00 |
 
+#### `combine_generations_p2`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/combine_generations.py --config configs/combine_generations_p2.json` |
+| Script | `src/combine_generations.py` |
+| Date | 2026-10-14T09:36:22+00:00 |
+| Git commit | `1e38d0a` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/combine_generations_p2.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | — |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.models` | `["lstm", "p2_lstm_w2v", "p2_lstm_glove"]` |
+| `options.input_template` | results/generations_{model}.json |
+| `options.output_path` | results/part2_generations.md |
+| `options.title` | Part II generations: random vs own frozen vs public frozen embeddings (LSTM), identical decoding |
+| `options.labels.lstm` | LSTM, random trainable embeddings (Part I run) |
+| `options.labels.p2_lstm_w2v` | LSTM, own Skip-gram embeddings, frozen |
+| `options.labels.p2_lstm_glove` | LSTM, public GloVe 100d embeddings, frozen |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `num_prompts` | 3 |
+| `num_models` | 3 |
+| `generations_per_model` | 3 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `output_path` | results/part2_generations.md |
+| `decoding.temperature` | 1.0000 |
+| `decoding.top_k` | 40 |
+| `decoding.max_tokens` | 50 |
+| `decoding.seed` | 0 |
+| `decoding.num_samples` | 1 |
+| `decoding.banned_tokens` | `["&lt;pad&gt;", "&lt;unk&gt;"]` |
+| `decoding.stop_at_eos` | True |
+| `sources.lstm.git_commit` | 5771854ab6f7cac600fa352f58a874f1fa3c4b6a |
+| `sources.lstm.hardware` | GPU: Tesla T4 |
+| `sources.lstm.date` | 2026-10-13T06:27:12+00:00 |
+| `sources.p2_lstm_w2v.git_commit` | 1e38d0ac9b7381342ba4c36f262d4d25a91a5cbb |
+| `sources.p2_lstm_w2v.hardware` | GPU: Tesla T4 |
+| `sources.p2_lstm_w2v.date` | 2026-10-14T09:36:13+00:00 |
+| `sources.p2_lstm_glove.git_commit` | 1e38d0ac9b7381342ba4c36f262d4d25a91a5cbb |
+| `sources.p2_lstm_glove.hardware` | GPU: Tesla T4 |
+| `sources.p2_lstm_glove.date` | 2026-10-14T09:36:21+00:00 |
+
 ### My notes
 
 <!-- my-notes:part3:start -->
@@ -2121,6 +2482,8 @@ Source: `DECISIONS.md` (copied as written there).
 
 - `generations_lstm`: temperature=1.0, top_k=40, max_tokens=50, seed=0, num_samples=1; 3 prompts
 - `generations_ngram`: temperature=1.0, top_k=40, max_tokens=50, seed=0, num_samples=1; 3 prompts
+- `generations_p2_lstm_glove`: temperature=1.0, top_k=40, max_tokens=50, seed=0, num_samples=1; 3 prompts
+- `generations_p2_lstm_w2v`: temperature=1.0, top_k=40, max_tokens=50, seed=0, num_samples=1; 3 prompts
 - `generations_rnn`: temperature=1.0, top_k=40, max_tokens=50, seed=0, num_samples=1; 3 prompts
 - `generations_transformer`: temperature=1.0, top_k=40, max_tokens=50, seed=0, num_samples=1; 3 prompts
 

@@ -1,0 +1,79 @@
+{
+  "run": "combine_generations_p2",
+  "script": "src/combine_generations.py",
+  "command": "/usr/bin/python3 src/combine_generations.py --config configs/combine_generations_p2.json",
+  "date": "2026-10-14T09:36:22+00:00",
+  "git_commit": "1e38d0ac9b7381342ba4c36f262d4d25a91a5cbb",
+  "git_dirty": false,
+  "gpu": "Tesla T4",
+  "hardware": "GPU: Tesla T4",
+  "seed": 0,
+  "config": {
+    "architecture": null,
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": null,
+    "embedding_init": null,
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": null,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "models": [
+        "lstm",
+        "p2_lstm_w2v",
+        "p2_lstm_glove"
+      ],
+      "input_template": "results/generations_{model}.json",
+      "output_path": "results/part2_generations.md",
+      "title": "Part II generations: random vs own frozen vs public frozen embeddings (LSTM), identical decoding",
+      "labels": {
+        "lstm": "LSTM, random trainable embeddings (Part I run)",
+        "p2_lstm_w2v": "LSTM, own Skip-gram embeddings, frozen",
+        "p2_lstm_glove": "LSTM, public GloVe 100d embeddings, frozen"
+      }
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "num_prompts": 3,
+    "num_models": 3,
+    "generations_per_model": 3
+  },
+  "details": {
+    "output_path": "results/part2_generations.md",
+    "decoding": {
+      "temperature": 1.0,
+      "top_k": 40,
+      "max_tokens": 50,
+      "seed": 0,
+      "num_samples": 1,
+      "banned_tokens": [
+        "<pad>",
+        "<unk>"
+      ],
+      "stop_at_eos": true
+    },
+    "sources": {
+      "lstm": {
+        "git_commit": "5771854ab6f7cac600fa352f58a874f1fa3c4b6a",
+        "hardware": "GPU: Tesla T4",
+        "date": "2026-10-13T06:27:12+00:00"
+      },
+      "p2_lstm_w2v": {
+        "git_commit": "1e38d0ac9b7381342ba4c36f262d4d25a91a5cbb",
+        "hardware": "GPU: Tesla T4",
+        "date": "2026-10-14T09:36:13+00:00"
+      },
+      "p2_lstm_glove": {
+        "git_commit": "1e38d0ac9b7381342ba4c36f262d4d25a91a5cbb",
+        "hardware": "GPU: Tesla T4",
+        "date": "2026-10-14T09:36:21+00:00"
+      }
+    }
+  }
+}

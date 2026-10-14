@@ -339,3 +339,15 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 ## 2026-10-14 (Part III extraction runs set up)
 
 - `configs/p3_feat_lstm_mean.json`, `configs/p3_feat_transformer_mean.json` (new): the LSTM vs Transformer comparison with mean pooling (user chose option 1). `notebooks/run_colab.ipynb`: section 12 (restore `data/classification/` from Drive, run both extractions, copy `data/features/` to Drive). Nothing run for real (Colab-only). `DECISIONS.md` X2 (NEEDS REVIEW, pooling). Ran `update_results.py`.
+
+## 2026-10-14 (Colab notebook order)
+
+- `notebooks/run_colab.ipynb`: the bigram re-run section moved from 7 to 5, next to the other Part I training sections; the benchmark is now 6 and text generation 7. Sections 8 onward and all cell contents are unchanged. No other file changed.
+
+## 2026-10-14 (Colab features copied back)
+
+- Copied `data/features/p3_feat_{lstm,transformer}_mean/{train,val,test}.npz` from the Colab zip into `data/features/` (git-ignored). Checked: shapes 40,000/5,000/5,000 rows x 256 (LSTM) or 100 (Transformer) columns, float32, no NaN, labels/lengths/original_indices identical to `data/classification/`. The `results/p3_feat_*.json` and Part II generation records were not in this zip, so nothing was added to `RESULTS.md`.
+
+## 2026-10-14 (Colab results copied back)
+
+- Copied from the Colab results zip into `results/`: `p3_feat_lstm_mean.json`, `p3_feat_transformer_mean.json`, `generations_p2_lstm_w2v.json`, `generations_p2_lstm_glove.json`, `combine_generations_p2.json`, `part2_generations.md`. Not copied: `all_runs.csv` and figures (rebuilt locally). No code changed. Ran `update_results.py`; added `results/RESULTS_LOG.md` entries.

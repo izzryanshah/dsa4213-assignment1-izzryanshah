@@ -1,0 +1,75 @@
+{
+  "run": "p3_feat_transformer_mean",
+  "script": "src/extract_features.py",
+  "command": "/usr/bin/python3 src/extract_features.py --config configs/p3_feat_transformer_mean.json",
+  "date": "2026-10-14T09:37:14+00:00",
+  "git_commit": "1e38d0ac9b7381342ba4c36f262d4d25a91a5cbb",
+  "git_dirty": false,
+  "gpu": "Tesla T4",
+  "hardware": "GPU: Tesla T4",
+  "seed": 0,
+  "config": {
+    "architecture": "transformer",
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": null,
+    "embedding_init": null,
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": 64,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "model": "transformer",
+      "processed_dir": "data/processed",
+      "classification_dir": "data/classification",
+      "output_dir": "data/features",
+      "pooling": "mean",
+      "train_result": "results/train_transformer.json",
+      "checkpoint": "checkpoints/train_transformer.pt"
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "pooling": "mean",
+    "splits": {
+      "train": {
+        "num_reviews": 40000,
+        "feature_size": 100,
+        "feature_mean": 0.010627079755067825,
+        "feature_std": 0.3800423741340637
+      },
+      "val": {
+        "num_reviews": 5000,
+        "feature_size": 100,
+        "feature_mean": 0.010692053474485874,
+        "feature_std": 0.3790897727012634
+      },
+      "test": {
+        "num_reviews": 5000,
+        "feature_size": 100,
+        "feature_mean": 0.010420669801533222,
+        "feature_std": 0.3790595829486847
+      }
+    }
+  },
+  "details": {
+    "train_result": "results/train_transformer.json",
+    "train_run_date": "2026-10-12T15:05:12+00:00",
+    "train_run_git_commit": "b59b5edeba923436751d1a65b48aee466c30e47e",
+    "checkpoint": "checkpoints/train_transformer.pt",
+    "num_parameters": 4231115,
+    "device": "cuda",
+    "timing_seconds": {
+      "train": 6.028024911880493,
+      "val": 0.7198185920715332,
+      "test": 0.7201406955718994
+    },
+    "output_dir": "data/features/p3_feat_transformer_mean",
+    "weights_unchanged": true,
+    "padding": "excluded: see src/extract_features.py docstring"
+  }
+}

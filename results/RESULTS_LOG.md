@@ -205,3 +205,13 @@ Before `prompts.txt` existed, `src/generate.py` was run end to end twice (n-gram
 - **Script / command:** `src/prepare_classification.py`; `python3 src/prepare_classification.py --config configs/p3_prepare_classification.json` (seed 0, no randomness; local CPU). Max length 256, first-N truncation, `<eos>` dropped.
 - **Key numbers (train / val / test):** reviews 40,000 / 5,000 / 5,000; positive 50.00% / 50.00% / 50.00%; truncated 37.0% / 37.0% / 38.2%; mean kept length 196.1 / 197.1 / 196.7; `<unk>` rate of kept tokens 1.996% / 2.122% / 2.151%; of full reviews 2.081% / 2.234% / 2.247%.
 - **Files:** `results/p3_prepare_classification.json`, `data/classification/{train,val,test}.npz`
+
+### 2026-10-14 09:36 UTC — Part II generation from the two frozen-embedding LSTMs (Colab)
+- **Script / command:** `src/generate.py`; `python -u src/generate.py --config configs/generations_p2_lstm_w2v.json` and `... configs/generations_p2_lstm_glove.json`, then `src/combine_generations.py --config configs/combine_generations_p2.json` (git commit `1e38d0a`, `git_dirty: false`; Tesla T4).
+- **Key numbers:** decoding temperature 1.0, top-k 40, 50 new tokens, seed 0, 1 sample, banned `<pad>`/`<unk>`, stop at `<eos>`; identical for both runs (the merge check passed).
+- **Files:** `results/generations_p2_lstm_w2v.json`, `results/generations_p2_lstm_glove.json`, `results/combine_generations_p2.json`, `results/part2_generations.md`
+
+### 2026-10-14 09:37 UTC — Part III frozen-feature extraction, mean pooling (Colab)
+- **Script / command:** `src/extract_features.py`; `python -u src/extract_features.py --config configs/p3_feat_lstm_mean.json` and `... configs/p3_feat_transformer_mean.json` (seed 0; git commit `1e38d0a`, `git_dirty: false`; Tesla T4).
+- **Key numbers:** LSTM (8,033,999 parameters): features 40,000 / 5,000 / 5,000 x 256; seconds train / val / test 9.8 / 1.2 / 1.2; train feature mean 0.0207, std 0.1299. Transformer (4,231,115 parameters): features x 100; seconds 6.0 / 0.7 / 0.7; train mean 0.0106, std 0.3800. `weights_unchanged` true for both.
+- **Files:** `results/p3_feat_lstm_mean.json`, `results/p3_feat_transformer_mean.json`, `data/features/p3_feat_*_mean/{train,val,test}.npz` (not in git)
