@@ -25,12 +25,31 @@ Usage:
 
     python3 src/train.py --config configs/train_lstm.json --model lstm --hidden-size 128 --layers 1 --dropout 0.1
 
+Part II: input embeddings. `--embedding` chooses how the word-embedding table (the
+`embedding` layer of the model) is set up:
+
+    random   (default) random numbers, learned together with the rest of the model.
+    w2v      our own Skip-gram table (data/embeddings/w2v_100d.npy), loaded and FROZEN.
+    glove    public GloVe 100d table (data/embeddings/glove_100d.npy), loaded and FROZEN.
+
+    python3 src/train.py --config configs/p2_lstm_w2v.json   --model lstm --embedding w2v
+    python3 src/train.py --config configs/p2_lstm_glove.json --model lstm --embedding glove
+
+"Frozen" means the WHOLE table, including the rows of words that had no vector
+(they hold the random values chosen when the table was built, and never change).
+The optimiser never touches it. As a safeguard, a copy of the table is taken
+before training and compared with the table after training (and again after
+the best checkpoint is reloaded); if a single number differs, the script stops
+with an error instead of saving results. Everything else (model sizes, data,
+optimiser, epochs, seed) comes from the config and is not affected by `--embedding`.
+
 To add a model: write an nn.Module whose forward(input_ids) returns logits of
 shape (batch, seq_len, vocab_size), write a small builder function, and add
 one line to MODELS.
 """
 
 import argparse
+import hashlib
 import os
 import random
 import time
@@ -46,7 +65,71 @@ from models import LSTMLanguageModel, RNNLanguageModel, TransformerLanguageModel
 from sanity_check import BigramLM
 
 
+EMBEDDING_CHOICES = ("random", "w2v", "glove")
+
+
+def check_embedding_setting(config):
+    """Stop early if the config's `embedding_init` is not one of the known choices."""
+    if config["embedding_init"] not in EMBEDDING_CHOICES:
+        raise SystemExit(f"embedding_init must be one of {EMBEDDING_CHOICES}, got {config['embedding_init']!r}")
+
+
+def freeze_embedding_if_pretrained(model, config):
+    """For w2v / glove: switch off learning for the whole word-embedding table.
+
+    `requires_grad_(False)` tells PyTorch not to compute gradients for these
+    weights, so the optimiser (Adam) never changes them. This is done when the
+    model is BUILT (not only during training), so the count of trainable
+    parameters is the same whenever the model is rebuilt later (generation,
+    benchmark). The values themselves come from `load_embedding_matrix`.
+    """
+    if config["embedding_init"] != "random":
+        model.embedding.weight.requires_grad_(False)
+
+
+def load_embedding_matrix(config, vocab):
+    """Read the saved table for config['embedding_init'] and check it fits our vocabulary.
+
+    Returns (tensor of shape (vocab size, embedding_dim), path, sha256 of the file).
+    Row i of the file is the vector for vocabulary id i (built by train_word2vec.py / load_glove.py).
+    """
+    paths = config["options"].get("embedding_paths") or {}
+    path = paths.get(config["embedding_init"])
+    if path is None:
+        raise SystemExit(f"config options.embedding_paths has no entry for {config['embedding_init']!r}")
+    if not os.path.exists(path):
+        raise SystemExit(f"Embedding file {path} not found. Build it first (README.md: train_word2vec.py / load_glove.py).")
+    matrix = np.load(path)
+    expected = (len(vocab), config["embedding_dim"])
+    if matrix.shape != expected:
+        raise SystemExit(f"{path} has shape {matrix.shape}, but this vocabulary/embedding_dim needs {expected}")
+    if not np.isfinite(matrix).all():
+        raise SystemExit(f"{path} contains values that are not finite numbers")
+    with open(path, "rb") as f:
+        digest = hashlib.sha256(f.read()).hexdigest()
+    return torch.from_numpy(matrix.astype(np.float32)), path, digest
+
+
+def check_embedding_unchanged(model, reference, when):
+    """Fail loudly unless the embedding table is EXACTLY equal to `reference`.
+
+    Returns the largest absolute difference (0.0 when identical). Also fails if
+    the table has been switched back to trainable.
+    """
+    weight = model.embedding.weight
+    if weight.requires_grad:
+        raise RuntimeError(f"FROZEN-EMBEDDING CHECK FAILED ({when}): the embedding table is trainable again.")
+    current = weight.detach().cpu()
+    if not torch.equal(current, reference.cpu()):
+        change = (current - reference.cpu()).abs().max().item()
+        raise RuntimeError(f"FROZEN-EMBEDDING CHECK FAILED ({when}): the embedding table changed "
+                           f"(largest absolute change {change:.3e}). Results were NOT saved.")
+    return 0.0
+
+
 def build_bigram(config, vocab):
+    if config["embedding_init"] not in (None, "random"):
+        raise SystemExit("the bigram model only supports random embeddings")
     return BigramLM(len(vocab), vocab.pad_id, config["embedding_dim"])
 
 
@@ -62,10 +145,11 @@ def build_recurrent(model_class):
         missing = [k for k, v in needed.items() if v is None]
         if missing:
             raise SystemExit(f"{config['architecture']} needs these config values, but they are null: {missing}")
-        if config["embedding_init"] != "random":
-            raise SystemExit(f"embedding_init must be 'random' for now, got {config['embedding_init']!r}")
-        return model_class(len(vocab), vocab.pad_id, config["embedding_dim"], config["hidden_size"],
-                           config["layers"], config["dropout"])
+        check_embedding_setting(config)
+        model = model_class(len(vocab), vocab.pad_id, config["embedding_dim"], config["hidden_size"],
+                            config["layers"], config["dropout"])
+        freeze_embedding_if_pretrained(model, config)
+        return model
     return build
 
 
@@ -78,12 +162,13 @@ def build_transformer(config, vocab):
     missing = [k for k, v in needed.items() if v is None]
     if missing:
         raise SystemExit(f"transformer needs these config values, but they are null or missing: {missing}")
-    if config["embedding_init"] != "random":
-        raise SystemExit(f"embedding_init must be 'random' for now, got {config['embedding_init']!r}")
+    check_embedding_setting(config)
     if config["embedding_dim"] % opts["num_heads"] != 0:
         raise SystemExit("embedding_dim must be divisible by options.num_heads")
-    return TransformerLanguageModel(len(vocab), vocab.pad_id, config["embedding_dim"], config["hidden_size"],
-                                    config["layers"], config["dropout"], opts["num_heads"], opts["max_positions"])
+    model = TransformerLanguageModel(len(vocab), vocab.pad_id, config["embedding_dim"], config["hidden_size"],
+                                     config["layers"], config["dropout"], opts["num_heads"], opts["max_positions"])
+    freeze_embedding_if_pretrained(model, config)  # only the word table; positions stay learned
+    return model
 
 
 # --model name -> function(config, vocab) that returns an nn.Module.
@@ -145,7 +230,9 @@ def fit(model, train_loader, val_split, config, pad_id, device, checkpoint_path)
     epochs_run, train_seconds.
     """
     opts = config["options"]
-    optimizer = torch.optim.Adam(model.parameters(), lr=config["learning_rate"])
+    # Only parameters that can learn (a frozen embedding table is left out; for
+    # random-embedding runs this is every parameter, exactly as before).
+    optimizer = torch.optim.Adam([p for p in model.parameters() if p.requires_grad], lr=config["learning_rate"])
     # ignore_index: positions whose target is <pad> add nothing to the loss.
     criterion = nn.CrossEntropyLoss(ignore_index=pad_id)
 
@@ -184,6 +271,9 @@ def parse_args():
     add_config_args(parser)
     parser.add_argument("--model", choices=sorted(MODELS), default=None,
                         help="Which model to train. Default: the config's `architecture`.")
+    parser.add_argument("--embedding", choices=EMBEDDING_CHOICES, default=None,
+                        help="Input embeddings: random (learned), w2v (own Skip-gram, frozen) or glove (public, frozen). "
+                             "Default: the config's `embedding_init`.")
     return parser.parse_args()
 
 
@@ -192,6 +282,8 @@ def main():
     config, run = load_config(args)
     if args.model is not None:
         config["architecture"] = args.model  # so the saved record shows what really ran
+    if args.embedding is not None:
+        config["embedding_init"] = args.embedding  # likewise
     if config["architecture"] not in MODELS:
         raise SystemExit(f"Unknown model '{config['architecture']}'. Choose from {sorted(MODELS)}.")
     opts = config["options"]
@@ -205,8 +297,20 @@ def main():
     vocab = data.vocab
 
     model = MODELS[config["architecture"]](config, vocab).to(device)
+    # Pretrained table: copy the saved values in, keep a reference copy to compare against later.
+    reference, embedding_path, embedding_sha = None, None, None
+    if config["embedding_init"] in ("w2v", "glove"):
+        table, embedding_path, embedding_sha = load_embedding_matrix(config, vocab)
+        with torch.no_grad():
+            model.embedding.weight.copy_(table.to(device))
+        reference = model.embedding.weight.detach().cpu().clone()
+        check_embedding_unchanged(model, reference, "right after loading")
+        print(f"Embedding '{config['embedding_init']}': loaded {embedding_path} {tuple(table.shape)}, "
+              f"whole table frozen")
     num_params = count_parameters(model)
-    print(f"Model '{config['architecture']}': {num_params:,} trainable parameters, device {device}")
+    total_params = sum(p.numel() for p in model.parameters())
+    print(f"Model '{config['architecture']}': {num_params:,} trainable parameters "
+          f"({total_params:,} in total), device {device}")
 
     train_loader = make_dataloader(data.train, config["context_length"], config["batch_size"],
                                    shuffle=True, seed=config["seed"])
@@ -215,8 +319,16 @@ def main():
 
     result = fit(model, train_loader, data.val, config, vocab.pad_id, device, checkpoint_path)
 
+    # --- frozen-embedding safeguard (after the last epoch, then after the best checkpoint is loaded) ---
+    if reference is not None:
+        check_embedding_unchanged(model, reference, "after training")
+
     # --- the one and only test evaluation, with the best checkpoint --------
     model.load_state_dict(torch.load(checkpoint_path, map_location=device))
+    frozen_change = None
+    if reference is not None:
+        frozen_change = check_embedding_unchanged(model, reference, "after loading the best checkpoint")
+        print(f"Frozen-embedding check passed: table identical to the loaded file (max abs change {frozen_change}).")
     test = evaluate(model, data.test, vocab.pad_id, opts["eval_batch_size"], opts["eval_max_length"])
     print(f"Best epoch {result['best_epoch']}: val loss {result['best_val_loss']:.4f}; "
           f"TEST cross-entropy {test['avg_cross_entropy']:.4f}, perplexity {test['perplexity']:.1f}")
@@ -232,7 +344,11 @@ def main():
         "stopped_early": result["stopped_early"],
     }
     details = {"checkpoint_path": checkpoint_path, "test_num_targets": test["num_targets"],
-               "test_target_checksum": test["target_checksum"]}
+               "test_target_checksum": test["target_checksum"],
+               "total_parameters": total_params, "embedding_table_trainable": reference is None}
+    if reference is not None:
+        details.update({"embedding_source": embedding_path, "embedding_source_sha256": embedding_sha,
+                        "frozen_embedding_max_abs_change": frozen_change})
     path = save_run(args.results_dir, run, "src/train.py", config, metrics=metrics,
                     epoch_losses=result["epoch_losses"], details=details)
     print(f"Saved run record to {path}")

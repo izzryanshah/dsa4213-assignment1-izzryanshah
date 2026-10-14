@@ -1,0 +1,38 @@
+{
+  "run": "test_frozen_embedding",
+  "script": "tests/test_frozen_embedding.py",
+  "command": "/usr/local/bin/python3 tests/test_frozen_embedding.py --config configs/test_frozen_embedding.json",
+  "date": "2026-10-14T13:42:08+08:00",
+  "git_commit": "bd539e548787a8cab20c43148e02bf59716b1f3e",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
+  "seed": 0,
+  "config": {
+    "architecture": "lstm",
+    "layers": 1,
+    "hidden_size": 16,
+    "embedding_dim": 8,
+    "embedding_init": "w2v",
+    "context_length": 8,
+    "learning_rate": 0.01,
+    "batch_size": 4,
+    "epochs": 3,
+    "dropout": 0.1,
+    "vocab_size": 20,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "patience": 3,
+      "grad_clip": 1.0,
+      "eval_max_length": 16,
+      "eval_batch_size": 4
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "passed": true,
+    "trainable_parameters_frozen_run": 2055
+  },
+  "details": {}
+}

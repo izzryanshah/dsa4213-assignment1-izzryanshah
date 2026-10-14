@@ -290,3 +290,16 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 - Not run on real GloVe: downloading GloVe is Colab-only (CLAUDE.md rule 9) and no file is on this machine, so there is no real coverage figure yet. Smoke test only, on a made-up GloVe-format file in a scratch folder (60% of words): the loader, coverage, fill and top-missing list ran; output not in `results/` or `data/embeddings/`. Not a result.
 - `notebooks/run_colab.ipynb`: new section 8 (download, `load_glove.py`, copy to Drive, restore `w2v_100d.npy`, `save_results()`).
 - `README.md`: new section "Public GloVe vectors" with download instructions and the citation. `configs/update_results.json`: the GloVe task now has its command and time. `DECISIONS.md`: S1 NEEDS REVIEW.
+
+## 2026-10-14 (GloVe coverage results imported)
+
+- Extracted the Colab results zip to a scratch folder and compared it with the local `results/`: only `results/glove_coverage.json` was new (the other differences were Colab-rebuilt `all_runs.csv` and figures, not copied; rebuilt locally instead). Copied `glove_coverage.json`. The record shows commit `bd539e5`, `git_dirty: false`. No code changed.
+- Ran `update_results.py`; added a `results/RESULTS_LOG.md` entry.
+
+## 2026-10-14 (frozen embedding option)
+
+- `src/train.py`: new `--embedding random|w2v|glove`. For w2v/glove it loads `data/embeddings/<w2v|glove>_100d.npy` (path from `options.embedding_paths`; shape and finiteness checked; SHA-256 recorded), copies it into the embedding layer and sets `requires_grad=False` on the whole table (done when the model is built, so generate/benchmark rebuild the same trainable count). Adam now gets only trainable parameters (identical for random runs). A copy of the table is compared (exact equality) after training and after the best checkpoint is reloaded; any difference raises an error before results are saved. Records `frozen_embedding_max_abs_change`, `total_parameters`, `embedding_source(_sha256)`.
+- `configs/p2_lstm_w2v.json`, `configs/p2_lstm_glove.json` (new): `train_lstm.json` plus `embedding_init` and `options.embedding_paths` only.
+- `tests/test_frozen_embedding.py` + `configs/test_frozen_embedding.json` (new): tiny-data test that the frozen table is unchanged, a random table does change, and the check fails on a one-number nudge or when unfrozen. Passed.
+- Smoke test only (CPU, first 60/40/40 reviews in a scratch folder, 1 epoch, output not in `results/`; GloVe run used a made-up table): both runs and a random-embedding run completed and the check passed. Not results. Real runs are Colab-only (rule 9).
+- `src/update_results.py` + `configs/update_results.json`: the frozen-embedding check now looks only at `src/train.py` runs (the word2vec and GloVe table builders were being flagged by mistake). `notebooks/run_colab.ipynb`: sections 9 and 10. `DECISIONS.md` section T. Ran `update_results.py`.

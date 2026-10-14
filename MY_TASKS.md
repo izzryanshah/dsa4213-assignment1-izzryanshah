@@ -1,6 +1,6 @@
 # My tasks
 
-Rebuilt by `src/update_results.py` on Tue 13 Oct 2026, 15:26 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (3 day(s) left; today is Tue 13 Oct).
+Rebuilt by `src/update_results.py` on Wed 14 Oct 2026, 13:42 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (2 day(s) left; today is Wed 14 Oct).
 
 Tick a box yourself with `[x]`; this file never ticks anything for you, and keeps your ticks and anything you write between the marker lines. Do not delete the `<!--id:...-->` tags at the end of each line.
 
@@ -9,12 +9,13 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 ## Waiting on me now
 
 - [ ] Put your planned day for each task into `schedule` in `configs/update_results.json` (item id -> `YYYY-MM-DD`, or `section:<key>` -> date). Until then every item shows "Planned: not set" and nothing can be overdue *(Planned: not set)* <!--id:wait-schedule-->
-- [ ] Review 24 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
-- [ ] Start run `glove_coverage`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-glove_coverage-->
+- [ ] Review 26 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
+- [ ] Start run `p2_lstm_glove`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p2_lstm_glove-->
+- [ ] Start run `p2_lstm_w2v`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p2_lstm_w2v-->
 - [ ] Write your notes for Data, Part I: see [Results to interpret](#results-to-interpret) *(Planned: not set)* <!--id:wait-notes-->
 - [ ] Fix failing check: Test set used only for final evaluation: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-test-set-used-only-for-final-evaluation-->
 - [ ] Fix failing check: All models scored on identical test targets: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-all-models-scored-on-identical-test-targets-->
-- [ ] Commit and push: 20 uncommitted file(s), 0 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
+- [ ] Commit and push: 16 uncommitted file(s), 0 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
 - [ ] Choose your comparison question (brief, "Experimental Focus": e.g. how model families differ on your corpus, whether fixed embeddings help, or whether better next-token prediction leads to better classification). The report is organised around it *(Planned: not set)* <!--id:w-question-->
   - Tell Claude your question; it is then logged in `DECISIONS.md`
 
@@ -122,6 +123,14 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Options: `glove.twitter.27B.100d` (cased-agnostic tweets, different domain, 1.2M words); `glove.840B.300d` (wrong dimension). 6B is the one that matches our lower-cased text and 100-d.
   - Current value: `glove.6B.100d.txt` (Wikipedia + Gigaword, 6B tokens, 400k lower-cased words, 100-d), matched to our tokens by exact string. Missing words (including `<unk>`, `...
   - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry S1 (line 589), which sets `Chosen by` and `Status`
+- [ ] **T1** How the option works and what stays identical *(Planned: not set)* <!--id:dec-T1-->
+  - Options: one shared config with `--embedding` only; a hard-coded path table in `train.py` (rejected: rule 1).
+  - Current value: `--embedding random|w2v|glove` overrides the config's `embedding_init`. For w2v/glove the saved table is copied into the model's embedding layer and the WHOLE t...
+  - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry T1 (line 597), which sets `Chosen by` and `Status`
+- [ ] **T2** The frozen-embedding check *(Planned: not set)* <!--id:dec-T2-->
+  - Options: tolerance of 1e-8; report total instead of trainable parameters as `num_parameters`.
+  - Current value: a copy of the table is taken right after loading; it must be exactly equal (`torch.equal`, no tolerance) after the last epoch and again after the best checkpoin...
+  - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry T2 (line 603), which sets `Chosen by` and `Status`
 - [ ] Part II: choose which one Part I architecture (RNN, LSTM or Transformer) gets the three embedding settings *(Planned: not set)* <!--id:dec-p2-arch-->
   - Decide after Part I results exist
 - [ ] Part III: choose the labeled task and dataset, and the two or more representation choices to compare (brief examples: LSTM vs Transformer, two embedding variants, two pooling methods) *(Planned: not set)* <!--id:dec-p3-task-->
@@ -135,10 +144,14 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 
 ## Runs to do
 
-- [ ] Run `glove_coverage` *(Planned: not set)* <!--id:run-glove_coverage-->
-  - Command: `(no script known for configs/glove_coverage.json)` (in Colab: the same command with a leading `!`, from inside the repo folder)
-  - Time: no earlier run of this script has a recorded time
-  - Produces: `results/glove_coverage.json`, then a new section in `RESULTS.md` after `update_results.py`
+- [ ] Run `p2_lstm_glove` *(Planned: not set)* <!--id:run-p2_lstm_glove-->
+  - Command: `python3 src/train.py --config configs/p2_lstm_glove.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+  - Time: earlier run `train_bigram` of this script took 16,611 s (about 4.6 h) on CPU: Apple M2 (Darwin arm64)
+  - Produces: `results/p2_lstm_glove.json`, then a new section in `RESULTS.md` after `update_results.py`
+- [ ] Run `p2_lstm_w2v` *(Planned: not set)* <!--id:run-p2_lstm_w2v-->
+  - Command: `python3 src/train.py --config configs/p2_lstm_w2v.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+  - Time: earlier run `train_bigram` of this script took 16,611 s (about 4.6 h) on CPU: Apple M2 (Darwin arm64)
+  - Produces: `results/p2_lstm_w2v.json`, then a new section in `RESULTS.md` after `update_results.py`
 - [ ] Download public GloVe 100d vectors (GloVe 6B, Stanford NLP: nlp.stanford.edu/projects/glove) in Colab, never on this machine *(Planned: not set)* <!--id:run-p2-glove-->
   - Command: `notebooks/run_colab.ipynb`, section 8 (downloads glove.6B.zip, then `python -u src/load_glove.py --config configs/glove_coverage.json`)
   - Time: a few minutes (about 822 MB download)
@@ -150,8 +163,8 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Produces: the vectors file and `results/word2vec_cost.json`; still to do: copy `w2v_100d.npy` to Drive for the Colab LM runs
   - May run locally (word2vec/embedding training is not Colab-only)
 - [ ] Train the two new Part II language models (own frozen embeddings; public frozen embeddings), same architecture and procedure as the reused Part I model *(Planned: not set)* <!--id:run-p2-lms-->
-  - Command: not available yet: `src/train.py` cannot load or freeze pretrained embeddings yet; name the runs `p2_*` so they land in Part II
-  - Time: not known yet
+  - Command: `notebooks/run_colab.ipynb`, sections 9 and 10: `python -u src/train.py --config configs/p2_lstm_w2v.json --model lstm --embedding w2v` and `python -u src/train.py --config configs/p2_lstm_glove.json --model lstm --embedding glove` (needs `data/embeddings/w2v_100d.npy` and `glove_100d.npy` on Colab)
+  - Time: about 1 hour each on a T4 (the Part I LSTM took 3,850 s)
   - Produces: `results/p2_*.json`, loss curves, the frozen-embeddings check in `RESULTS.md`
   - Colab only (CLAUDE.md rule 9): never run on this machine
 - [ ] Extract features from the frozen language models (`extract_features.py`, Colab only), then train the classifier for each representation choice (`classify.py`, may run locally; same classifier family and evaluation procedure) *(Planned: not set)* <!--id:run-p3-clf-->
@@ -172,7 +185,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Runs in this section: `data`, `inspect_data`, `show_batch`
   - Where: the empty *My notes* block at the end of the Data section of `RESULTS.md`
 - [ ] Write your notes for [Part I](RESULTS.md#part-i) *(Planned: not set)* <!--id:interp-part1-->
-  - Runs in this section: `generations_lstm`, `generations_ngram`, `generations_rnn`, `generations_transformer`, `ngram`, `sanity_check`, `test_causality`, `test_evaluate`, `test_generate`, `test_models`, `test_train`, `train_bigram`, `train_bigram_colab`, `train_lstm`, `train_rnn`, `train_transformer`
+  - Runs in this section: `generations_lstm`, `generations_ngram`, `generations_rnn`, `generations_transformer`, `ngram`, `sanity_check`, `test_causality`, `test_evaluate`, `test_frozen_embedding`, `test_generate`, `test_models`, `test_train`, `train_bigram`, `train_bigram_colab`, `train_lstm`, `train_rnn`, `train_transformer`
   - Where: the empty *My notes* block at the end of the Part I section of `RESULTS.md`
 
 ### Added by me
@@ -237,7 +250,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 - [ ] Nothing submitted contains API keys, credentials or data you may not share (`data/` is git-ignored) *(Planned: not set)* <!--id:req-secrets-->
   - Status: not done (cannot be checked automatically; tick when finished)
 - [ ] Submit the PDF report and the code (a GitHub link the instructor can open, or a zip) *(Planned: not set)* <!--id:req-submit-->
-  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 20 uncommitted file(s); 0 unpushed commit(s). Whether the instructor has access cannot be checked from here)
+  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 16 uncommitted file(s); 0 unpushed commit(s). Whether the instructor has access cannot be checked from here)
 - [ ] Find out the late-submission policy and the submission platform (the brief says both are announced separately) *(Planned: not set)* <!--id:req-late-->
   - Status: not done (cannot be checked automatically; tick when finished)
 
@@ -251,7 +264,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 
 - [ ] Test set used only for final evaluation: FAIL *(Planned: not set)* <!--id:fail-test-set-used-only-for-final-evaluation-->
   - Evidence (Checks section of `RESULTS.md`): `src/ngram.py`: `data.test` used at line(s) [333]; `tune_discounts(...)` called at line(s) [321]; single use after the call
-  - Evidence (Checks section of `RESULTS.md`): `src/train.py`: `data.test` used at line(s) [220]; `fit(...)` called at line(s) [216]; single use after the call
+  - Evidence (Checks section of `RESULTS.md`): `src/train.py`: `data.test` used at line(s) [332]; `fit(...)` called at line(s) [320]; single use after the call
   - Evidence (Checks section of `RESULTS.md`): other files in `src/` that use `data.test`: `src/benchmark.py` lines [152]
   - Evidence (Checks section of `RESULTS.md`): method: static scan of the source (Python `ast`), not a run-time trace
   - Needs fixing: the evidence above shows what does not hold; after fixing, re-run `update_results.py`

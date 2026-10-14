@@ -190,3 +190,8 @@ Before `prompts.txt` existed, `src/generate.py` was run end to end twice (n-gram
 - **Script / command:** `src/train_word2vec.py`; `python3 src/train_word2vec.py --config configs/word2vec_cost.json` (seed 0; Apple M2, workers 1).
 - **Key numbers:** 40,000 training reviews, 11,067,213 tokens. Skip-gram, dim 100, window 5, min_count 1, epochs 10. Vocabulary build 0.7 s; training 273.8 s. Coverage: 20,002 of 20,002 vocabulary types (100.00%), 100.00% of training tokens; 0 rows filled randomly. Output identical to the previous run (np.array_equal True).
 - **Files:** `results/word2vec_cost.json` (replaces the earlier record), `data/embeddings/w2v_100d.npy`
+
+### 2026-10-13 07:41 UTC — Public GloVe 100d coverage (Colab)
+- **Script / command:** `src/load_glove.py`; `python src/load_glove.py --config configs/glove_coverage.json` (seed 0; git commit `bd539e5`, `git_dirty: false`; Tesla T4 session, script itself does not use the GPU).
+- **Key numbers:** file `glove.6B.100d.txt` (400,000 lines read). Vocabulary types with a vector: 19,914 of 20,002 (99.56%); training tokens covered: 97.52% (11,067,213 tokens). Excluding `<unk>` and `<eos>`: 99.57% of types, 99.95% of tokens. 88 rows filled randomly (std 0.5027); `<pad>` row zero. Most frequent missing: `<unk>` 229,425 (2.073% of tokens), `<eos>` 40,000 (0.361%), `\x96` 2,060, `\x97` 490, `hadn` 418, `´` 348, `\x91` 93, `imho` 64, `feinstone` 43, `hynkel` 37 (full 20 in the file).
+- **File:** `results/glove_coverage.json` (the matrix `data/embeddings/glove_100d.npy` is on Drive, not in the results zip)

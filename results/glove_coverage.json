@@ -1,0 +1,177 @@
+{
+  "run": "glove_coverage",
+  "script": "src/load_glove.py",
+  "command": "/usr/bin/python3 src/load_glove.py --config configs/glove_coverage.json",
+  "date": "2026-10-13T07:41:32+00:00",
+  "git_commit": "bd539e548787a8cab20c43148e02bf59716b1f3e",
+  "git_dirty": false,
+  "gpu": "Tesla T4",
+  "hardware": "GPU: Tesla T4",
+  "seed": 0,
+  "config": {
+    "architecture": "glove_public_lookup",
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": 100,
+    "embedding_init": "public_glove",
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": null,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "processed_dir": "data/processed",
+      "glove_path": "data/embeddings/glove.6B.100d.txt",
+      "output_path": "data/embeddings/glove_100d.npy",
+      "top_missing": 20
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "coverage_types_percent": 99.56004399560044,
+    "coverage_tokens_percent": 97.51843576155984,
+    "coverage_real_words_types_percent": 99.57,
+    "coverage_real_words_tokens_percent": 99.9517030710364,
+    "vocab_types_excluding_pad": 20002,
+    "vocab_types_with_vector": 19914,
+    "rows_filled_randomly": 88
+  },
+  "details": {
+    "glove_file": "glove.6B.100d.txt",
+    "glove_lines_read": 400000,
+    "training_tokens": 11067213,
+    "vectors_shape": [
+      20003,
+      100
+    ],
+    "vectors_path": "data/embeddings/glove_100d.npy",
+    "fill_rule": "N(0, std of real vectors), seeded; <pad> row zeros",
+    "fill_std": 0.5027084946632385,
+    "pad_row_zero": true,
+    "most_frequent_missing_words": [
+      {
+        "word": "<unk>",
+        "train_count": 229425,
+        "percent_of_train_tokens": 2.07301513036751,
+        "special_symbol": true
+      },
+      {
+        "word": "<eos>",
+        "train_count": 40000,
+        "percent_of_train_tokens": 0.3614279403495713,
+        "special_symbol": true
+      },
+      {
+        "word": "\u0096",
+        "train_count": 2060,
+        "percent_of_train_tokens": 0.018613538928002923,
+        "special_symbol": false
+      },
+      {
+        "word": "\u0097",
+        "train_count": 490,
+        "percent_of_train_tokens": 0.004427492269282248,
+        "special_symbol": false
+      },
+      {
+        "word": "hadn",
+        "train_count": 418,
+        "percent_of_train_tokens": 0.00377692197665302,
+        "special_symbol": false
+      },
+      {
+        "word": "\u00b4",
+        "train_count": 348,
+        "percent_of_train_tokens": 0.0031444230810412704,
+        "special_symbol": false
+      },
+      {
+        "word": "\u0091",
+        "train_count": 93,
+        "percent_of_train_tokens": 0.0008403199613127532,
+        "special_symbol": false
+      },
+      {
+        "word": "imho",
+        "train_count": 64,
+        "percent_of_train_tokens": 0.0005782847045593141,
+        "special_symbol": false
+      },
+      {
+        "word": "feinstone",
+        "train_count": 43,
+        "percent_of_train_tokens": 0.0003885350358757891,
+        "special_symbol": false
+      },
+      {
+        "word": "hynkel",
+        "train_count": 37,
+        "percent_of_train_tokens": 0.00033432084482335346,
+        "special_symbol": false
+      },
+      {
+        "word": "ossessione",
+        "train_count": 36,
+        "percent_of_train_tokens": 0.00032528514631461415,
+        "special_symbol": false
+      },
+      {
+        "word": "cheezy",
+        "train_count": 35,
+        "percent_of_train_tokens": 0.0003162494478058749,
+        "special_symbol": false
+      },
+      {
+        "word": "starewicz",
+        "train_count": 35,
+        "percent_of_train_tokens": 0.0003162494478058749,
+        "special_symbol": false
+      },
+      {
+        "word": "carface",
+        "train_count": 34,
+        "percent_of_train_tokens": 0.0003072137492971356,
+        "special_symbol": false
+      },
+      {
+        "word": "paperhouse",
+        "train_count": 32,
+        "percent_of_train_tokens": 0.00028914235227965704,
+        "special_symbol": false
+      },
+      {
+        "word": "nazarin",
+        "train_count": 30,
+        "percent_of_train_tokens": 0.0002710709552621785,
+        "special_symbol": false
+      },
+      {
+        "word": "slausen",
+        "train_count": 30,
+        "percent_of_train_tokens": 0.0002710709552621785,
+        "special_symbol": false
+      },
+      {
+        "word": "needn",
+        "train_count": 29,
+        "percent_of_train_tokens": 0.0002620352567534392,
+        "special_symbol": false
+      },
+      {
+        "word": "hackenstein",
+        "train_count": 28,
+        "percent_of_train_tokens": 0.00025299955824469993,
+        "special_symbol": false
+      },
+      {
+        "word": "trelkovsky",
+        "train_count": 28,
+        "percent_of_train_tokens": 0.00025299955824469993,
+        "special_symbol": false
+      }
+    ]
+  }
+}

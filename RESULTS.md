@@ -1,6 +1,6 @@
 # Results
 
-Rebuilt by `src/update_results.py` on 2026-10-13T15:26:14+08:00 from 22 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-13T15:19:34+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
+Rebuilt by `src/update_results.py` on 2026-10-14T13:42:05+08:00 from 24 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-14T13:41:10+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
 
 Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III](#part-iii) · [Settings](#settings) · [Checks](#checks)
 
@@ -664,6 +664,47 @@ Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III
 | `test_result_does_not_depend_on_batch_size` | passed |
 | `test_neural_and_ngram_style_scorer_see_same_targets` | passed |
 | `test_padding_is_ignored` | passed |
+
+#### `test_frozen_embedding`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/local/bin/python3 tests/test_frozen_embedding.py --config configs/test_frozen_embedding.json` |
+| Script | `tests/test_frozen_embedding.py` |
+| Date | 2026-10-14T13:41:10+08:00 |
+| Git commit | `bd539e5 (uncommitted changes at run time)` |
+| Hardware | CPU: Apple M2 (Darwin arm64) |
+| Seed | 0 |
+| Result file | `results/test_frozen_embedding.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | lstm |
+| `layers` | 1 |
+| `hidden_size` | 16 |
+| `embedding_dim` | 8 |
+| `embedding_init` | w2v |
+| `context_length` | 8 |
+| `learning_rate` | 0.0100 |
+| `batch_size` | 4 |
+| `epochs` | 3 |
+| `dropout` | 0.1000 |
+| `vocab_size` | 20 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.patience` | 3 |
+| `options.grad_clip` | 1.0000 |
+| `options.eval_max_length` | 16 |
+| `options.eval_batch_size` | 4 |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `passed` | True |
+| `trainable_parameters_frozen_run` | 2,055 |
 
 #### `test_generate`
 
@@ -1458,6 +1499,66 @@ These runs match no rule in `part_rules` (`configs/update_results.json`).
 | `sources.transformer.hardware` | GPU: Tesla T4 |
 | `sources.transformer.date` | 2026-10-13T06:27:17+00:00 |
 
+#### `glove_coverage`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/load_glove.py --config configs/glove_coverage.json` |
+| Script | `src/load_glove.py` |
+| Date | 2026-10-13T07:41:32+00:00 |
+| Git commit | `bd539e5` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/glove_coverage.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | glove_public_lookup |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | 100 |
+| `embedding_init` | public_glove |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.processed_dir` | data/processed |
+| `options.glove_path` | data/embeddings/glove.6B.100d.txt |
+| `options.output_path` | data/embeddings/glove_100d.npy |
+| `options.top_missing` | 20 |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `coverage_types_percent` | 99.5600 |
+| `coverage_tokens_percent` | 97.5184 |
+| `coverage_real_words_types_percent` | 99.5700 |
+| `coverage_real_words_tokens_percent` | 99.9517 |
+| `vocab_types_excluding_pad` | 20,002 |
+| `vocab_types_with_vector` | 19,914 |
+| `rows_filled_randomly` | 88 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `glove_file` | glove.6B.100d.txt |
+| `glove_lines_read` | 400,000 |
+| `training_tokens` | 11,067,213 |
+| `vectors_shape` | `[20003, 100]` |
+| `vectors_path` | data/embeddings/glove_100d.npy |
+| `fill_rule` | N(0, std of real vectors), seeded; &lt;pad&gt; row zeros |
+| `fill_std` | 0.5027 |
+| `pad_row_zero` | True |
+| `most_frequent_missing_words` | (20 entries; see the run's JSON file) |
+
 #### `word2vec_cost`
 
 | Field | Value |
@@ -1535,7 +1636,7 @@ These runs match no rule in `part_rules` (`configs/update_results.json`).
 
 Source: `DECISIONS.md` (copied as written there).
 
-### NEEDS REVIEW (24)
+### NEEDS REVIEW (26)
 
 | ID | Decision | Status |
 |---|---|---|
@@ -1563,8 +1664,10 @@ Source: `DECISIONS.md` (copied as written there).
 | O2 | Other benchmark details | NEEDS REVIEW |
 | P2 | Loading neural models and the combined file | NEEDS REVIEW |
 | S1 | Which public GloVe file | NEEDS REVIEW |
+| T1 | How the option works and what stays identical | NEEDS REVIEW (config layout, run names) |
+| T2 | The frozen-embedding check | NEEDS REVIEW (parameter-count convention) |
 
-### All design choices (75)
+### All design choices (77)
 
 | ID | Decision | Value | Where | Chosen by | Status |
 |---|---|---|---|---|---|
@@ -1643,6 +1746,8 @@ Source: `DECISIONS.md` (copied as written there).
 | R1 | Architecture for Part II | LSTM (2 layers, hidden 256, context 64, dropout 0.3, lr 0.001, batch 64, up to 20 epochs, seed 0, as in `configs/train_lstm.json`). The random-embedding setting reuses the Part I run `train_lstm` (test perplexity 80.45, Colab T4); the two frozen-embedding runs must use exactly these settings except the embedding. | `configs/train_lstm.json` (to be copied to `configs/p2_*.json`). | User, 2026-10-13. | CONFIRMED |
 | R2 | Initialising vocabulary words that have no vector (own word2vec and public GloVe) | rows without a vector are drawn from a normal distribution, mean 0, standard deviation = that of all real vectors in the same table, seeded with the run's seed. The `&lt;pad&gt;` row is always zeros. The table is then kept fixed. The same function is used for both tables. | `src/embedding_utils.py` (`fill_missing_rows`); called from `src/train_word2vec.py`. (The GloVe script, not yet written, must call it too.) | User, 2026-10-13, from three options. | CONFIRMED |
 | S1 | Which public GloVe file | `glove.6B.100d.txt` (Wikipedia + Gigaword, 6B tokens, 400k lower-cased words, 100-d), matched to our tokens by exact string. Missing words (including `&lt;unk&gt;`, `&lt;eos&gt;`) follow R2 (seeded small random normal, `&lt;pad&gt;` zeros); coverage is reported with `&lt;unk&gt;`/`&lt;eos&gt;` counted as missing, and also without them. | `configs/glove_coverage.json` (`options.glove_path`, `options.output_path`, `options.top_missing` = 20); `src/load_glove.py`. | Assistant default (the request said "GloVe 100d" and R2 fixed the missing-word rule). | NEEDS REVIEW |
+| T1 | How the option works and what stays identical | `--embedding random\|w2v\|glove` overrides the config's `embedding_init`. For w2v/glove the saved table is copied into the model's embedding layer and the WHOLE table (all 20,003 rows, including `&lt;pad&gt;`, `&lt;unk&gt;`, `&lt;eos&gt;` and words filled by R2) gets `requires_grad=False`, so Adam never changes it. The positional/other parts of the model are unaffected (the LSTM has no other embedding). Model construction order and seed are unchanged, so the LSTM and output layers start from the same random values as in the Part I run. The run configs `configs/p2_lstm_w2v.json` and `configs/p2_lstm_glove.json` differ from `configs/train_lstm.json` only in `embedding_init` and the added `options.embedding_paths`. Optimiser: Adam on the trainable parameters only (for random runs that is every parameter, as before). | `src/train.py` (`EMBEDDING_CHOICES`, `freeze_embedding_if_pretrained`, `load_embedding_matrix`, `check_embedding_unchanged`, `main`); `configs/p2_lstm_*.json`. | User asked for the option, the freezing and the check; the config layout and run names (`p2_lstm_w2v`, `p2_lstm_glove`) are assistant defaults. | NEEDS REVIEW (config layout, run names) |
+| T2 | The frozen-embedding check | a copy of the table is taken right after loading; it must be exactly equal (`torch.equal`, no tolerance) after the last epoch and again after the best checkpoint is reloaded, and the table must still be non-trainable; otherwise the script raises an error and does NOT save results. The record stores `frozen_embedding_max_abs_change` (0.0), the file path and its SHA-256, `total_parameters`, and `embedding_table_trainable`. `num_parameters` stays the trainable count (so a frozen run reports 6,033,699, not 8,033,999; the total is in `details.total_parameters`). | `src/train.py`; tested in `tests/test_frozen_embedding.py`. | User (asked for a check that fails loudly); exact-equality and the reported parameter counts are assistant defaults. | NEEDS REVIEW (parameter-count convention) |
 
 ### My notes
 
@@ -1671,13 +1776,13 @@ Source: `DECISIONS.md` (copied as written there).
 #### Test set used only for final evaluation: FAIL
 
 - `src/ngram.py`: `data.test` used at line(s) [333]; `tune_discounts(...)` called at line(s) [321]; single use after the call
-- `src/train.py`: `data.test` used at line(s) [220]; `fit(...)` called at line(s) [216]; single use after the call
+- `src/train.py`: `data.test` used at line(s) [332]; `fit(...)` called at line(s) [320]; single use after the call
 - other files in `src/` that use `data.test`: `src/benchmark.py` lines [152]
 - method: static scan of the source (Python `ast`), not a run-time trace
 
 #### Padding excluded from the loss: PASS
 
-- `src/train.py`: `CrossEntropyLoss(ignore_index=...)` at line(s) [150]; without `ignore_index` at none
+- `src/train.py`: `CrossEntropyLoss(ignore_index=...)` at line(s) [237]; without `ignore_index` at none
 - `src/sanity_check.py`: `CrossEntropyLoss(ignore_index=...)` at line(s) [78]; without `ignore_index` at none
 - `test_padding_is_ignored` in `results/test_evaluate.json`: passed
 
@@ -1703,7 +1808,7 @@ Source: `DECISIONS.md` (copied as written there).
 
 #### Frozen embeddings unchanged: NOT YET AVAILABLE
 
-- `results/word2vec_cost.json`: details.frozen_embedding_max_abs_change not recorded
+- no run with a pretrained `embedding_init` (Part II has no such run yet)
 
 ### My notes
 

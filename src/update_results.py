@@ -468,7 +468,8 @@ def check_causality(runs, opts):
 def check_frozen(runs, opts):
     key = opts["frozen_embedding_detail_key"]
     frozen = [(r, rec) for r, rec in runs.items() if rec["config"].get("embedding_init") not in opts["not_frozen_embedding_inits"]
-              and not r.startswith(opts["test_run_prefix"])]
+              and not r.startswith(opts["test_run_prefix"])
+              and rec.get("script") in opts["frozen_check_scripts"]]  # embedding-building scripts are not LM runs
     if not frozen:
         return "NOT YET AVAILABLE", ["no run with a pretrained `embedding_init` (Part II has no such run yet)"]
     evidence, ok, missing = [], True, False

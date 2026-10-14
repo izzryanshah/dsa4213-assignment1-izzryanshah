@@ -38,6 +38,7 @@
     ],
     "causality_test_keyword": "causal",
     "frozen_embedding_detail_key": "frozen_embedding_max_abs_change",
+    "frozen_check_scripts": ["src/train.py"],
     "part_rules": [
       [
         "^(data|inspect_data|show_batch)$",
@@ -80,6 +81,10 @@
     "run_script_rules": [
       [
         "^train_",
+        "src/train.py"
+      ],
+      [
+        "^p2_lstm_",
         "src/train.py"
       ],
       [
@@ -330,8 +335,8 @@
         "id": "run-p2-lms",
         "text": "Train the two new Part II language models (own frozen embeddings; public frozen embeddings), same architecture and procedure as the reused Part I model",
         "details": [
-          "Command: not available yet: `src/train.py` cannot load or freeze pretrained embeddings yet; name the runs `p2_*` so they land in Part II",
-          "Time: not known yet",
+          "Command: `notebooks/run_colab.ipynb`, sections 9 and 10: `python -u src/train.py --config configs/p2_lstm_w2v.json --model lstm --embedding w2v` and `python -u src/train.py --config configs/p2_lstm_glove.json --model lstm --embedding glove` (needs `data/embeddings/w2v_100d.npy` and `glove_100d.npy` on Colab)",
+          "Time: about 1 hour each on a T4 (the Part I LSTM took 3,850 s)",
           "Produces: `results/p2_*.json`, loss curves, the frozen-embeddings check in `RESULTS.md`",
           "Colab only (CLAUDE.md rule 9): never run on this machine"
         ]

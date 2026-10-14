@@ -592,6 +592,20 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 - **Chosen by:** Assistant default (the request said "GloVe 100d" and R2 fixed the missing-word rule). **Alternatives:** `glove.twitter.27B.100d` (cased-agnostic tweets, different domain, 1.2M words); `glove.840B.300d` (wrong dimension). 6B is the one that matches our lower-cased text and 100-d.
 - **Status:** NEEDS REVIEW
 
+## T. Frozen-embedding runs (`src/train.py --embedding`, 2026-10-14)
+
+### T1. How the option works and what stays identical
+- **Value:** `--embedding random|w2v|glove` overrides the config's `embedding_init`. For w2v/glove the saved table is copied into the model's embedding layer and the WHOLE table (all 20,003 rows, including `<pad>`, `<unk>`, `<eos>` and words filled by R2) gets `requires_grad=False`, so Adam never changes it. The positional/other parts of the model are unaffected (the LSTM has no other embedding). Model construction order and seed are unchanged, so the LSTM and output layers start from the same random values as in the Part I run. The run configs `configs/p2_lstm_w2v.json` and `configs/p2_lstm_glove.json` differ from `configs/train_lstm.json` only in `embedding_init` and the added `options.embedding_paths`. Optimiser: Adam on the trainable parameters only (for random runs that is every parameter, as before).
+- **Where:** `src/train.py` (`EMBEDDING_CHOICES`, `freeze_embedding_if_pretrained`, `load_embedding_matrix`, `check_embedding_unchanged`, `main`); `configs/p2_lstm_*.json`.
+- **Chosen by:** User asked for the option, the freezing and the check; the config layout and run names (`p2_lstm_w2v`, `p2_lstm_glove`) are assistant defaults. **Alternatives:** one shared config with `--embedding` only; a hard-coded path table in `train.py` (rejected: rule 1).
+- **Status:** NEEDS REVIEW (config layout, run names)
+
+### T2. The frozen-embedding check
+- **Value:** a copy of the table is taken right after loading; it must be exactly equal (`torch.equal`, no tolerance) after the last epoch and again after the best checkpoint is reloaded, and the table must still be non-trainable; otherwise the script raises an error and does NOT save results. The record stores `frozen_embedding_max_abs_change` (0.0), the file path and its SHA-256, `total_parameters`, and `embedding_table_trainable`. `num_parameters` stays the trainable count (so a frozen run reports 6,033,699, not 8,033,999; the total is in `details.total_parameters`).
+- **Where:** `src/train.py`; tested in `tests/test_frozen_embedding.py`.
+- **Chosen by:** User (asked for a check that fails loudly); exact-equality and the reported parameter counts are assistant defaults. **Alternatives:** tolerance of 1e-8; report total instead of trainable parameters as `num_parameters`.
+- **Status:** NEEDS REVIEW (parameter-count convention)
+
 ---
 
 ## NEEDS REVIEW summary
@@ -629,3 +643,5 @@ One item (D4) was accepted rather than fixed: the n-gram discount grid was widen
 **2026-10-13:** Q2 (word2vec settings) confirmed; R2 (missing-word fill) confirmed. Nothing new pending.
 
 **New since then (2026-10-13), pending the user:** S1 (which GloVe file).
+
+**New since then (2026-10-14), pending the user:** T1 (frozen-embedding option and configs), T2 (check and parameter-count convention). S1 still pending.
