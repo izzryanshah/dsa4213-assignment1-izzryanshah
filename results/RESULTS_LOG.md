@@ -215,3 +215,13 @@ Before `prompts.txt` existed, `src/generate.py` was run end to end twice (n-gram
 - **Script / command:** `src/extract_features.py`; `python -u src/extract_features.py --config configs/p3_feat_lstm_mean.json` and `... configs/p3_feat_transformer_mean.json` (seed 0; git commit `1e38d0a`, `git_dirty: false`; Tesla T4).
 - **Key numbers:** LSTM (8,033,999 parameters): features 40,000 / 5,000 / 5,000 x 256; seconds train / val / test 9.8 / 1.2 / 1.2; train feature mean 0.0207, std 0.1299. Transformer (4,231,115 parameters): features x 100; seconds 6.0 / 0.7 / 0.7; train mean 0.0106, std 0.3800. `weights_unchanged` true for both.
 - **Files:** `results/p3_feat_lstm_mean.json`, `results/p3_feat_transformer_mean.json`, `data/features/p3_feat_*_mean/{train,val,test}.npz` (not in git)
+
+### 2026-10-14 — Part III logistic-regression classifier on frozen features
+- **Script / command:** `src/classify.py`; `python3 src/classify.py --config configs/p3_classify.json` (seed 0; local CPU, Apple M2; run before commit, so `git_dirty: true`). Grid C in [0.001 ... 100], selection by validation macro-F1, features standardised.
+- **Key numbers:** `p3_feat_lstm_mean` (256 features): best C 0.01; validation accuracy 0.8154; test accuracy 0.8192, macro-F1 0.8192; 904 of 5,000 test errors. `p3_feat_transformer_mean` (100 features): best C 0.1; validation accuracy 0.7624; test accuracy 0.7744, macro-F1 0.7744; 1,128 of 5,000 test errors. All fits converged.
+- **Files:** `results/part3.csv`, `results/part3_errors_p3_feat_lstm_mean.csv`, `results/part3_errors_p3_feat_transformer_mean.csv`, `results/p3_classify.json`
+
+### 2026-10-14 — Part III error-review material and ranking table
+- **Script / command:** `src/error_sample.py`; `python3 src/error_sample.py --config configs/p3_error_sample.json` (seed 0; local CPU).
+- **Key numbers:** `p3_feat_lstm_mean`: errors 904 (mean 203.8 tokens, 45.0% truncated, mean `<unk>` rate 2.34%, 87.7% with a negation word) vs correct 4,096 (195.1, 37.0%, 2.02%, 87.4%). `p3_feat_transformer_mean`: errors 1,128 (202.0, 41.8%, 2.29%, 89.3%) vs correct 3,872 (195.1, 37.5%, 2.02%, 87.0%). Ranking: LSTM perplexity 80.45 (rank 1), accuracy 0.8192 (rank 1); Transformer perplexity 156.94 (rank 2), accuracy 0.7744 (rank 2).
+- **Files:** `results/part3_error_sample_p3_feat_lstm_mean.csv`, `results/part3_error_sample_p3_feat_transformer_mean.csv`, `results/part3_error_stats.csv`, `results/part3_ranking.csv`, `results/p3_error_sample.json`

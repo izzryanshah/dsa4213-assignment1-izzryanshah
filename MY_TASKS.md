@@ -1,6 +1,6 @@
 # My tasks
 
-Rebuilt by `src/update_results.py` on Wed 14 Oct 2026, 17:59 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (2 day(s) left; today is Wed 14 Oct).
+Rebuilt by `src/update_results.py` on Wed 14 Oct 2026, 18:47 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (2 day(s) left; today is Wed 14 Oct).
 
 Tick a box yourself with `[x]`; this file never ticks anything for you, and keeps your ticks and anything you write between the marker lines. Do not delete the `<!--id:...-->` tags at the end of each line.
 
@@ -9,11 +9,11 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 ## Waiting on me now
 
 - [ ] Put your planned day for each task into `schedule` in `configs/update_results.json` (item id -> `YYYY-MM-DD`, or `section:<key>` -> date). Until then every item shows "Planned: not set" and nothing can be overdue *(Planned: not set)* <!--id:wait-schedule-->
-- [ ] Review 3 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
+- [ ] Review 5 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
 - [ ] Write your notes for Data, Part I, Part II, Part III: see [Results to interpret](#results-to-interpret) *(Planned: not set)* <!--id:wait-notes-->
 - [ ] Fix failing check: Test set used only for final evaluation: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-test-set-used-only-for-final-evaluation-->
 - [ ] Fix failing check: All models scored on identical test targets: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-all-models-scored-on-identical-test-targets-->
-- [ ] Commit and push: 11 uncommitted file(s), 0 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
+- [ ] Commit and push: 20 uncommitted file(s), 0 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
 - [ ] Choose your comparison question (brief, "Experimental Focus": e.g. how model families differ on your corpus, whether fixed embeddings help, or whether better next-token prediction leads to better classification). The report is organised around it *(Planned: not set)* <!--id:w-question-->
   - Tell Claude your question; it is then logged in `DECISIONS.md`
 
@@ -37,6 +37,14 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Options: last vs mean on one model; full 2x2 grid; adding the Part II frozen-embedding LSTMs.
   - Current value: compare the Part I LSTM and Part I Transformer (both random trainable embeddings, as trained), same pooling for both: `mean`. Runs: `p3_feat_lstm_mean`, `p3_fea...
   - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry X2 (line 662), which sets `Chosen by` and `Status`
+- [ ] **Y1** Classifier procedure *(Planned: not set)* <!--id:dec-Y1-->
+  - Options: a finer or wider C grid; selecting on validation accuracy (equal here: balanced classes); no standardisation; refitting on train+validation at the chosen C.
+  - Current value: scikit-learn `LogisticRegression` (L2, lbfgs, `max_iter` 1000, `random_state` = seed 0), fitted on the train split for each C in [0.001, 0.01, 0.1, 1, 10, 100];...
+  - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry Y1 (line 672), which sets `Chosen by` and `Status`
+- [ ] **Y2** Error-review material (counted properties only) *(Planned: not set)* <!--id:dec-Y2-->
+  - Options: a larger sample; a longer negation list; a sample balanced by true label.
+  - Current value: 15 random errors per variant (seed 0) with counted properties: tokens kept, truncated or not, `<unk>` count and share, negation-word count. Negation words: not,...
+  - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry Y2 (line 680), which sets `Chosen by` and `Status`
 - [ ] Part II: choose which one Part I architecture (RNN, LSTM or Transformer) gets the three embedding settings *(Planned: not set)* <!--id:dec-p2-arch-->
   - Decide after Part I results exist
 - [ ] Part III: choose the labeled task and dataset, and the two or more representation choices to compare (brief examples: LSTM vs Transformer, two embedding variants, two pooling methods) *(Planned: not set)* <!--id:dec-p3-task-->
@@ -89,7 +97,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Runs in this section: `generations_p2_lstm_glove`, `generations_p2_lstm_w2v`, `glove_coverage`, `p2_lstm_glove`, `p2_lstm_w2v`, `word2vec_cost`
   - Where: the empty *My notes* block at the end of the Part II section of `RESULTS.md`
 - [ ] Write your notes for [Part III](RESULTS.md#part-iii) *(Planned: not set)* <!--id:interp-part3-->
-  - Runs in this section: `p3_feat_lstm_mean`, `p3_feat_transformer_mean`, `p3_prepare_classification`
+  - Runs in this section: `p3_classify`, `p3_error_sample`, `p3_feat_lstm_mean`, `p3_feat_transformer_mean`, `p3_prepare_classification`
   - Where: the empty *My notes* block at the end of the Part III section of `RESULTS.md`
 
 ### Added by me
@@ -154,7 +162,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 - [ ] Nothing submitted contains API keys, credentials or data you may not share (`data/` is git-ignored) *(Planned: not set)* <!--id:req-secrets-->
   - Status: not done (cannot be checked automatically; tick when finished)
 - [ ] Submit the PDF report and the code (a GitHub link the instructor can open, or a zip) *(Planned: not set)* <!--id:req-submit-->
-  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 11 uncommitted file(s); 0 unpushed commit(s). Whether the instructor has access cannot be checked from here)
+  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 20 uncommitted file(s); 0 unpushed commit(s). Whether the instructor has access cannot be checked from here)
 - [ ] Find out the late-submission policy and the submission platform (the brief says both are announced separately) *(Planned: not set)* <!--id:req-late-->
   - Status: not done (cannot be checked automatically; tick when finished)
 

@@ -1,6 +1,6 @@
 # Results
 
-Rebuilt by `src/update_results.py` on 2026-10-14T17:59:05+08:00 from 32 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-14T17:07:58+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
+Rebuilt by `src/update_results.py` on 2026-10-14T18:47:39+08:00 from 34 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-14T18:38:42+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
 
 Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III](#part-iii) · [Settings](#settings) · [Checks](#checks)
 
@@ -1865,6 +1865,116 @@ Read from the run records; nothing here is interpreted.
 
 ## Part III
 
+#### `p3_classify`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/local/bin/python3 src/classify.py --config configs/p3_classify.json` |
+| Script | `src/classify.py` |
+| Date | 2026-10-14T18:34:33+08:00 |
+| Git commit | `8a26330 (uncommitted changes at run time)` |
+| Hardware | CPU: Apple M2 (Darwin arm64) |
+| Seed | 0 |
+| Result file | `results/p3_classify.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | — |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.features_dir` | data/features |
+| `options.feature_sets` | `["p3_feat_lstm_mean", "p3_feat_transformer_mean"]` |
+| `options.raw_csv` | data/IMDB Dataset.csv |
+| `options.c_grid` | `[0.001, 0.01, 0.1, 1, 10, 100]` |
+| `options.selection_metric` | macro_f1 |
+| `options.standardise` | True |
+| `options.max_iter` | 1,000 |
+| `options.summary_csv` | results/part3.csv |
+| `options.errors_prefix` | results/part3_errors_ |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `variants` | `[{"variant": "p3_feat_lstm_mean", "feature_size": 256, "best_C": 0.01, "val_accuracy": 0.8154, "val_macro_f1": 0.8153983385850473, "test_accuracy": 0.8192, "test_macro_f1": 0.8191916394214068, "n_test": 5000, "n_test_errors": 904, "seed": 0}, {"variant": "p3_feat_transformer_mean", "feature_size": 100, "best_C": 0.1, "val_accuracy": 0.7624, "val_macro_f1": 0.7623902675053571, "test_accuracy": 0.7744, "test_macro_f1": 0.774371697185695, "n_test": 5000, "n_test_errors": 1128, "seed": 0}]` |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `p3_feat_lstm_mean.validation_by_C` | `[{"C": 0.001, "accuracy": 0.806, "macro_f1": 0.805999223996896, "converged": true}, {"C": 0.01, "accuracy": 0.8154, "macro_f1": 0.8153983385850473, "converged": true}, {"C": 0.1, "accuracy": 0.8144, "macro_f1": 0.8143949812402927, "converged": true}, {"C": 1, "accuracy": 0.815, "macro_f1": 0.8149953748843721, "converged": true}, {"C": 10, "accuracy": 0.815, "macro_f1": 0.8149953748843721, "converged": true}, {"C": 100, "accuracy": 0.815, "macro_f1": 0.8149953748843721, "converged": true}]` |
+| `p3_feat_lstm_mean.errors_file` | results/part3_errors_p3_feat_lstm_mean.csv |
+| `p3_feat_lstm_mean.seconds` | 2.8079 |
+| `p3_feat_transformer_mean.validation_by_C` | `[{"C": 0.001, "accuracy": 0.7504, "macro_f1": 0.7503985622957188, "converged": true}, {"C": 0.01, "accuracy": 0.759, "macro_f1": 0.7589983708289868, "converged": true}, {"C": 0.1, "accuracy": 0.7624, "macro_f1": 0.7623902675053571, "converged": true}, {"C": 1, "accuracy": 0.7622, "macro_f1": 0.7621869773588802, "converged": true}, {"C": 10, "accuracy": 0.7624, "macro_f1": 0.7623876821774441, "converged": true}, {"C": 100, "accuracy": 0.7624, "macro_f1": 0.7623876821774441, "converged": true}]` |
+| `p3_feat_transformer_mean.errors_file` | results/part3_errors_p3_feat_transformer_mean.csv |
+| `p3_feat_transformer_mean.seconds` | 1.5116 |
+
+#### `p3_error_sample`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/local/bin/python3 src/error_sample.py --config configs/p3_error_sample.json` |
+| Script | `src/error_sample.py` |
+| Date | 2026-10-14T18:38:42+08:00 |
+| Git commit | `8a26330 (uncommitted changes at run time)` |
+| Hardware | CPU: Apple M2 (Darwin arm64) |
+| Seed | 0 |
+| Result file | `results/p3_error_sample.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | — |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.classification_dir` | data/classification |
+| `options.processed_dir` | data/processed |
+| `options.part3_csv` | results/part3.csv |
+| `options.errors_prefix` | results/part3_errors_ |
+| `options.sample_prefix` | results/part3_error_sample_ |
+| `options.stats_csv` | results/part3_error_stats.csv |
+| `options.ranking_csv` | results/part3_ranking.csv |
+| `options.n_sample` | 15 |
+| `options.negation_words` | `["not", "no", "never", "nothing", "nobody", "none", "neither", "nor", "hardly", "cannot"]` |
+| `options.variant_to_lm_run.p3_feat_lstm_mean` | train_lstm |
+| `options.variant_to_lm_run.p3_feat_transformer_mean` | train_transformer |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `stats` | `[{"variant": "p3_feat_lstm_mean", "group": "errors", "n_reviews": 904, "mean_tokens": 203.8396017699115, "share_truncated": 0.4502212389380531, "mean_unk_rate": 0.02336649938970649, "share_with_negation": 0.8772123893805309, "mean_negation_count": 2.60287610619469}, {"variant": "p3_feat_lstm_mean", "group": "correct", "n_reviews": 4096, "mean_tokens": 195.069091796875, "share_truncated": 0.36962890625, "mean_unk_rate": 0.02022590441973582, "share_with_negation": 0.874267578125, "mean_negation_count": 2.623779296875}, {"variant": "p3_feat_transformer_mean", "group": "errors", "n_reviews": 1128, "mean_tokens": 201.9804964539007, "share_truncated": 0.4175531914893617, "mean_unk_rate": 0.022945052917175687, "share_with_negation": 0.8927304964539007, "mean_negation_count": 2.624113475177305}, {"variant": "p3_feat_transformer_mean", "group": "correct", "n_reviews": 3872, "mean_tokens": 195.10330578512398, "share_truncated": 0.3744834710743802, "mean_unk_rate": 0.020166993869049174, "share_with_negation": 0.8695764462809917, "mean_negation_count": 2.618801652892562}]` |
+| `ranking` | `[{"variant": "p3_feat_lstm_mean", "lm_run": "train_lstm", "lm_test_perplexity": 80.44937180664519, "classifier_test_accuracy": 0.8192, "classifier_test_macro_f1": 0.8191916394214068}, {"variant": "p3_feat_transformer_mean", "lm_run": "train_transformer", "lm_test_perplexity": 156.9419120574047, "classifier_test_accuracy": 0.7744, "classifier_test_macro_f1": 0.774371697185695}]` |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `negation_ids_found` | 10 |
+
 #### `p3_feat_lstm_mean`
 
 | Field | Value |
@@ -2333,15 +2443,17 @@ These runs match no rule in `part_rules` (`configs/update_results.json`).
 
 Source: `DECISIONS.md` (copied as written there).
 
-### NEEDS REVIEW (3)
+### NEEDS REVIEW (5)
 
 | ID | Decision | Status |
 |---|---|---|
 | W2 | Details not covered by the user's choice | NEEDS REVIEW |
 | X1 | Which vector is pooled, and how padding is excluded | NEEDS REVIEW |
 | X2 | Part III comparison and pooling | NEEDS REVIEW (pooling choice) |
+| Y1 | Classifier procedure | NEEDS REVIEW (the assistant defaults) |
+| Y2 | Error-review material (counted properties only) | NEEDS REVIEW |
 
-### All design choices (84)
+### All design choices (86)
 
 | ID | Decision | Value | Where | Chosen by | Status |
 |---|---|---|---|---|---|
@@ -2429,6 +2541,8 @@ Source: `DECISIONS.md` (copied as written there).
 | W2 | Details not covered by the user's choice | (a) the `&lt;eos&gt;` marker data.py appended to each review is dropped (it separates documents for the language models; it is not part of a review, and truncated reviews would lose it anyway); (b) `&lt;unk&gt;` rate is reported over real tokens only (no `&lt;pad&gt;`, no `&lt;eos&gt;`), both for the full review and for the kept part; (c) the saved files also store `lengths` (real tokens per row) so later code can ignore padding. | `src/prepare_classification.py` (`prepare_split`). | Assistant default. | NEEDS REVIEW |
 | X1 | Which vector is pooled, and how padding is excluded | the pooled vector is the one fed to the model's output layer: output of the last recurrent layer (RNN/LSTM, size 256) or of the final LayerNorm (Transformer, size 100). `last` = hidden state at position `length - 1`; `mean` = sum over real positions (0/1 mask) divided by `length`. Padding is on the right and all models are causal, so real positions never depend on padding (checked by `tests/test_extract_features.py`). Models are put in eval mode (dropout off), all parameters set to `requires_grad False`, and the run stops if any weight changed. Only `hidden_states()` was added to `src/models.py`; `forward` computes the same numbers as before. | `src/extract_features.py` (`pool`, `extract_split`); `src/models.py` (`hidden_states` in each class). | Assistant default (pooling methods themselves: user's request). | NEEDS REVIEW |
 | X2 | Part III comparison and pooling | compare the Part I LSTM and Part I Transformer (both random trainable embeddings, as trained), same pooling for both: `mean`. Runs: `p3_feat_lstm_mean`, `p3_feat_transformer_mean`; batch size 64 (speed only). Feature sizes: LSTM 256, Transformer 100. | `configs/p3_feat_lstm_mean.json`, `configs/p3_feat_transformer_mean.json` (`options.pooling`, `batch_size`); Colab section 12. | comparison: User, prompt (2026-10-14), option 1 of 3. Pooling `mean`: Assistant default (it was named as the usual default in the options; the user did not specify). | NEEDS REVIEW (pooling choice) |
+| Y1 | Classifier procedure | scikit-learn `LogisticRegression` (L2, lbfgs, `max_iter` 1000, `random_state` = seed 0), fitted on the train split for each C in [0.001, 0.01, 0.1, 1, 10, 100]; C chosen by best VALIDATION macro-F1 (ties go to the smaller C); the model trained at that C (no refit on train+val) predicts the test split once. Features are standardised with the training mean and standard deviation (the same for both feature sets). Identical procedure and seed for every feature set. All misclassified test reviews are saved with their raw text. | `configs/p3_classify.json` (`options.c_grid`, `selection_metric`, `standardise`, `max_iter`); `src/classify.py` (`select_c`). | logistic regression, validation-only selection, single test evaluation, outputs: User, prompt (2026-10-14). The C grid, macro-F1 as the selection metric, standardisation, `max_iter`, no refit: Assistant defaults. | NEEDS REVIEW (the assistant defaults) |
+| Y2 | Error-review material (counted properties only) | 15 random errors per variant (seed 0) with counted properties: tokens kept, truncated or not, `&lt;unk&gt;` count and share, negation-word count. Negation words: not, no, never, nothing, nobody, none, neither, nor, hardly, cannot, plus any n't contraction. The same properties are averaged over all errors and over all correct reviews. The patterns themselves are not written up: your `CLAUDE.md` says interpretation is the user's job. | `configs/p3_error_sample.json` (`options.n_sample`, `options.negation_words`); `src/error_sample.py`. | Assistant default (the property list came from the user's prompt: negation, length, `&lt;unk&gt;`, sarcasm). | NEEDS REVIEW |
 
 ### My notes
 

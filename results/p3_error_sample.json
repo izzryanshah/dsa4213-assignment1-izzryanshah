@@ -1,0 +1,116 @@
+{
+  "run": "p3_error_sample",
+  "script": "src/error_sample.py",
+  "command": "/usr/local/bin/python3 src/error_sample.py --config configs/p3_error_sample.json",
+  "date": "2026-10-14T18:38:42+08:00",
+  "git_commit": "8a26330bc571bad0efaf1b0f0b3677a47ccd061f",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
+  "seed": 0,
+  "config": {
+    "architecture": null,
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": null,
+    "embedding_init": null,
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": null,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "classification_dir": "data/classification",
+      "processed_dir": "data/processed",
+      "part3_csv": "results/part3.csv",
+      "errors_prefix": "results/part3_errors_",
+      "sample_prefix": "results/part3_error_sample_",
+      "stats_csv": "results/part3_error_stats.csv",
+      "ranking_csv": "results/part3_ranking.csv",
+      "n_sample": 15,
+      "negation_words": [
+        "not",
+        "no",
+        "never",
+        "nothing",
+        "nobody",
+        "none",
+        "neither",
+        "nor",
+        "hardly",
+        "cannot"
+      ],
+      "variant_to_lm_run": {
+        "p3_feat_lstm_mean": "train_lstm",
+        "p3_feat_transformer_mean": "train_transformer"
+      }
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "stats": [
+      {
+        "variant": "p3_feat_lstm_mean",
+        "group": "errors",
+        "n_reviews": 904,
+        "mean_tokens": 203.8396017699115,
+        "share_truncated": 0.4502212389380531,
+        "mean_unk_rate": 0.02336649938970649,
+        "share_with_negation": 0.8772123893805309,
+        "mean_negation_count": 2.60287610619469
+      },
+      {
+        "variant": "p3_feat_lstm_mean",
+        "group": "correct",
+        "n_reviews": 4096,
+        "mean_tokens": 195.069091796875,
+        "share_truncated": 0.36962890625,
+        "mean_unk_rate": 0.02022590441973582,
+        "share_with_negation": 0.874267578125,
+        "mean_negation_count": 2.623779296875
+      },
+      {
+        "variant": "p3_feat_transformer_mean",
+        "group": "errors",
+        "n_reviews": 1128,
+        "mean_tokens": 201.9804964539007,
+        "share_truncated": 0.4175531914893617,
+        "mean_unk_rate": 0.022945052917175687,
+        "share_with_negation": 0.8927304964539007,
+        "mean_negation_count": 2.624113475177305
+      },
+      {
+        "variant": "p3_feat_transformer_mean",
+        "group": "correct",
+        "n_reviews": 3872,
+        "mean_tokens": 195.10330578512398,
+        "share_truncated": 0.3744834710743802,
+        "mean_unk_rate": 0.020166993869049174,
+        "share_with_negation": 0.8695764462809917,
+        "mean_negation_count": 2.618801652892562
+      }
+    ],
+    "ranking": [
+      {
+        "variant": "p3_feat_lstm_mean",
+        "lm_run": "train_lstm",
+        "lm_test_perplexity": 80.44937180664519,
+        "classifier_test_accuracy": 0.8192,
+        "classifier_test_macro_f1": 0.8191916394214068
+      },
+      {
+        "variant": "p3_feat_transformer_mean",
+        "lm_run": "train_transformer",
+        "lm_test_perplexity": 156.9419120574047,
+        "classifier_test_accuracy": 0.7744,
+        "classifier_test_macro_f1": 0.774371697185695
+      }
+    ]
+  },
+  "details": {
+    "negation_ids_found": 10
+  }
+}

@@ -667,6 +667,24 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 
 ---
 
+## Y. Part III classifier (2026-10-14)
+
+### Y1. Classifier procedure
+- **Value:** scikit-learn `LogisticRegression` (L2, lbfgs, `max_iter` 1000, `random_state` = seed 0), fitted on the train split for each C in [0.001, 0.01, 0.1, 1, 10, 100]; C chosen by best VALIDATION macro-F1 (ties go to the smaller C); the model trained at that C (no refit on train+val) predicts the test split once. Features are standardised with the training mean and standard deviation (the same for both feature sets). Identical procedure and seed for every feature set. All misclassified test reviews are saved with their raw text.
+- **Where:** `configs/p3_classify.json` (`options.c_grid`, `selection_metric`, `standardise`, `max_iter`); `src/classify.py` (`select_c`).
+- **Chosen by:** logistic regression, validation-only selection, single test evaluation, outputs: User, prompt (2026-10-14). The C grid, macro-F1 as the selection metric, standardisation, `max_iter`, no refit: Assistant defaults. **Alternatives considered:** a finer or wider C grid; selecting on validation accuracy (equal here: balanced classes); no standardisation; refitting on train+validation at the chosen C.
+- **Status:** NEEDS REVIEW (the assistant defaults)
+
+---
+
+### Y2. Error-review material (counted properties only)
+- **Value:** 15 random errors per variant (seed 0) with counted properties: tokens kept, truncated or not, `<unk>` count and share, negation-word count. Negation words: not, no, never, nothing, nobody, none, neither, nor, hardly, cannot, plus any n't contraction. The same properties are averaged over all errors and over all correct reviews. The patterns themselves are not written up: your `CLAUDE.md` says interpretation is the user's job.
+- **Where:** `configs/p3_error_sample.json` (`options.n_sample`, `options.negation_words`); `src/error_sample.py`.
+- **Chosen by:** Assistant default (the property list came from the user's prompt: negation, length, `<unk>`, sarcasm). **Alternatives considered:** a larger sample; a longer negation list; a sample balanced by true label.
+- **Status:** NEEDS REVIEW
+
+---
+
 ## NEEDS REVIEW summary
 
 **All 24 items resolved 2026-10-10.** The user reviewed every one (2-3 options with trade-offs each, per CLAUDE.md's record-keeping rules) and confirmed every current value as-is: A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, B1, B3, C1, C2, C3, D2, D3, D4, D5, D6, D7, D8, E1, E3. See each entry above for the specific options offered and the reasoning. No reruns were needed since nothing changed.
@@ -711,4 +729,4 @@ One item (D4) was accepted rather than fixed: the n-gram discount grid was widen
 
 **New since then (2026-10-14), pending the user:** W2 (classification data details). W1 confirmed.
 
-**New since then (2026-10-14), pending the user:** W2 (above), X1 (feature extraction details), X2 (pooling `mean` for the LSTM vs Transformer comparison).
+**New since then (2026-10-14), pending the user:** W2 (above), X1 (feature extraction details), X2 (pooling `mean` for the LSTM vs Transformer comparison), Y1 (classifier grid and standardisation), Y2 (error-review properties).

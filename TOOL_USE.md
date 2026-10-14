@@ -351,3 +351,15 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 ## 2026-10-14 (Colab results copied back)
 
 - Copied from the Colab results zip into `results/`: `p3_feat_lstm_mean.json`, `p3_feat_transformer_mean.json`, `generations_p2_lstm_w2v.json`, `generations_p2_lstm_glove.json`, `combine_generations_p2.json`, `part2_generations.md`. Not copied: `all_runs.csv` and figures (rebuilt locally). No code changed. Ran `update_results.py`; added `results/RESULTS_LOG.md` entries.
+
+## 2026-10-14 (Part III classifier)
+
+- `src/classify.py` + `configs/p3_classify.json` (new): logistic regression on each feature set; C chosen on validation macro-F1; test scored once; writes `results/part3.csv`, `results/part3_errors_<variant>.csv` (raw text, true and predicted label; not analysed) and `results/p3_classify.json`. `tests/test_classify.py` (new, passed). Ran locally on CPU (allowed: not Colab-only). `DECISIONS.md` Y1 (NEEDS REVIEW). Ran `update_results.py`.
+
+## 2026-10-14 (Part III error-review material)
+
+- `src/error_sample.py` + `configs/p3_error_sample.json` (new): per variant, 15 seeded random misclassified test reviews with counted properties (`results/part3_error_sample_<variant>.csv`), the same counts over all errors vs all correct reviews (`results/part3_error_stats.csv`), and Part I perplexity next to Part III accuracy with ranks (`results/part3_ranking.csv`). No pattern notes were written (CLAUDE.md: interpretation is the user's job). `DECISIONS.md` Y2 (NEEDS REVIEW). Ran `update_results.py`.
+
+## 2026-10-14 (Part III error notes, user exception)
+
+- `results/part3_error_notes.md` (new): assistant-drafted notes from reading the 30 sampled misclassified reviews, plus the perplexity vs accuracy ranking facts. Written because the user explicitly asked for an exception to the "never interpret results" rule; the *My notes* block in `RESULTS.md` was not touched. Ran `update_results.py`.

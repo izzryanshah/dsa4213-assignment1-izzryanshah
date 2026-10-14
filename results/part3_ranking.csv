@@ -1,0 +1,3 @@
+variant,lm_run,lm_test_perplexity,classifier_test_accuracy,classifier_test_macro_f1,perplexity_rank,accuracy_rank
+p3_feat_lstm_mean,train_lstm,80.44937180664519,0.8192,0.8191916394214068,1,1
+p3_feat_transformer_mean,train_transformer,156.9419120574047,0.7744,0.774371697185695,2,2

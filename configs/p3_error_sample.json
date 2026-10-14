@@ -1,0 +1,27 @@
+{
+  "architecture": null,
+  "layers": null,
+  "hidden_size": null,
+  "embedding_dim": null,
+  "embedding_init": null,
+  "context_length": null,
+  "learning_rate": null,
+  "batch_size": null,
+  "epochs": null,
+  "dropout": null,
+  "vocab_size": 20000,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "classification_dir": "data/classification",
+    "processed_dir": "data/processed",
+    "part3_csv": "results/part3.csv",
+    "errors_prefix": "results/part3_errors_",
+    "sample_prefix": "results/part3_error_sample_",
+    "stats_csv": "results/part3_error_stats.csv",
+    "ranking_csv": "results/part3_ranking.csv",
+    "n_sample": 15,
+    "negation_words": ["not", "no", "never", "nothing", "nobody", "none", "neither", "nor", "hardly", "cannot"],
+    "variant_to_lm_run": {"p3_feat_lstm_mean": "train_lstm", "p3_feat_transformer_mean": "train_transformer"}
+  }
+}

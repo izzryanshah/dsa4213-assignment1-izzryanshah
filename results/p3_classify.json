@@ -1,0 +1,162 @@
+{
+  "run": "p3_classify",
+  "script": "src/classify.py",
+  "command": "/usr/local/bin/python3 src/classify.py --config configs/p3_classify.json",
+  "date": "2026-10-14T18:34:33+08:00",
+  "git_commit": "8a26330bc571bad0efaf1b0f0b3677a47ccd061f",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
+  "seed": 0,
+  "config": {
+    "architecture": null,
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": null,
+    "embedding_init": null,
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": null,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "features_dir": "data/features",
+      "feature_sets": [
+        "p3_feat_lstm_mean",
+        "p3_feat_transformer_mean"
+      ],
+      "raw_csv": "data/IMDB Dataset.csv",
+      "c_grid": [
+        0.001,
+        0.01,
+        0.1,
+        1,
+        10,
+        100
+      ],
+      "selection_metric": "macro_f1",
+      "standardise": true,
+      "max_iter": 1000,
+      "summary_csv": "results/part3.csv",
+      "errors_prefix": "results/part3_errors_"
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "variants": [
+      {
+        "variant": "p3_feat_lstm_mean",
+        "feature_size": 256,
+        "best_C": 0.01,
+        "val_accuracy": 0.8154,
+        "val_macro_f1": 0.8153983385850473,
+        "test_accuracy": 0.8192,
+        "test_macro_f1": 0.8191916394214068,
+        "n_test": 5000,
+        "n_test_errors": 904,
+        "seed": 0
+      },
+      {
+        "variant": "p3_feat_transformer_mean",
+        "feature_size": 100,
+        "best_C": 0.1,
+        "val_accuracy": 0.7624,
+        "val_macro_f1": 0.7623902675053571,
+        "test_accuracy": 0.7744,
+        "test_macro_f1": 0.774371697185695,
+        "n_test": 5000,
+        "n_test_errors": 1128,
+        "seed": 0
+      }
+    ]
+  },
+  "details": {
+    "p3_feat_lstm_mean": {
+      "validation_by_C": [
+        {
+          "C": 0.001,
+          "accuracy": 0.806,
+          "macro_f1": 0.805999223996896,
+          "converged": true
+        },
+        {
+          "C": 0.01,
+          "accuracy": 0.8154,
+          "macro_f1": 0.8153983385850473,
+          "converged": true
+        },
+        {
+          "C": 0.1,
+          "accuracy": 0.8144,
+          "macro_f1": 0.8143949812402927,
+          "converged": true
+        },
+        {
+          "C": 1,
+          "accuracy": 0.815,
+          "macro_f1": 0.8149953748843721,
+          "converged": true
+        },
+        {
+          "C": 10,
+          "accuracy": 0.815,
+          "macro_f1": 0.8149953748843721,
+          "converged": true
+        },
+        {
+          "C": 100,
+          "accuracy": 0.815,
+          "macro_f1": 0.8149953748843721,
+          "converged": true
+        }
+      ],
+      "errors_file": "results/part3_errors_p3_feat_lstm_mean.csv",
+      "seconds": 2.8079280853271484
+    },
+    "p3_feat_transformer_mean": {
+      "validation_by_C": [
+        {
+          "C": 0.001,
+          "accuracy": 0.7504,
+          "macro_f1": 0.7503985622957188,
+          "converged": true
+        },
+        {
+          "C": 0.01,
+          "accuracy": 0.759,
+          "macro_f1": 0.7589983708289868,
+          "converged": true
+        },
+        {
+          "C": 0.1,
+          "accuracy": 0.7624,
+          "macro_f1": 0.7623902675053571,
+          "converged": true
+        },
+        {
+          "C": 1,
+          "accuracy": 0.7622,
+          "macro_f1": 0.7621869773588802,
+          "converged": true
+        },
+        {
+          "C": 10,
+          "accuracy": 0.7624,
+          "macro_f1": 0.7623876821774441,
+          "converged": true
+        },
+        {
+          "C": 100,
+          "accuracy": 0.7624,
+          "macro_f1": 0.7623876821774441,
+          "converged": true
+        }
+      ],
+      "errors_file": "results/part3_errors_p3_feat_transformer_mean.csv",
+      "seconds": 1.5116100311279297
+    }
+  }
+}
