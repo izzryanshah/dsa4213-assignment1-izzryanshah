@@ -729,6 +729,17 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 
 ---
 
+## AB. Review text in git (2026-10-15)
+
+### AB1. Error files with review text are not committed
+- **Value:** `results/part3_errors_*.csv`, `results/part3_five_errors_*.csv` and `results/part3_error_sample_*.csv` (they hold verbatim IMDB review text) are git-ignored and untracked; the local copies stay and are rebuilt by `classify.py` and `error_sample.py`.
+- **Where:** `.gitignore`; `git rm --cached` on the five tracked files. Earlier commits still contain them (history not rewritten).
+- **Chosen by:** User (option 1 of 3, 2026-10-15). **Alternatives considered:** strip the `text` column; keep the files tracked.
+- **Reason:** the dataset's redistribution terms are unclear and the brief says not to submit data you may not share.
+- **Status:** confirmed
+
+---
+
 ## NEEDS REVIEW summary
 
 **All 24 items resolved 2026-10-10.** The user reviewed every one (2-3 options with trade-offs each, per CLAUDE.md's record-keeping rules) and confirmed every current value as-is: A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, B1, B3, C1, C2, C3, D2, D3, D4, D5, D6, D7, D8, E1, E3. See each entry above for the specific options offered and the reasoning. No reruns were needed since nothing changed.

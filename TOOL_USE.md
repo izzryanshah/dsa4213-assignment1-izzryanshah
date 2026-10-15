@@ -386,3 +386,29 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 - New configs: `p3_feat_rnn_mean`, `p3_feat_lstm_w2v_mean`, `p3_feat_lstm_glove_mean`, `p3_classify_five`, `p3_rank_table`, `p3_rescore_windows` (not run yet: need Colab / the Colab features), `p3_classify_pca`, `p3_mcnemar` (run locally). `notebooks/run_colab.ipynb`: sections 13 (three extractions) and 14 (window rescoring). `README.md` Part III block extended. `tests/test_part3_extras.py` (new, passed).
 - Smoke test on CPU only (random-weight checkpoints and a 40-review subset in a scratch folder; meaningless numbers, nothing saved to `results/`): the rescoring script and the three new extraction configs ran.
 - Ran locally: `p3_classify_pca`, `p3_mcnemar`. `DECISIONS.md` section AA (NEEDS REVIEW). Ran `update_results.py`.
+
+## 2026-10-15 (Colab results for sections 13 and 14 copied back)
+
+- Copied `p3_feat_{rnn,lstm_w2v,lstm_glove}_mean.json`, `p3_rescore_windows.json`, `part3_window_perplexity.csv` from the Colab results zip into `results/`. Not copied: `all_runs.csv` (rebuilt locally). The zip had no `data/features/` folders, so `classify.py` on five feature sets has not run. No code changed. Ran `update_results.py`; added `results/RESULTS_LOG.md` entries.
+
+## 2026-10-15 (five-representation classification)
+
+- Copied `data/features/p3_feat_{rnn,lstm_w2v,lstm_glove}_mean/` from the Colab features zip (git-ignored); checked shapes, no NaN, labels/lengths/original_indices equal to `data/classification/`; the zip copies of the LSTM and Transformer features are byte-identical to the local ones. Ran `classify.py` (`p3_classify_five`) and `rank_table.py` (`p3_rank_table`) locally. No code changed. Ran `update_results.py`; `results/RESULTS_LOG.md` entry added.
+
+## 2026-10-15 (report draft v2, user exception)
+
+- `report/REPORT_DRAFT.md` and `report/VERIFY.md` rewritten (v2) after the user's review and Part III extension: five-representation Table 6 with PCA row, McNemar, Spearman, 64-token-window perplexities in Part I, nine review points applied, text cut by about a third (still about 1.8 pages over by estimate). Assistant-drafted text, for the user to verify and rewrite. No code or results changed; `update_results.py` not run; nothing committed.
+
+## 2026-10-15 (README rewrite from the code)
+
+- Checked the existing `README.md` against the scripts, configs, `notebooks/run_colab.ipynb` and `results/`: every `src/` and `tests/` command, config path and flag (`--config`, `--run-name`, `--set`, `--seed`, `--results-dir`, `--model`, `--embedding`, `--pooling`) exists (48 commands checked by script, `--help` run for every `src/` script). Re-ran `classify.py` (`p3_classify_five.json`) and `ngram.py --seed 1 --run-name ngram_seed1` into a scratch directory outside `results/`: five-way rows and n-gram numbers matched the recorded ones; nothing in `results/` changed.
+- Edited `README.md`: added `scipy` (imported by `rank_table.py`, `mcnemar.py`, missing from `requirements.txt`) and a pinned install line; the one-time Drive copies for Colab; a runtime and hardware table; step dependencies for Part III step 15; a new "Report tables and figures, in order" table (command steps, configs, seed, output files for each report table and figure, and which ones `make_figures.py` does not cover); repository layout now lists `rescore_windows.py`, `rank_table.py`, `mcnemar.py`, `prompts.txt` and the documents. `requirements.txt` was not changed.
+
+## 2026-10-15 (fresh-clone reproduction test, README fixes)
+
+- Cloned the repo (commit `d0aacb1`) into a scratch folder outside the project, made a Python 3.10.11 venv, `pip install -r requirements.txt` (35 s; resolved versions equal the README table), copied in the Kaggle CSV, and followed the README Part I local steps: `inspect_data`, `data`, `sanity_check`, `ngram`, the five `--config` tests, `test_windows`, `generate` (n-gram), `summarise_runs`, then `bash run_part1_ngram.sh`. All ran without error. Compared against the committed `results/*.json` (data, ngram, sanity_check, generations_ngram, test_*): every metric and the generated text identical; only run date and git commit differ. `data/processed/` rebuilt from scratch is byte-identical to the original (split, vocab, token arrays). n-gram test perplexity 116.5 (116.54 recorded).
+- README edits: added the venv commands; step 1 time "about 10 seconds" corrected to about 25 seconds; section 9 now says the Part III error files contain verbatim review text. No code changed. Git history scanned (22 commits): no keys, tokens, credentials, data CSV, `.npz`/`.npy` or checkpoints; `notebooks/run_colab.ipynb` has no outputs and only a `<token>` placeholder. Found: `results/part3_errors_*.csv` and `results/part3_error_sample_*.csv` (tracked) hold IMDB review text.
+
+## 2026-10-15 (review text kept out of git, DECISIONS AB1)
+
+- User chose option 1. Added the three error-file patterns to `.gitignore`, ran `git rm --cached` on the five tracked files (local copies kept), added `DECISIONS.md` AB1, updated README section 9. Nothing committed; history not rewritten.

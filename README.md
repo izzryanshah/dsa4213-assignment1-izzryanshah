@@ -43,13 +43,17 @@ The reasoning behind each of these choices is in `DECISIONS.md`.
 
 ## 3. Dependencies
 
-Python 3.10. Install with:
+Python 3.10. Create a clean environment and install (these are the exact commands used when this README was tested from a fresh clone; about 35 seconds):
 
 ```
+python3.10 -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-`requirements.txt` lists the packages without version pins: `torch`, `numpy`, `nltk`, `gensim`, `scikit-learn`, `matplotlib`, `pandas`. (`nltk` is listed but no script imports it.) All results in this repository were produced with:
+All commands below use `python`, so run them with this environment active.
+
+`requirements.txt` lists the packages without version pins: `torch`, `numpy`, `nltk`, `gensim`, `scikit-learn`, `matplotlib`, `pandas`. Two notes on that list: `nltk` is listed but no script imports it, and `scipy` is imported (by `src/rank_table.py` and `src/mcnemar.py`) but is not listed; `pip` installs it anyway as a dependency of `scikit-learn` and `gensim`. The local (laptop) results in this repository were produced with:
 
 | Package | Version |
 |---|---|
@@ -58,8 +62,11 @@ pip install -r requirements.txt
 | numpy | 2.2.6 |
 | pandas | 2.3.3 |
 | scikit-learn | 1.7.2 |
+| scipy | 1.15.3 |
 | gensim | 4.4.0 |
 | matplotlib | 3.10.9 |
+
+To match these exactly: `pip install torch==2.14.1 numpy==2.2.6 pandas==2.3.3 scikit-learn==1.7.2 scipy==1.15.3 gensim==4.4.0 matplotlib==3.10.9`.
 
 Hardware for the recorded runs:
 - **Local, CPU only (Apple M2, macOS):** data pipeline, n-gram model, word2vec, Part III data preparation, classifier, error sampling, tables and figures, tests.
@@ -73,12 +80,33 @@ Every script takes `--config configs/<name>.json` and writes a run record to `re
 
 Steps marked **(Colab)** must run in Colab on a GPU (`notebooks/run_colab.ipynb` has one labelled cell for each; set its `REPO_URL` and Drive folder first). They also work on a CPU, but the recorded timings, throughputs and Part I to III numbers come from a Colab Tesla T4, and the project rule is that neural training, the benchmark, neural generation, GloVe and feature extraction are not run on the laptop. Each Colab cell is followed by `save_results()`, which copies `results/`, `checkpoints/` and `RESULTS.md` to Google Drive; copy the result files back into this repository before the local steps. Everything else runs locally in seconds to minutes.
 
+**One-time copies to Google Drive before the Colab runs** (Colab starts from a fresh clone and `data/` is not in git). Put these under the Drive folder `DRIVE_DEST` set in the notebook's setup cell: `data/processed/` (from step 1; notebook section 1), `data/embeddings/w2v_100d.npy` (from step 9; section 8 explains it), and `data/classification/` (from step 12; section 12). The GloVe table, the checkpoints and the feature files are made in Colab and saved to Drive by the notebook. After the Colab steps, copy `results/` and `data/features/` back from Drive into this repository.
+
+**Expected runtimes and hardware** (recorded in `results/<run>.json` unless marked "not timed"):
+
+| Step | Hardware | Time |
+|---|---|---|
+| 1 `data.py` | laptop CPU | about 10 seconds (not timed) |
+| 4 `ngram.py` | laptop CPU (Apple M2) | 0.8 s fit + 22.8 s discount tuning; about 40 s wall-clock including scoring |
+| 7 `train.py` RNN / LSTM / Transformer | Colab T4 | 3,388 s / 3,850 s / 2,246 s (20 epochs each, the cap) |
+| 7 `train.py` bigram baseline | Colab T4 (local CPU run: 16,611 s) | 1,970 s |
+| 8 `benchmark.py`, `generate.py` (neural) | Colab T4 | not timed; minutes |
+| 9 `train_word2vec.py` | laptop CPU, 1 worker | 273.8 s |
+| 10 GloVe download + `load_glove.py` | Colab | a few minutes, mostly the 822 MB download (not timed) |
+| 11 `train.py` frozen w2v / frozen GloVe LSTM | Colab T4 | 3,394 s / 3,398 s |
+| 13 `extract_features.py` | Colab T4 | LSTM about 12 s, RNN about 4.5 s (train + val + test) |
+| 15b `rescore_windows.py` | Colab T4 | a few minutes (not timed) |
+| 14, 15c, 15d `classify.py`, `rank_table.py`, `mcnemar.py` | laptop CPU | seconds; the five-feature-set `classify.py` took about 18 s |
+| Collecting everything | laptop CPU | seconds |
+
+The neural training runs add up to about 5 hours of Colab GPU time (RNN, LSTM, Transformer, two frozen LSTMs, bigram re-run). Run one per session, because Colab has no resume.
+
 `run_part1_ngram.sh` re-runs the first local steps in one go (`bash run_part1_ngram.sh`): steps 1 to 4, the evaluate and generate tests of step 5, step 6 and `summarise_runs.py`. It does not cover the neural, Part II or Part III steps.
 
 ### Part I: language models
 
 ```
-# 1. Processed dataset (about 10 seconds)
+# 1. Processed dataset (about 25 seconds)
 python src/data.py --config configs/data.json
 
 # 2. Raw-data statistics (optional)
@@ -171,7 +199,7 @@ python src/make_figures.py --config configs/make_figures.json         # results/
 python src/update_results.py --config configs/update_results.json     # RESULTS.md, MY_TASKS.md, results/figures/
 ```
 
-Step 1 comes before everything else. Step 4 needs step 1; step 6 needs step 4 (it reads the discounts tuned in `results/ngram.json`); step 8 needs step 7 and step 4; step 11 needs steps 9 and 10; step 13 needs step 7 and step 12; step 14 needs step 13.
+Step 1 comes before everything else. Step 4 needs step 1; step 6 needs step 4 (it reads the discounts tuned in `results/ngram.json`); step 8 needs step 7 and step 4; step 11 needs steps 9 and 10; step 13 needs step 7 and step 12; step 14 needs step 13. In step 15: 15a needs steps 7, 11 and 12; 15b needs step 7; 15c needs 13 and 15a (and step 7 and 11 run records for the perplexities); 15d needs step 14 (it reads `results/part3_errors_p3_feat_*_mean.csv` and, for PCA, the LSTM features from step 13).
 
 ### What to expect
 
@@ -187,6 +215,29 @@ Numbers recorded in `results/` (seed 0), for checking a re-run. Local numbers ar
 | Part III (logistic regression) | LSTM mean-pooled features (256-d): test accuracy 0.8192; Transformer (100-d): 0.7744 |
 
 The full tables are `results/tables/part{1,2,3}_table.{md,csv,tex}` and `RESULTS.md`.
+
+### Report tables and figures, in order
+
+Numbering follows `report/REPORT_DRAFT.md`; renumber if the submitted PDF differs. Every run uses **seed 0**. "Step" refers to the numbered commands above, all run from the repository root. Within a row, run the steps in the order listed.
+
+| Report item | Steps, in order | Settings (config) | Where the numbers are |
+|---|---|---|---|
+| Table 1: dataset splits | 1, 12 | vocab 20,000, 80/10/10 split (`data.json`); first 256 tokens (`p3_prepare_classification.json`) | `results/data.json`, `results/p3_prepare_classification.json`, `results/inspect_data.json` |
+| Table 2 and Appendix A: model settings | 4, 7, 11 | `ngram.json`, `train_{rnn,lstm,transformer}.json`, `p2_lstm_{w2v,glove}.json` | the configs; `python src/summarise_runs.py` then `results/all_runs.csv` |
+| Table 3: perplexity, size, time, throughput | 1, 4, 7, 8, then `make_figures.py` | `ngram.json`, `train_*.json`, `benchmark.json` (context 256, batch 64, 2 warm-up passes, 3 repeats) | `results/part1_costs.csv`, `results/tables/part1_table.{csv,md,tex}` |
+| Table 3: 64-token-window perplexity column | 15b | `p3_rescore_windows.json` (window 64, first 256 tokens) | `results/part3_window_perplexity.csv`. `make_figures.py` does not include this column |
+| Figure 1: Part I loss curves | 7, then `make_figures.py` | `make_figures.json` | `results/figures/part1_loss_curves.pdf` |
+| Table 4 and Appendix B: generated text | 6, 8 | `generations_*.json`, `prompts.txt`; temperature 1.0, top-k 40, 50 tokens, 1 sample, seed 0 | `results/part1_generations.md`, `results/part2_generations.md`, `results/generations_*.json` |
+| Table 5: embedding settings (LSTM) | 9, 10, 11, then `make_figures.py` | `word2vec_cost.json`, `glove_coverage.json`, `p2_lstm_{w2v,glove}.json` | `results/tables/part2_table.{csv,md,tex}`, `results/word2vec_cost.json`, `results/glove_coverage.json` |
+| Figure 2: Part II loss curves | 11, then `make_figures.py` | `make_figures.json` | `results/figures/part2_loss_curves.pdf` |
+| Table 6: five-way sentiment table | 12, 13, 14, 15a, 15c, 15d | `p3_feat_*_mean.json`, `p3_classify.json`, `p3_classify_five.json`, `p3_classify_pca.json`, `p3_rank_table.json` | `results/part3_five.csv`, `results/part3_lm_vs_classifier.csv` (with Spearman rho in `results/p3_rank_table.json`), `results/part3_pca.csv`. `results/tables/part3_table.*` holds only the LSTM and Transformer rows of `p3_classify.json` |
+| Section 5.2: McNemar, LSTM vs Transformer | 14, 15d | `p3_mcnemar.json` | `results/p3_mcnemar.json` |
+| Table 7 and error analysis | 14 | `p3_error_sample.json` (15 random errors per variant) | `results/part3_error_sample_<variant>.csv`, `results/part3_error_stats.csv`, `results/part3_ranking.csv` |
+| Appendix D: validation loss, all runs | 7, 11, then `update_results.py` | `update_results.json` | `results/figures/val_loss_all_runs.png` |
+
+The classifier settings behind Table 6 are the same for every row: logistic regression on standardised features, C from {0.001, 0.01, 0.1, 1, 10, 100} chosen on validation macro-F1, `max_iter` 1000, seed 0 (the PCA row first reduces to 100 dimensions, fitted on the training features only).
+
+Checked on 2026-10-15: re-running `classify.py` with `p3_classify_five.json` on the saved features reproduced all five rows of `part3_five.csv` (best C, accuracy, errors) exactly, and `ngram.py` reproduced the n-gram numbers (the n-gram model does not depend on the seed).
 
 ### Generation prompts
 
@@ -278,14 +329,18 @@ report/       REPORT_DRAFT.md and VERIFY.md (assistant-drafted report text for t
 src/          data.py, inspect_data.py, sanity_check.py, evaluate.py, ngram.py, models.py, train.py,
               benchmark.py, generate.py, combine_generations.py, embedding_utils.py, train_word2vec.py,
               load_glove.py, prepare_classification.py, extract_features.py, classify.py, error_sample.py,
-              make_figures.py, runconfig.py, summarise_runs.py, update_results.py, my_tasks.py
-tests/        test_*.py (run as plain scripts)
+              rescore_windows.py, rank_table.py, mcnemar.py, make_figures.py, runconfig.py,
+              summarise_runs.py, update_results.py, my_tasks.py
+tests/        test_*.py (plain scripts; most take --config, see step 5 and steps 14 and 15)
+prompts.txt   the three generation prompts
+run_part1_ngram.sh   re-runs the first local steps (see section 4)
+README.md, ASSIGNMENT.md, CLAUDE.md, DECISIONS.md, RESULTS.md, MY_TASKS.md, TOOL_USE.md   documents (section 7)
 ```
 
 ## 9. Notes on sharing
 
 - Nothing secret is stored here: no API keys, tokens or credentials are used, and `.env` files are git-ignored.
-- The dataset and everything derived from it (`data/`) are kept out of git; do not add them to a submission unless the dataset's terms allow redistribution.
+- The dataset and everything derived from it in `data/` (raw CSV, token arrays, vocabulary, features, embedding tables) are kept out of git. **Exception handled:** the Part III error-analysis files (`results/part3_errors_*.csv`, `results/part3_five_errors_*.csv`, `results/part3_error_sample_*.csv`) contain the verbatim text of misclassified test reviews, so they are git-ignored (`DECISIONS.md` AB1). They are rebuilt by `classify.py` (steps 14 and 15) and `error_sample.py`; `classify.py` needs `data/IMDB Dataset.csv`. Commits made before 2026-10-15 still contain the first five.
 - Model checkpoints (`*.pt`, `*.pth`, `*.ckpt`) are git-ignored too.
 
 ## 10. Citations and tool use
