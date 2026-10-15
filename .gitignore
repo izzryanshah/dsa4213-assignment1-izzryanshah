@@ -17,3 +17,8 @@ __pycache__/
 
 # macOS Finder artifacts
 .DS_Store
+
+# Part III error files: contain verbatim IMDB review text (DECISIONS AB1)
+results/part3_errors_*.csv
+results/part3_five_errors_*.csv
+results/part3_error_sample_*.csv
