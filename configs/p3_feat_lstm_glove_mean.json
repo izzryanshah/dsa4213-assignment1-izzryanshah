@@ -1,0 +1,24 @@
+{
+  "architecture": "lstm",
+  "layers": null,
+  "hidden_size": null,
+  "embedding_dim": null,
+  "embedding_init": "glove",
+  "context_length": null,
+  "learning_rate": null,
+  "batch_size": 64,
+  "epochs": null,
+  "dropout": null,
+  "vocab_size": 20000,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "model": "lstm",
+    "processed_dir": "data/processed",
+    "classification_dir": "data/classification",
+    "output_dir": "data/features",
+    "pooling": "mean",
+    "train_result": "results/p2_lstm_glove.json",
+    "checkpoint": "checkpoints/p2_lstm_glove.pt"
+  }
+}

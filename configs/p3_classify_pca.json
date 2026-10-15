@@ -1,0 +1,27 @@
+{
+  "architecture": null,
+  "layers": null,
+  "hidden_size": null,
+  "embedding_dim": null,
+  "embedding_init": null,
+  "context_length": null,
+  "learning_rate": null,
+  "batch_size": null,
+  "epochs": null,
+  "dropout": null,
+  "vocab_size": 20000,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "features_dir": "data/features",
+    "feature_sets": ["p3_feat_lstm_mean"],
+    "raw_csv": "data/IMDB Dataset.csv",
+    "c_grid": [0.001, 0.01, 0.1, 1, 10, 100],
+    "selection_metric": "macro_f1",
+    "standardise": true,
+    "max_iter": 1000,
+    "pca_components": 100,
+    "summary_csv": "results/part3_pca.csv",
+    "errors_prefix": "results/part3_errors_"
+  }
+}

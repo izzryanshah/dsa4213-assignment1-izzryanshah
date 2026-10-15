@@ -1,0 +1,2 @@
+variant,feature_size,best_C,val_accuracy,val_macro_f1,test_accuracy,test_macro_f1,n_test,n_test_errors,seed,pca_components
+p3_feat_lstm_mean_pca100,100,0.01,0.8124,0.8123610911958704,0.8128,0.8127963757378343,5000,936,0,100

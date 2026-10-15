@@ -1,6 +1,6 @@
 # My tasks
 
-Rebuilt by `src/update_results.py` on Wed 14 Oct 2026, 21:47 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (2 day(s) left; today is Wed 14 Oct).
+Rebuilt by `src/update_results.py` on Thu 15 Oct 2026, 16:27 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (1 day(s) left; today is Thu 15 Oct).
 
 Tick a box yourself with `[x]`; this file never ticks anything for you, and keeps your ticks and anything you write between the marker lines. Do not delete the `<!--id:...-->` tags at the end of each line.
 
@@ -9,13 +9,17 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 ## Waiting on me now
 
 - [ ] Put your planned day for each task into `schedule` in `configs/update_results.json` (item id -> `YYYY-MM-DD`, or `section:<key>` -> date). Until then every item shows "Planned: not set" and nothing can be overdue *(Planned: not set)* <!--id:wait-schedule-->
-- [ ] Review 5 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
+- [ ] Review 9 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
+- [ ] Start run `p3_classify_five`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p3_classify_five-->
+- [ ] Start run `p3_feat_lstm_glove_mean`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p3_feat_lstm_glove_mean-->
+- [ ] Start run `p3_feat_lstm_w2v_mean`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p3_feat_lstm_w2v_mean-->
+- [ ] Start run `p3_feat_rnn_mean`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p3_feat_rnn_mean-->
+- [ ] Start run `p3_rank_table`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p3_rank_table-->
+- [ ] Start run `p3_rescore_windows`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p3_rescore_windows-->
 - [ ] Write your notes for Data, Part I, Part II, Part III: see [Results to interpret](#results-to-interpret) *(Planned: not set)* <!--id:wait-notes-->
 - [ ] Fix failing check: Test set used only for final evaluation: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-test-set-used-only-for-final-evaluation-->
 - [ ] Fix failing check: All models scored on identical test targets: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-all-models-scored-on-identical-test-targets-->
-- [ ] Commit and push: 9 uncommitted file(s), 0 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
-- [ ] Choose your comparison question (brief, "Experimental Focus": e.g. how model families differ on your corpus, whether fixed embeddings help, or whether better next-token prediction leads to better classification). The report is organised around it *(Planned: not set)* <!--id:w-question-->
-  - Tell Claude your question; it is then logged in `DECISIONS.md`
+- [ ] Commit and push: 28 uncommitted file(s), 1 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
 
 ### Added by me
 
@@ -45,10 +49,22 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Options: a larger sample; a longer negation list; a sample balanced by true label.
   - Current value: 15 random errors per variant (seed 0) with counted properties: tokens kept, truncated or not, `<unk>` count and share, negation-word count. Negation words: not,...
   - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry Y2 (line 680), which sets `Chosen by` and `Status`
-- [ ] Part II: choose which one Part I architecture (RNN, LSTM or Transformer) gets the three embedding settings *(Planned: not set)* <!--id:dec-p2-arch-->
-  - Decide after Part I results exist
-- [ ] Part III: choose the labeled task and dataset, and the two or more representation choices to compare (brief examples: LSTM vs Transformer, two embedding variants, two pooling methods) *(Planned: not set)* <!--id:dec-p3-task-->
-  - IMDB sentiment labels are already in `data/IMDB Dataset.csv`; the brief also allows a different dataset
+- [ ] **AA1** Extra representations and the five-way comparison *(Planned: not set)* <!--id:dec-AA1-->
+  - Options: Kendall tau; flipping the sign so that agreement is positive.
+  - Current value: mean-pooled features, same settings as before (first 256 tokens, frozen model, batch size 64), for the Part I RNN (`train_rnn`) and the Part II LSTMs with froze...
+  - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry AA1 (line 706), which sets `Chosen by` and `Status`
+- [ ] **AA2** Window rescoring definition *(Planned: not set)* <!--id:dec-AA2-->
+  - Options: giving each later window the previous window's last token as extra context; carrying the recurrent state across windows (that is not a window rescoring).
+  - Current value: the Part I test targets (each test review cut to its first 256 tokens; inputs = tokens 0..254, targets = tokens 1..255) are scored by `evaluate.evaluate()` unch...
+  - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry AA2 (line 712), which sets `Chosen by` and `Status`
+- [ ] **AA3** PCA procedure *(Planned: not set)* <!--id:dec-AA3-->
+  - Options: PCA on standardised features; no standardisation after PCA.
+  - Current value: `sklearn.decomposition.PCA(n_components=100, random_state=0)` fitted on the TRAIN split's raw LSTM features only; validation and test projected with the train-f...
+  - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry AA3 (line 718), which sets `Chosen by` and `Status`
+- [ ] **AA4** McNemar variant *(Planned: not set)* <!--id:dec-AA4-->
+  - Options: the uncorrected statistic.
+  - Current value: counts from the saved error files (a review absent from a classifier's error file was classified correctly); statistic = (|n10 - n01| - 1)^2 / (n10 + n01) (cont...
+  - Record your choice: tell Claude in chat; it is written to `DECISIONS.md` entry AA4 (line 724), which sets `Chosen by` and `Status`
 
 ### Added by me
 
@@ -58,26 +74,36 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 
 ## Runs to do
 
-- [ ] Download public GloVe 100d vectors (GloVe 6B, Stanford NLP: nlp.stanford.edu/projects/glove) in Colab, never on this machine *(Planned: not set)* <!--id:run-p2-glove-->
-  - Command: `notebooks/run_colab.ipynb`, section 8 (downloads glove.6B.zip, then `python -u src/load_glove.py --config configs/glove_coverage.json`)
-  - Time: a few minutes (about 822 MB download)
-  - Produces: `data/embeddings/glove_100d.npy` (copied to Drive) and `results/glove_coverage.json` (coverage and 20 most frequent missing words); the GloVe file itself must not be committed; cite Pennington et al. (2014) in the report
-  - Colab only (CLAUDE.md rule 9): never run on this machine
-- [ ] Train your own word embeddings on the training split (Skip-gram, CBOW or GloVe), then freeze them *(Planned: not set)* <!--id:run-p2-own-->
-  - Command: `python3 src/train_word2vec.py --config configs/word2vec_cost.json` (already run once locally: `results/word2vec_cost.json`, `data/embeddings/w2v_100d.npy`)
-  - Time: about 5 minutes on the laptop CPU (cost recorded separately from LM training)
-  - Produces: the vectors file and `results/word2vec_cost.json`; still to do: copy `w2v_100d.npy` to Drive for the Colab LM runs
-  - May run locally (word2vec/embedding training is not Colab-only)
-- [ ] Train the two new Part II language models (own frozen embeddings; public frozen embeddings), same architecture and procedure as the reused Part I model *(Planned: not set)* <!--id:run-p2-lms-->
-  - Command: `notebooks/run_colab.ipynb`, sections 9 and 10: `python -u src/train.py --config configs/p2_lstm_w2v.json --model lstm --embedding w2v` and `python -u src/train.py --config configs/p2_lstm_glove.json --model lstm --embedding glove` (needs `data/embeddings/w2v_100d.npy` and `glove_100d.npy` on Colab)
-  - Time: about 1 hour each on a T4 (the Part I LSTM took 3,850 s)
-  - Produces: `results/p2_*.json`, loss curves, the frozen-embeddings check in `RESULTS.md`
-  - Colab only (CLAUDE.md rule 9): never run on this machine
-- [ ] Extract features from the frozen language models (`extract_features.py`, Colab only), then train the classifier for each representation choice (`classify.py`, may run locally; same classifier family and evaluation procedure) *(Planned: not set)* <!--id:run-p3-clf-->
-  - Command: not available yet: no classifier script exists yet; name the runs `p3_*` so they land in Part III
-  - Time: not known yet; needs the saved checkpoints from Parts I-II (save `checkpoints/` to Drive on Colab)
-  - Produces: `results/p3_*.json` with accuracy or macro-F1
-  - Feature extraction: Colab only (CLAUDE.md rule 9): never run on this machine
+- [ ] Run `p3_classify_five` *(Planned: not set)* <!--id:run-p3_classify_five-->
+  - Command: `python3 src/classify.py --config configs/p3_classify_five.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+  - Time: no earlier run of this script has a recorded time
+  - Produces: `results/p3_classify_five.json`, then a new section in `RESULTS.md` after `update_results.py`
+- [ ] Run `p3_feat_lstm_glove_mean` *(Planned: not set)* <!--id:run-p3_feat_lstm_glove_mean-->
+  - Command: `python3 src/extract_features.py --config configs/p3_feat_lstm_glove_mean.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+  - Time: no earlier run of this script has a recorded time
+  - Produces: `results/p3_feat_lstm_glove_mean.json`, then a new section in `RESULTS.md` after `update_results.py`
+- [ ] Run `p3_feat_lstm_w2v_mean` *(Planned: not set)* <!--id:run-p3_feat_lstm_w2v_mean-->
+  - Command: `python3 src/extract_features.py --config configs/p3_feat_lstm_w2v_mean.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+  - Time: no earlier run of this script has a recorded time
+  - Produces: `results/p3_feat_lstm_w2v_mean.json`, then a new section in `RESULTS.md` after `update_results.py`
+- [ ] Run `p3_feat_rnn_mean` *(Planned: not set)* <!--id:run-p3_feat_rnn_mean-->
+  - Command: `python3 src/extract_features.py --config configs/p3_feat_rnn_mean.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+  - Time: no earlier run of this script has a recorded time
+  - Produces: `results/p3_feat_rnn_mean.json`, then a new section in `RESULTS.md` after `update_results.py`
+- [ ] Run `p3_rank_table` *(Planned: not set)* <!--id:run-p3_rank_table-->
+  - Command: `python3 src/rank_table.py --config configs/p3_rank_table.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+  - Time: no earlier run of this script has a recorded time
+  - Produces: `results/p3_rank_table.json`, then a new section in `RESULTS.md` after `update_results.py`
+- [ ] Run `p3_rescore_windows` *(Planned: not set)* <!--id:run-p3_rescore_windows-->
+  - Command: `python3 src/rescore_windows.py --config configs/p3_rescore_windows.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
+  - Time: no earlier run of this script has a recorded time
+  - Produces: `results/p3_rescore_windows.json`, then a new section in `RESULTS.md` after `update_results.py`
+- [ ] Part III extension, in this order: (1) in Colab run notebook sections 13 and 14, then copy `data/features/` and `results/` back from Drive; (2) locally run `classify.py` with `configs/p3_classify_five.json`, then `rank_table.py` with `configs/p3_rank_table.json` *(Planned: not set)* <!--id:run-p3-extension-->
+  - Section 13 (Colab): `python -u src/extract_features.py` for `configs/p3_feat_rnn_mean.json`, `p3_feat_lstm_w2v_mean.json`, `p3_feat_lstm_glove_mean.json`; a few minutes on a T4 (the LSTM and Transformer extractions took about 12 s each)
+  - Section 14 (Colab): `python -u src/rescore_windows.py --config configs/p3_rescore_windows.json`; a few minutes on a T4 (each model is scored twice over the 5,000 test reviews)
+  - Needs `checkpoints/train_rnn.pt`, `p2_lstm_w2v.pt`, `p2_lstm_glove.pt`, `train_lstm.pt`, `train_transformer.pt` and `data/classification/` on Drive; run `!git pull` first
+  - Local steps: `python3 src/classify.py --config configs/p3_classify_five.json`, then `python3 src/rank_table.py --config configs/p3_rank_table.json`
+  - Colab only (CLAUDE.md rule 9): the extraction and rescoring cells never run on this machine
 
 ### Added by me
 
@@ -97,7 +123,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Runs in this section: `generations_p2_lstm_glove`, `generations_p2_lstm_w2v`, `glove_coverage`, `p2_lstm_glove`, `p2_lstm_w2v`, `word2vec_cost`
   - Where: the empty *My notes* block at the end of the Part II section of `RESULTS.md`
 - [ ] Write your notes for [Part III](RESULTS.md#part-iii) *(Planned: not set)* <!--id:interp-part3-->
-  - Runs in this section: `p3_classify`, `p3_error_sample`, `p3_feat_lstm_mean`, `p3_feat_transformer_mean`, `p3_prepare_classification`
+  - Runs in this section: `p3_classify`, `p3_classify_pca`, `p3_error_sample`, `p3_feat_lstm_mean`, `p3_feat_transformer_mean`, `p3_mcnemar`, `p3_prepare_classification`
   - Where: the empty *My notes* block at the end of the Part III section of `RESULTS.md`
 
 ### Added by me
@@ -162,7 +188,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 - [ ] Nothing submitted contains API keys, credentials or data you may not share (`data/` is git-ignored) *(Planned: not set)* <!--id:req-secrets-->
   - Status: not done (cannot be checked automatically; tick when finished)
 - [ ] Submit the PDF report and the code (a GitHub link the instructor can open, or a zip) *(Planned: not set)* <!--id:req-submit-->
-  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 9 uncommitted file(s); 0 unpushed commit(s). Whether the instructor has access cannot be checked from here)
+  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 28 uncommitted file(s); 1 unpushed commit(s). Whether the instructor has access cannot be checked from here)
 - [ ] Find out the late-submission policy and the submission platform (the brief says both are announced separately) *(Planned: not set)* <!--id:req-late-->
   - Status: not done (cannot be checked automatically; tick when finished)
 
@@ -177,7 +203,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 - [ ] Test set used only for final evaluation: FAIL *(Planned: not set)* <!--id:fail-test-set-used-only-for-final-evaluation-->
   - Evidence (Checks section of `RESULTS.md`): `src/ngram.py`: `data.test` used at line(s) [333]; `tune_discounts(...)` called at line(s) [321]; single use after the call
   - Evidence (Checks section of `RESULTS.md`): `src/train.py`: `data.test` used at line(s) [332]; `fit(...)` called at line(s) [320]; single use after the call
-  - Evidence (Checks section of `RESULTS.md`): other files in `src/` that use `data.test`: `src/benchmark.py` lines [152]
+  - Evidence (Checks section of `RESULTS.md`): other files in `src/` that use `data.test`: `src/benchmark.py` lines [152], `src/rescore_windows.py` lines [67]
   - Evidence (Checks section of `RESULTS.md`): method: static scan of the source (Python `ast`), not a run-time trace
   - Needs fixing: the evidence above shows what does not hold; after fixing, re-run `update_results.py`
 - [ ] All models scored on identical test targets: FAIL *(Planned: not set)* <!--id:fail-all-models-scored-on-identical-test-targets-->

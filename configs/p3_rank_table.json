@@ -1,0 +1,26 @@
+{
+  "architecture": null,
+  "layers": null,
+  "hidden_size": null,
+  "embedding_dim": null,
+  "embedding_init": null,
+  "context_length": null,
+  "learning_rate": null,
+  "batch_size": null,
+  "epochs": null,
+  "dropout": null,
+  "vocab_size": 20000,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "classifier_csv": "results/part3_five.csv",
+    "output_csv": "results/part3_lm_vs_classifier.csv",
+    "variant_to_lm_run": {
+      "p3_feat_lstm_mean": "train_lstm",
+      "p3_feat_transformer_mean": "train_transformer",
+      "p3_feat_rnn_mean": "train_rnn",
+      "p3_feat_lstm_w2v_mean": "p2_lstm_w2v",
+      "p3_feat_lstm_glove_mean": "p2_lstm_glove"
+    }
+  }
+}

@@ -4,14 +4,14 @@
 
 This repository is one student's individual assignment (30% of the course), due **Fri 16 Oct 2026, 11:59 pm Singapore time**. The full brief is restated in `ASSIGNMENT.md` (source: `Assignment1_2026.pdf`). Read it before starting any task.
 
-- **Part I (40 pts):** on one corpus (IMDB reviews, word-level), train and compare an n-gram model (done), an RNN, an LSTM and a causal Transformer. Neural models use random trainable 100-d embeddings. Report test perplexity, training time, model size, inference throughput, loss curves, and generated text from the same prompts with matched decoding.
-- **Part II (30 pts):** pick one Part I architecture; compare random learned embeddings, own embeddings (Skip-gram/CBOW/GloVe) kept fixed, and public GloVe 100d kept fixed. Everything else identical.
-- **Part III (20 pts):** frozen language-model representations feed a simple classifier; compare at least two representation choices.
-- **Report (10 pts):** the user writes the PDF (at most 6 pages); the repo must reproduce its results (`README.md`).
+- **Part I (40 pts):** on one corpus (IMDB reviews, word-level), train and compare an n-gram model, an RNN, an LSTM and a causal Transformer (all done). Neural models use random trainable 100-d embeddings. Report test perplexity, training time, model size, inference throughput, loss curves, and generated text from the same prompts with matched decoding.
+- **Part II (30 pts):** pick one Part I architecture (the LSTM, decision R1); compare random learned embeddings, own embeddings (Skip-gram/CBOW/GloVe) kept fixed, and public GloVe 100d kept fixed. Everything else identical.
+- **Part III (20 pts):** frozen language-model representations feed a simple classifier; compare at least two representation choices (Part I LSTM vs Transformer, mean pooling, logistic regression; done).
+- **Report (10 pts):** the user writes the PDF (at most 6 pages; `report/` holds assistant-drafted text written at the user's explicit request, for them to verify and rewrite); the repo must reproduce its results (`README.md`).
 
 **Your job:** write and test the code, run what can run, record every result and decision, keep `RESULTS.md` and `MY_TASKS.md` current, and tell the user what they must do. **Not your job:** writing report text, interpreting results, choosing design values for the user (offer 2-3 options and wait), ticking boxes in `MY_TASKS.md`, or writing in the *My notes* blocks.
 
-**Where things are:** `ASSIGNMENT.md` (the brief), `MY_TASKS.md` (what the user must do, with deadlines), `RESULTS.md` (all results, auto-built), `DECISIONS.md` (every design choice and its status), `results/RESULTS_LOG.md` (run log), `TOOL_USE.md` (what each task changed), `configs/` (one config per run), `src/` (scripts), `tests/`. Run-name convention: Part II runs start with `p2_`, Part III runs with `p3_`.
+**Where things are:** `ASSIGNMENT.md` (the brief), `MY_TASKS.md` (what the user must do, with deadlines), `RESULTS.md` (all results, auto-built), `DECISIONS.md` (every design choice and its status), `results/RESULTS_LOG.md` (run log), `TOOL_USE.md` (what each task changed), `configs/` (one config per run), `src/` (scripts), `tests/`, `report/` (draft report text and `VERIFY.md`, only when the user asks), `README.md` (how to reproduce). Run-name convention: Part II runs start with `p2_`, Part III runs with `p3_`.
 
 **Be honest about progress:** `RESULTS.md` and `MY_TASKS.md` show what exists; never describe code or runs that do not exist as done.
 

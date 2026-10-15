@@ -38,7 +38,9 @@
     ],
     "causality_test_keyword": "causal",
     "frozen_embedding_detail_key": "frozen_embedding_max_abs_change",
-    "frozen_check_scripts": ["src/train.py"],
+    "frozen_check_scripts": [
+      "src/train.py"
+    ],
     "part_rules": [
       [
         "^(data|inspect_data|show_batch)$",
@@ -94,6 +96,26 @@
       [
         "^p3_feat_",
         "src/extract_features.py"
+      ],
+      [
+        "^p3_classify",
+        "src/classify.py"
+      ],
+      [
+        "^p3_rescore_windows$",
+        "src/rescore_windows.py"
+      ],
+      [
+        "^p3_mcnemar$",
+        "src/mcnemar.py"
+      ],
+      [
+        "^p3_rank_table$",
+        "src/rank_table.py"
+      ],
+      [
+        "^p3_error_sample$",
+        "src/error_sample.py"
       ],
       [
         "^p3_prepare_classification$",
@@ -256,7 +278,10 @@
       }
     ],
     "part_comparison_extra_runs": {
-      "Part II": ["train_lstm", "generations_lstm"]
+      "Part II": [
+        "train_lstm",
+        "generations_lstm"
+      ]
     },
     "part2_baseline_run": "train_lstm",
     "part2_own_embedding_run": "word2vec_cost",
@@ -269,30 +294,6 @@
       "num_samples"
     ],
     "extra_items": [
-      {
-        "section": "waiting",
-        "id": "w-question",
-        "text": "Choose your comparison question (brief, \"Experimental Focus\": e.g. how model families differ on your corpus, whether fixed embeddings help, or whether better next-token prediction leads to better classification). The report is organised around it",
-        "details": [
-          "Tell Claude your question; it is then logged in `DECISIONS.md`"
-        ]
-      },
-      {
-        "section": "decisions",
-        "id": "dec-p2-arch",
-        "text": "Part II: choose which one Part I architecture (RNN, LSTM or Transformer) gets the three embedding settings",
-        "details": [
-          "Decide after Part I results exist"
-        ]
-      },
-      {
-        "section": "decisions",
-        "id": "dec-p3-task",
-        "text": "Part III: choose the labeled task and dataset, and the two or more representation choices to compare (brief examples: LSTM vs Transformer, two embedding variants, two pooling methods)",
-        "details": [
-          "IMDB sentiment labels are already in `data/IMDB Dataset.csv`; the brief also allows a different dataset"
-        ]
-      },
       {
         "section": "runs",
         "id": "run-p1-rnn",
@@ -336,7 +337,8 @@
           "Time: a few minutes (about 822 MB download)",
           "Produces: `data/embeddings/glove_100d.npy` (copied to Drive) and `results/glove_coverage.json` (coverage and 20 most frequent missing words); the GloVe file itself must not be committed; cite Pennington et al. (2014) in the report",
           "Colab only (CLAUDE.md rule 9): never run on this machine"
-        ]
+        ],
+        "done_if_result": "glove_coverage"
       },
       {
         "section": "runs",
@@ -347,7 +349,8 @@
           "Time: about 5 minutes on the laptop CPU (cost recorded separately from LM training)",
           "Produces: the vectors file and `results/word2vec_cost.json`; still to do: copy `w2v_100d.npy` to Drive for the Colab LM runs",
           "May run locally (word2vec/embedding training is not Colab-only)"
-        ]
+        ],
+        "done_if_result": "word2vec_cost"
       },
       {
         "section": "runs",
@@ -358,7 +361,8 @@
           "Time: about 1 hour each on a T4 (the Part I LSTM took 3,850 s)",
           "Produces: `results/p2_*.json`, loss curves, the frozen-embeddings check in `RESULTS.md`",
           "Colab only (CLAUDE.md rule 9): never run on this machine"
-        ]
+        ],
+        "done_if_result": "p2_lstm_glove"
       },
       {
         "section": "runs",
@@ -369,13 +373,36 @@
           "Time: not known yet; needs the saved checkpoints from Parts I-II (save `checkpoints/` to Drive on Colab)",
           "Produces: `results/p3_*.json` with accuracy or macro-F1",
           "Feature extraction: Colab only (CLAUDE.md rule 9): never run on this machine"
-        ]
+        ],
+        "done_if_result": "p3_classify"
+      },
+      {
+        "section": "runs",
+        "id": "run-p3-extension",
+        "text": "Part III extension, in this order: (1) in Colab run notebook sections 13 and 14, then copy `data/features/` and `results/` back from Drive; (2) locally run `classify.py` with `configs/p3_classify_five.json`, then `rank_table.py` with `configs/p3_rank_table.json`",
+        "details": [
+          "Section 13 (Colab): `python -u src/extract_features.py` for `configs/p3_feat_rnn_mean.json`, `p3_feat_lstm_w2v_mean.json`, `p3_feat_lstm_glove_mean.json`; a few minutes on a T4 (the LSTM and Transformer extractions took about 12 s each)",
+          "Section 14 (Colab): `python -u src/rescore_windows.py --config configs/p3_rescore_windows.json`; a few minutes on a T4 (each model is scored twice over the 5,000 test reviews)",
+          "Needs `checkpoints/train_rnn.pt`, `p2_lstm_w2v.pt`, `p2_lstm_glove.pt`, `train_lstm.pt`, `train_transformer.pt` and `data/classification/` on Drive; run `!git pull` first",
+          "Local steps: `python3 src/classify.py --config configs/p3_classify_five.json`, then `python3 src/rank_table.py --config configs/p3_rank_table.json`",
+          "Colab only (CLAUDE.md rule 9): the extraction and rescoring cells never run on this machine"
+        ],
+        "done_if_result": "p3_rank_table"
       }
     ],
+    "part3_facts": {
+      "classify_run": "p3_classify",
+      "pca_run": "p3_classify_pca",
+      "mcnemar_run": "p3_mcnemar",
+      "five_run": "p3_classify_five",
+      "rank_run": "p3_rank_table",
+      "window_run": "p3_rescore_windows"
+    },
     "colab_only_scripts": [
       "src/train.py",
       "src/benchmark.py",
-      "src/extract_features.py"
+      "src/extract_features.py",
+      "src/rescore_windows.py"
     ],
     "colab_only_generate_script": "src/generate.py",
     "colab_only_generate_skip_model": "ngram",

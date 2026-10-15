@@ -685,6 +685,50 @@ The user's prompt specified the six sections, checkboxes, planned days, overdue-
 
 ---
 
+## Z. Report (2026-10-15)
+
+### Z1. Comparison question
+- **Value:** "Does a language model that predicts the next word better (lower test perplexity) also give better features for classifying review sentiment?" The report is organised around it (Part I perplexity ranking vs Part III accuracy ranking, with Part II as the embedding ablation).
+- **Where:** `report/REPORT_DRAFT.md` (Section 1); no config or script depends on it.
+- **Chosen by:** User, 2026-10-15 (answered the assistant's request for a question). **Alternatives considered:** the other two examples in the brief's "Experimental Focus": how the model families differ on this corpus; whether fixed embeddings help.
+- **Status:** CONFIRMED
+
+### Z2. Assistant-drafted report text (exception to the CLAUDE.md rule)
+- **Value:** `report/REPORT_DRAFT.md` and `report/VERIFY.md` were drafted by the assistant, as were `results/part3_error_notes.md` (2026-10-14). The *My notes* blocks in `RESULTS.md` are untouched. Every number in the draft is tagged with its results file; analytical sentences are tagged `[OBS]`, `[HYP]` or `[CHECK]`. The user must verify and rewrite them in their own words (the brief grades the user's understanding and requires tool assistance to be cited).
+- **Where:** `report/`, `results/part3_error_notes.md`; logged in `TOOL_USE.md`.
+- **Chosen by:** User, prompt (2026-10-14 and 2026-10-15), an explicit override of "never write report text or interpret results".
+- **Status:** CONFIRMED
+
+---
+
+## AA. Part III extension (2026-10-15)
+
+### AA1. Extra representations and the five-way comparison
+- **Value:** mean-pooled features, same settings as before (first 256 tokens, frozen model, batch size 64), for the Part I RNN (`train_rnn`) and the Part II LSTMs with frozen own word2vec (`p2_lstm_w2v`) and frozen GloVe (`p2_lstm_glove`) embeddings; `classify.py` then runs on all five feature sets with the unchanged procedure and seed 0 (`configs/p3_classify_five.json`, separate output files, so `part3.csv` is untouched). Spearman rho (scipy) between LM test perplexity and test accuracy, and between perplexity and test macro-F1, over the five rows; the sign is reported as computed (lower perplexity is better, higher accuracy is better, so agreement shows as a negative rho). The LM perplexity is the stored 256-token test value of each language model's training record.
+- **Where:** `configs/p3_feat_rnn_mean.json`, `p3_feat_lstm_w2v_mean.json`, `p3_feat_lstm_glove_mean.json`, `p3_classify_five.json`, `p3_rank_table.json`; `src/rank_table.py`; Colab section 13.
+- **Chosen by:** User, prompt (2026-10-15) (which models, same settings, the table and Spearman). Spearman via `scipy.stats.spearmanr` with its two-sided p-value and the table layout: Assistant default. **Alternatives considered:** Kendall tau; flipping the sign so that agreement is positive.
+- **Status:** NEEDS REVIEW (Spearman details only)
+
+### AA2. Window rescoring definition
+- **Value:** the Part I test targets (each test review cut to its first 256 tokens; inputs = tokens 0..254, targets = tokens 1..255) are scored by `evaluate.evaluate()` unchanged, with a scorer that cuts each review's input into consecutive 64-token pieces (0-63, 64-127, ...) and runs the model on each piece separately (fresh recurrent state; Transformer positions 0-63 only). Each target is predicted from the tokens before it inside its own window. `num_targets` and `target_checksum` must equal the one-piece run (the script stops otherwise). It also recomputes the one-piece 256 value as a check of the script against the stored Part I value. Models: RNN, LSTM, Transformer (Part I checkpoints).
+- **Where:** `src/rescore_windows.py` (`WindowedScorer`); `configs/p3_rescore_windows.json` (`options.window` 64, `options.max_length` 256, `batch_size` 64).
+- **Chosen by:** User, prompt (2026-10-15): non-overlapping 64-token windows over the same first-256-token targets. The 64-token window starts at position 0 of the review (no tokens are shared between windows), and the first target of each later window sees only one input token of context: Assistant reading of "non-overlapping windows". **Alternatives considered:** giving each later window the previous window's last token as extra context; carrying the recurrent state across windows (that is not a window rescoring).
+- **Status:** NEEDS REVIEW
+
+### AA3. PCA procedure
+- **Value:** `sklearn.decomposition.PCA(n_components=100, random_state=0)` fitted on the TRAIN split's raw LSTM features only; validation and test projected with the train-fitted PCA; then the unchanged classifier procedure (features standardised with the training mean and standard deviation of the 100 PCA outputs, C chosen on validation macro-F1, test scored once). Standardising after PCA gives every component equal variance (whitening).
+- **Where:** `configs/p3_classify_pca.json` (`options.pca_components`); `src/classify.py`.
+- **Chosen by:** User, prompt (2026-10-15): PCA to 100 dimensions fitted on train only, same procedure. Standardising after PCA, and PCA on the raw (not standardised) features: Assistant default. **Alternatives considered:** PCA on standardised features; no standardisation after PCA.
+- **Status:** NEEDS REVIEW
+
+### AA4. McNemar variant
+- **Value:** counts from the saved error files (a review absent from a classifier's error file was classified correctly); statistic = (|n10 - n01| - 1)^2 / (n10 + n01) (continuity-corrected chi-square, 1 degree of freedom) with its p-value; the exact two-sided binomial p-value is also reported.
+- **Where:** `src/mcnemar.py`; `configs/p3_mcnemar.json` (A = LSTM, B = Transformer).
+- **Chosen by:** User (McNemar on the LSTM vs Transformer test predictions). Continuity correction and the extra exact p-value: Assistant default. **Alternatives considered:** the uncorrected statistic.
+- **Status:** NEEDS REVIEW
+
+---
+
 ## NEEDS REVIEW summary
 
 **All 24 items resolved 2026-10-10.** The user reviewed every one (2-3 options with trade-offs each, per CLAUDE.md's record-keeping rules) and confirmed every current value as-is: A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, B1, B3, C1, C2, C3, D2, D3, D4, D5, D6, D7, D8, E1, E3. See each entry above for the specific options offered and the reasoning. No reruns were needed since nothing changed.
@@ -730,3 +774,7 @@ One item (D4) was accepted rather than fixed: the n-gram discount grid was widen
 **New since then (2026-10-14), pending the user:** W2 (classification data details). W1 confirmed.
 
 **New since then (2026-10-14), pending the user:** W2 (above), X1 (feature extraction details), X2 (pooling `mean` for the LSTM vs Transformer comparison), Y1 (classifier grid and standardisation), Y2 (error-review properties).
+
+**Current state (2026-10-15).** Pending the user: W2, X1, X2, Y1, Y2 (five items, all Part III). Everything earlier in this section was reviewed and kept as is by the user; the dated lines above are the history, not a to-do list. Z1 and Z2 are confirmed. Open fact, not a decision: the "Test set used only for final evaluation" check still shows FAIL because `src/benchmark.py` reads `data.test` (the statically scanned rule from J4 was kept), and "All models scored on identical test targets" still shows FAIL because the n-gram model scores 1,390,673 targets (no truncation) while the neural models score 981,353 (reviews cut to 256 tokens; decision C2). `results/part1_costs.csv` and the Part I table in `results/tables/` score all four models on the same 981,353 targets.
+
+**New since then (2026-10-15), pending the user:** AA1 (Spearman details), AA2 (window rescoring definition), AA3 (PCA procedure), AA4 (McNemar variant).

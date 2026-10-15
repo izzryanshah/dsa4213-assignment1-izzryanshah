@@ -367,3 +367,22 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 ## 2026-10-14 (report tables and loss-curve figures)
 
 - `src/make_figures.py` + `configs/make_figures.json` (new): reads `results/*.json` and `results/part1_costs.csv` and writes Part I, II and III tables (`results/tables/part{1,2,3}_table.{csv,tex,md}`) and two loss-curve PDFs (`results/figures/part{1,2}_loss_curves.pdf`, 6.5 x 2.3 in, one panel per model/setting). Numbers only, no interpretation. Part I test perplexity comes from the benchmark column (same 981,353 targets for all four models). Runs locally (reads files only). No `DECISIONS.md` entry added yet; the layout choices (panel per model, solid = train / dashed = validation, colour palette, which perplexity column) are the assistant's defaults, to be reviewed. Ran `update_results.py`.
+
+## 2026-10-15 (report draft, user exception)
+
+- `report/REPORT_DRAFT.md` and `report/VERIFY.md` (new): assistant-drafted report text and analysis, written because the user explicitly overrode the CLAUDE.md rule against report text. Question chosen by the user: does better next-token prediction mean better classification? Every number has a results-file source, analytical sentences are tagged [OBS]/[HYP]/[CHECK], and `VERIFY.md` lists items to check, rubric gaps, a page-budget estimate and likely marker questions. No code or results were changed. `update_results.py` was not run (the user asked for no changes to results); `RESULTS.md` and its *My notes* blocks are untouched.
+
+## 2026-10-15 (documentation update)
+
+- `README.md` rewritten: status line, dependencies (added gensim and matplotlib versions, Colab hardware), reproduction commands for Parts I to III with the Colab-only steps marked and a run order, expected numbers, config table for every config, seeds per script, outputs, layout (added `report/`, `embeddings/`, `classification/`, `features/`) and a new section 10 on citations and tool use. Numbers in "What to expect" come from `results/tables/part{1,2,3}_table.md`; nothing was re-run.
+- `DECISIONS.md`: new section Z (Z1 comparison question, Z2 assistant-drafted report text, both CONFIRMED) and a "Current state" paragraph at the end of the summary (five items pending: W2, X1, X2, Y1, Y2).
+- `CLAUDE.md`: scope section brought up to date (all three parts done, Part II uses the LSTM, `report/` and `README.md` added to the file map). Rules 1 to 9 unchanged.
+- `configs/update_results.json`: removed the three stale items (`w-question`, `dec-p2-arch`, `dec-p3-task`, all decided) and set `done_if_result` on `run-p2-glove`, `run-p2-own`, `run-p2-lms` and `run-p3-clf`, so `MY_TASKS.md` no longer lists finished runs. `report/VERIFY.md` item 4 (README out of date) updated. Ran `update_results.py`.
+- The earlier request for `src/train_word2vec.py` was interrupted; that script already exists (`results/word2vec_cost.json`, Skip-gram, window 5, min_count 1, 10 epochs, DECISIONS Q1 and Q2), so nothing was written for it.
+
+## 2026-10-15 (Part III extension and window diagnostic)
+
+- New code: `src/rescore_windows.py` (Colab-only; `WindowedScorer` run through the unchanged `evaluate()`), `src/rank_table.py` (LM perplexity vs classifier table + Spearman), `src/mcnemar.py`. `src/classify.py` got an optional `options.pca_components` (PCA fit on train only; null = unchanged behaviour, checked byte-identical on the existing outputs). `src/update_results.py` + `configs/update_results.json`: new "Part III extension facts" block (facts only) and rules so the new runs get the right command / Colab-only label.
+- New configs: `p3_feat_rnn_mean`, `p3_feat_lstm_w2v_mean`, `p3_feat_lstm_glove_mean`, `p3_classify_five`, `p3_rank_table`, `p3_rescore_windows` (not run yet: need Colab / the Colab features), `p3_classify_pca`, `p3_mcnemar` (run locally). `notebooks/run_colab.ipynb`: sections 13 (three extractions) and 14 (window rescoring). `README.md` Part III block extended. `tests/test_part3_extras.py` (new, passed).
+- Smoke test on CPU only (random-weight checkpoints and a 40-review subset in a scratch folder; meaningless numbers, nothing saved to `results/`): the rescoring script and the three new extraction configs ran.
+- Ran locally: `p3_classify_pca`, `p3_mcnemar`. `DECISIONS.md` section AA (NEEDS REVIEW). Ran `update_results.py`.

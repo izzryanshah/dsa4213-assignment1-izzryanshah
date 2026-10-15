@@ -419,6 +419,76 @@ def render_part2_facts(runs, opts):
     return "\n".join(out)
 
 
+def render_part3_facts(runs, opts):
+    """Part III extension facts, read from the run records (no interpretation)."""
+    names = opts.get("part3_facts") or {}
+    out = []
+
+    # 1. LM perplexity vs classifier, with Spearman ---------------------------------------
+    rank = runs.get(names.get("rank_run"))
+    if rank:
+        m = rank["metrics"]
+        rows = [[f"`{r['variant']}`", fmt(r["lm_test_perplexity"]), fmt(r["perplexity_rank"]), fmt(r["test_accuracy"]),
+                 fmt(r["accuracy_rank"]), fmt(r["test_macro_f1"]), fmt(r["macro_f1_rank"])] for r in m["rows"]]
+        out.append("\n**Language-model test perplexity vs classifier test accuracy and macro-F1** "
+                   f"({m['n_representations']} representations; rank 1 = lowest perplexity / highest score; "
+                   f"record `{rank['run']}`)\n")
+        out.append(table(["Representation", "LM test perplexity", "Perplexity rank", "Test accuracy", "Accuracy rank",
+                          "Test macro-F1", "Macro-F1 rank"], rows))
+        srows = [[metric.replace("test_", "").replace("_", " "), fmt(v["rho"]), fmt(v["p_value"])]
+                 for metric, v in m["spearman_perplexity_vs"].items()]
+        out.append(f"\n**Spearman rank correlation** between LM test perplexity and the classifier score "
+                   f"(n = {m['n_representations']}; a negative value means lower perplexity goes with a higher score)\n")
+        out.append(table(["Classifier score", "Spearman rho", "Two-sided p-value"], srows))
+
+    # 2. window rescoring ------------------------------------------------------------------
+    win = runs.get(names.get("window_run"))
+    if win:
+        m = win["metrics"]
+        w = m["window"]
+        rows = [[r["model"], fmt(r["stored_test_ppl_256"]), fmt(r["recomputed_test_ppl_256"]),
+                 fmt(r[f"test_ppl_{w}_windows"]), fmt(r["num_targets"]), f"`{r['target_checksum'][:12]}...`"]
+                for r in m["models"]]
+        out.append(f"\n**Test perplexity: first {m['max_length']} tokens in one piece vs consecutive non-overlapping "
+                   f"{w}-token windows** (same test targets; the script stops if `num_targets` or the checksum differ; "
+                   f"record `{win['run']}`, {cell(win.get('hardware'))})\n")
+        out.append(table(["Model", f"Stored Part I value ({m['max_length']} tokens)", f"Recomputed here ({m['max_length']} tokens)",
+                          f"{w}-token windows", "Test targets", "Target checksum (first 12)"], rows))
+
+    # 3. PCA ----------------------------------------------------------------------------------
+    base, pca = runs.get(names.get("classify_run")), runs.get(names.get("pca_run"))
+    if pca:
+        pv = pca["metrics"]["variants"][0]
+        k = pca["config"]["options"]["pca_components"]
+        rows = []
+        for src_rec in (base,):
+            for r in (src_rec["metrics"]["variants"] if src_rec else []):
+                rows.append([f"`{r['variant']}`", "—", fmt(r["feature_size"]), fmt(r["best_C"]), fmt(r["val_accuracy"]),
+                             fmt(r["val_macro_f1"]), fmt(r["test_accuracy"]), fmt(r["test_macro_f1"]), fmt(r["n_test_errors"])])
+        rows.append([f"`{pv['variant']}`", fmt(pca["details"][pv["variant"]]["pca_explained_variance_ratio_sum"]),
+                     fmt(pv["feature_size"]), fmt(pv["best_C"]), fmt(pv["val_accuracy"]), fmt(pv["val_macro_f1"]),
+                     fmt(pv["test_accuracy"]), fmt(pv["test_macro_f1"]), fmt(pv["n_test_errors"])])
+        out.append(f"\n**PCA to {k} dimensions** (fit on the train split only, then the same classifier procedure; "
+                   f"records `{pca['run']}` and `{base['run'] if base else '—'}`)\n")
+        out.append(table(["Representation", "PCA explained variance (sum)", "Features", "Best C", "Val accuracy",
+                          "Val macro-F1", "Test accuracy", "Test macro-F1", "Test errors"], rows))
+
+    # 4. McNemar --------------------------------------------------------------------------------
+    mc = runs.get(names.get("mcnemar_run"))
+    if mc:
+        m = mc["metrics"]
+        a, b = f"`{m['variant_a']}`", f"`{m['variant_b']}`"
+        out.append(f"\n**McNemar's test** on the test predictions of {a} (A) and {b} (B), {fmt(m['n_test'])} test reviews "
+                   f"(record `{mc['run']}`)\n")
+        out.append(table(["Both right", "Only A right", "Only B right", "Both wrong", "Chi-square (continuity-corrected)",
+                          "p-value", "Exact binomial p-value"],
+                         [[fmt(m["both_right"]), fmt(m["only_a_right"]), fmt(m["only_b_right"]), fmt(m["both_wrong"]),
+                           fmt(m["statistic"]), f"{m['p_value']:.3g}", f"{m['p_value_exact']:.3g}"]]))
+    if not out:
+        return ""
+    return "\n### Part III extension facts\n\nRead from the run records; nothing here is interpreted.\n" + "\n".join(out)
+
+
 def render_model_summary(runs, test_prefix, keep=lambda run: True):
     """One row per language model: perplexity and cost numbers, as recorded in the run records."""
     rows = []
@@ -732,7 +802,7 @@ def main():
     body["data"] = render_group(groups["Data"])
     body["part1"] = render_group(groups["Part I"]) + part_comparison("Part I")
     body["part2"] = render_group(groups["Part II"]) + (f"\n![val_loss_all_runs.png]({all_curves})\n" if all_curves else "") + part_comparison("Part II") + render_part2_facts(runs, opts)
-    body["part3"] = render_group(groups["Part III"])
+    body["part3"] = render_group(groups["Part III"]) + render_part3_facts(runs, opts)
     if unassigned:
         body["part3"] += ("\n### Runs not assigned to a section\n\n"
                           "These runs match no rule in `part_rules` (`configs/update_results.json`).\n\n" + render_group(unassigned))

@@ -1,0 +1,42 @@
+{
+  "architecture": null,
+  "layers": null,
+  "hidden_size": null,
+  "embedding_dim": null,
+  "embedding_init": null,
+  "context_length": null,
+  "learning_rate": null,
+  "batch_size": 64,
+  "epochs": null,
+  "dropout": null,
+  "vocab_size": 20000,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "processed_dir": "data/processed",
+    "models": [
+      {
+        "name": "RNN",
+        "model": "rnn",
+        "train_result": "results/train_rnn.json",
+        "checkpoint": "checkpoints/train_rnn.pt"
+      },
+      {
+        "name": "LSTM",
+        "model": "lstm",
+        "train_result": "results/train_lstm.json",
+        "checkpoint": "checkpoints/train_lstm.pt"
+      },
+      {
+        "name": "Transformer",
+        "model": "transformer",
+        "train_result": "results/train_transformer.json",
+        "checkpoint": "checkpoints/train_transformer.pt"
+      }
+    ],
+    "max_length": 256,
+    "window": 64,
+    "max_reviews": null,
+    "output_csv": "results/part3_window_perplexity.csv"
+  }
+}

@@ -6,6 +6,9 @@ For every feature set listed in `options.feature_sets` (each is a folder in data
 by extract_features.py: one fixed-length vector per review plus its label) it runs exactly the
 same procedure, with the same seed:
 
+0.  Optionally (`options.pca_components`, null = off) reduce the features to that many dimensions
+    with PCA. PCA is FIT ON THE TRAIN SPLIT ONLY; validation and test are then projected with the
+    train-fitted PCA. The steps below run on the reduced features.
 1.  Optionally standardise the features (subtract the TRAINING mean, divide by the TRAINING
     standard deviation of each column; the validation and test sets reuse those numbers).
 2.  For each regularisation strength C in `options.c_grid`, fit scikit-learn's LogisticRegression
@@ -32,6 +35,7 @@ import time
 
 import numpy as np
 import pandas as pd
+from sklearn.decomposition import PCA
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score
 
@@ -76,10 +80,16 @@ def main():
     raw = pd.read_csv(opts["raw_csv"])  # the original review texts, for the error files
 
     rows, details = [], {}
-    for variant in opts["feature_sets"]:
+    k = opts.get("pca_components")  # None = no dimensionality reduction
+    for source in opts["feature_sets"]:
         t0 = time.time()
-        x_tr, y_tr, _ = load_features(opts["features_dir"], variant, "train")
-        x_va, y_va, _ = load_features(opts["features_dir"], variant, "val")
+        variant = f"{source}_pca{k}" if k else source  # name used in the output files
+        x_tr, y_tr, _ = load_features(opts["features_dir"], source, "train")
+        x_va, y_va, _ = load_features(opts["features_dir"], source, "val")
+        pca = None
+        if k:
+            pca = PCA(n_components=k, random_state=config["seed"]).fit(x_tr)  # train split only
+            x_tr, x_va = pca.transform(x_tr), pca.transform(x_va)
         if opts["standardise"]:
             mean, std = x_tr.mean(axis=0), x_tr.std(axis=0)
             std[std == 0] = 1.0  # a constant column would otherwise divide by zero
@@ -90,7 +100,9 @@ def main():
         val_best = next(r for r in val_table if r["C"] == best_c)
 
         # ---- the ONE test evaluation, after C has been fixed on validation ----
-        x_te, y_te, idx_te = load_features(opts["features_dir"], variant, "test")
+        x_te, y_te, idx_te = load_features(opts["features_dir"], source, "test")
+        if pca is not None:
+            x_te = pca.transform(x_te)
         if opts["standardise"]:
             x_te = (x_te - mean) / std
         pred = model.predict(x_te)
@@ -108,8 +120,12 @@ def main():
                      "val_accuracy": val_best["accuracy"], "val_macro_f1": val_best["macro_f1"],
                      "test_accuracy": test["accuracy"], "test_macro_f1": test["macro_f1"],
                      "n_test": len(y_te), "n_test_errors": len(wrong), "seed": config["seed"]})
+        if k:
+            rows[-1]["pca_components"] = k
         details[variant] = {"validation_by_C": val_table, "errors_file": errors_path,
                             "seconds": time.time() - t0}
+        if k:
+            details[variant]["pca_explained_variance_ratio_sum"] = float(pca.explained_variance_ratio_.sum())
         print(f"[{variant}] best C {best_c} (val {opts['selection_metric']} {val_best[opts['selection_metric']]:.4f}); "
               f"test accuracy {test['accuracy']:.4f}, macro-F1 {test['macro_f1']:.4f}; {len(wrong)} errors")
 

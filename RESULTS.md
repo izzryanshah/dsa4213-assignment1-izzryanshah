@@ -1,6 +1,6 @@
 # Results
 
-Rebuilt by `src/update_results.py` on 2026-10-14T21:47:53+08:00 from 35 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-14T21:47:37+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
+Rebuilt by `src/update_results.py` on 2026-10-15T16:27:53+08:00 from 37 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-15T16:20:38+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
 
 Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III](#part-iii) · [Settings](#settings) · [Checks](#checks)
 
@@ -1921,6 +1921,61 @@ Read from the run records; nothing here is interpreted.
 | `p3_feat_transformer_mean.errors_file` | results/part3_errors_p3_feat_transformer_mean.csv |
 | `p3_feat_transformer_mean.seconds` | 1.5116 |
 
+#### `p3_classify_pca`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/local/bin/python3 src/classify.py --config configs/p3_classify_pca.json` |
+| Script | `src/classify.py` |
+| Date | 2026-10-15T16:20:10+08:00 |
+| Git commit | `731538c (uncommitted changes at run time)` |
+| Hardware | CPU: Apple M2 (Darwin arm64) |
+| Seed | 0 |
+| Result file | `results/p3_classify_pca.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | — |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.features_dir` | data/features |
+| `options.feature_sets` | `["p3_feat_lstm_mean"]` |
+| `options.raw_csv` | data/IMDB Dataset.csv |
+| `options.c_grid` | `[0.001, 0.01, 0.1, 1, 10, 100]` |
+| `options.selection_metric` | macro_f1 |
+| `options.standardise` | True |
+| `options.max_iter` | 1,000 |
+| `options.pca_components` | 100 |
+| `options.summary_csv` | results/part3_pca.csv |
+| `options.errors_prefix` | results/part3_errors_ |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `variants` | `[{"variant": "p3_feat_lstm_mean_pca100", "feature_size": 100, "best_C": 0.01, "val_accuracy": 0.8124, "val_macro_f1": 0.8123610911958704, "test_accuracy": 0.8128, "test_macro_f1": 0.8127963757378343, "n_test": 5000, "n_test_errors": 936, "seed": 0, "pca_components": 100}]` |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `p3_feat_lstm_mean_pca100.validation_by_C` | `[{"C": 0.001, "accuracy": 0.8118, "macro_f1": 0.8117505958263687, "converged": true}, {"C": 0.01, "accuracy": 0.8124, "macro_f1": 0.8123610911958704, "converged": true}, {"C": 0.1, "accuracy": 0.8122, "macro_f1": 0.8121621243707582, "converged": true}, {"C": 1, "accuracy": 0.8122, "macro_f1": 0.8121621243707582, "converged": true}, {"C": 10, "accuracy": 0.8122, "macro_f1": 0.8121621243707582, "converged": true}, {"C": 100, "accuracy": 0.8122, "macro_f1": 0.8121621243707582, "converged": true}]` |
+| `p3_feat_lstm_mean_pca100.errors_file` | results/part3_errors_p3_feat_lstm_mean_pca100.csv |
+| `p3_feat_lstm_mean_pca100.seconds` | 0.3134 |
+| `p3_feat_lstm_mean_pca100.pca_explained_variance_ratio_sum` | 0.9788 |
+
 #### `p3_error_sample`
 
 | Field | Value |
@@ -2119,6 +2174,55 @@ Read from the run records; nothing here is interpreted.
 | `weights_unchanged` | True |
 | `padding` | excluded: see src/extract_features.py docstring |
 
+#### `p3_mcnemar`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/local/bin/python3 src/mcnemar.py --config configs/p3_mcnemar.json` |
+| Script | `src/mcnemar.py` |
+| Date | 2026-10-15T16:20:38+08:00 |
+| Git commit | `731538c (uncommitted changes at run time)` |
+| Hardware | CPU: Apple M2 (Darwin arm64) |
+| Seed | 0 |
+| Result file | `results/p3_mcnemar.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | — |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.classification_dir` | data/classification |
+| `options.errors_prefix` | results/part3_errors_ |
+| `options.variant_a` | p3_feat_lstm_mean |
+| `options.variant_b` | p3_feat_transformer_mean |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `variant_a` | p3_feat_lstm_mean |
+| `variant_b` | p3_feat_transformer_mean |
+| `n_test` | 5,000 |
+| `both_right` | 3,531 |
+| `both_wrong` | 563 |
+| `only_a_right` | 565 |
+| `only_b_right` | 341 |
+| `statistic` | 54.8885 |
+| `p_value` | 0.0000 |
+| `p_value_exact` | 0.0000 |
+
 #### `p3_prepare_classification`
 
 | Field | Value |
@@ -2200,6 +2304,25 @@ Read from the run records; nothing here is interpreted.
 | `truncate` | head |
 | `eos_dropped` | True |
 | `padding` | right, &lt;pad&gt; id 0 |
+
+### Part III extension facts
+
+Read from the run records; nothing here is interpreted.
+
+**PCA to 100 dimensions** (fit on the train split only, then the same classifier procedure; records `p3_classify_pca` and `p3_classify`)
+
+| Representation | PCA explained variance (sum) | Features | Best C | Val accuracy | Val macro-F1 | Test accuracy | Test macro-F1 | Test errors |
+|---|---|---|---|---|---|---|---|---|
+| `p3_feat_lstm_mean` | — | 256 | 0.0100 | 0.8154 | 0.8154 | 0.8192 | 0.8192 | 904 |
+| `p3_feat_transformer_mean` | — | 100 | 0.1000 | 0.7624 | 0.7624 | 0.7744 | 0.7744 | 1,128 |
+| `p3_feat_lstm_mean_pca100` | 0.9788 | 100 | 0.0100 | 0.8124 | 0.8124 | 0.8128 | 0.8128 | 936 |
+
+
+**McNemar's test** on the test predictions of `p3_feat_lstm_mean` (A) and `p3_feat_transformer_mean` (B), 5,000 test reviews (record `p3_mcnemar`)
+
+| Both right | Only A right | Only B right | Both wrong | Chi-square (continuity-corrected) | p-value | Exact binomial p-value |
+|---|---|---|---|---|---|---|
+| 3,531 | 565 | 341 | 563 | 54.8885 | 1.28e-13 | 9.6e-14 |
 
 ### Runs not assigned to a section
 
@@ -2504,7 +2627,7 @@ These runs match no rule in `part_rules` (`configs/update_results.json`).
 
 Source: `DECISIONS.md` (copied as written there).
 
-### NEEDS REVIEW (5)
+### NEEDS REVIEW (9)
 
 | ID | Decision | Status |
 |---|---|---|
@@ -2513,8 +2636,12 @@ Source: `DECISIONS.md` (copied as written there).
 | X2 | Part III comparison and pooling | NEEDS REVIEW (pooling choice) |
 | Y1 | Classifier procedure | NEEDS REVIEW (the assistant defaults) |
 | Y2 | Error-review material (counted properties only) | NEEDS REVIEW |
+| AA1 | Extra representations and the five-way comparison | NEEDS REVIEW (Spearman details only) |
+| AA2 | Window rescoring definition | NEEDS REVIEW |
+| AA3 | PCA procedure | NEEDS REVIEW |
+| AA4 | McNemar variant | NEEDS REVIEW |
 
-### All design choices (86)
+### All design choices (92)
 
 | ID | Decision | Value | Where | Chosen by | Status |
 |---|---|---|---|---|---|
@@ -2604,6 +2731,12 @@ Source: `DECISIONS.md` (copied as written there).
 | X2 | Part III comparison and pooling | compare the Part I LSTM and Part I Transformer (both random trainable embeddings, as trained), same pooling for both: `mean`. Runs: `p3_feat_lstm_mean`, `p3_feat_transformer_mean`; batch size 64 (speed only). Feature sizes: LSTM 256, Transformer 100. | `configs/p3_feat_lstm_mean.json`, `configs/p3_feat_transformer_mean.json` (`options.pooling`, `batch_size`); Colab section 12. | comparison: User, prompt (2026-10-14), option 1 of 3. Pooling `mean`: Assistant default (it was named as the usual default in the options; the user did not specify). | NEEDS REVIEW (pooling choice) |
 | Y1 | Classifier procedure | scikit-learn `LogisticRegression` (L2, lbfgs, `max_iter` 1000, `random_state` = seed 0), fitted on the train split for each C in [0.001, 0.01, 0.1, 1, 10, 100]; C chosen by best VALIDATION macro-F1 (ties go to the smaller C); the model trained at that C (no refit on train+val) predicts the test split once. Features are standardised with the training mean and standard deviation (the same for both feature sets). Identical procedure and seed for every feature set. All misclassified test reviews are saved with their raw text. | `configs/p3_classify.json` (`options.c_grid`, `selection_metric`, `standardise`, `max_iter`); `src/classify.py` (`select_c`). | logistic regression, validation-only selection, single test evaluation, outputs: User, prompt (2026-10-14). The C grid, macro-F1 as the selection metric, standardisation, `max_iter`, no refit: Assistant defaults. | NEEDS REVIEW (the assistant defaults) |
 | Y2 | Error-review material (counted properties only) | 15 random errors per variant (seed 0) with counted properties: tokens kept, truncated or not, `&lt;unk&gt;` count and share, negation-word count. Negation words: not, no, never, nothing, nobody, none, neither, nor, hardly, cannot, plus any n't contraction. The same properties are averaged over all errors and over all correct reviews. The patterns themselves are not written up: your `CLAUDE.md` says interpretation is the user's job. | `configs/p3_error_sample.json` (`options.n_sample`, `options.negation_words`); `src/error_sample.py`. | Assistant default (the property list came from the user's prompt: negation, length, `&lt;unk&gt;`, sarcasm). | NEEDS REVIEW |
+| Z1 | Comparison question | "Does a language model that predicts the next word better (lower test perplexity) also give better features for classifying review sentiment?" The report is organised around it (Part I perplexity ranking vs Part III accuracy ranking, with Part II as the embedding ablation). | `report/REPORT_DRAFT.md` (Section 1); no config or script depends on it. | User, 2026-10-15 (answered the assistant's request for a question). | CONFIRMED |
+| Z2 | Assistant-drafted report text (exception to the CLAUDE.md rule) | `report/REPORT_DRAFT.md` and `report/VERIFY.md` were drafted by the assistant, as were `results/part3_error_notes.md` (2026-10-14). The *My notes* blocks in `RESULTS.md` are untouched. Every number in the draft is tagged with its results file; analytical sentences are tagged `[OBS]`, `[HYP]` or `[CHECK]`. The user must verify and rewrite them in their own words (the brief grades the user's understanding and requires tool assistance to be cited). | `report/`, `results/part3_error_notes.md`; logged in `TOOL_USE.md`. | User, prompt (2026-10-14 and 2026-10-15), an explicit override of "never write report text or interpret results". | CONFIRMED |
+| AA1 | Extra representations and the five-way comparison | mean-pooled features, same settings as before (first 256 tokens, frozen model, batch size 64), for the Part I RNN (`train_rnn`) and the Part II LSTMs with frozen own word2vec (`p2_lstm_w2v`) and frozen GloVe (`p2_lstm_glove`) embeddings; `classify.py` then runs on all five feature sets with the unchanged procedure and seed 0 (`configs/p3_classify_five.json`, separate output files, so `part3.csv` is untouched). Spearman rho (scipy) between LM test perplexity and test accuracy, and between perplexity and test macro-F1, over the five rows; the sign is reported as computed (lower perplexity is better, higher accuracy is better, so agreement shows as a negative rho). The LM perplexity is the stored 256-token test value of each language model's training record. | `configs/p3_feat_rnn_mean.json`, `p3_feat_lstm_w2v_mean.json`, `p3_feat_lstm_glove_mean.json`, `p3_classify_five.json`, `p3_rank_table.json`; `src/rank_table.py`; Colab section 13. | User, prompt (2026-10-15) (which models, same settings, the table and Spearman). Spearman via `scipy.stats.spearmanr` with its two-sided p-value and the table layout: Assistant default. | NEEDS REVIEW (Spearman details only) |
+| AA2 | Window rescoring definition | the Part I test targets (each test review cut to its first 256 tokens; inputs = tokens 0..254, targets = tokens 1..255) are scored by `evaluate.evaluate()` unchanged, with a scorer that cuts each review's input into consecutive 64-token pieces (0-63, 64-127, ...) and runs the model on each piece separately (fresh recurrent state; Transformer positions 0-63 only). Each target is predicted from the tokens before it inside its own window. `num_targets` and `target_checksum` must equal the one-piece run (the script stops otherwise). It also recomputes the one-piece 256 value as a check of the script against the stored Part I value. Models: RNN, LSTM, Transformer (Part I checkpoints). | `src/rescore_windows.py` (`WindowedScorer`); `configs/p3_rescore_windows.json` (`options.window` 64, `options.max_length` 256, `batch_size` 64). | User, prompt (2026-10-15): non-overlapping 64-token windows over the same first-256-token targets. The 64-token window starts at position 0 of the review (no tokens are shared between windows), and the first target of each later window sees only one input token of context: Assistant reading of "non-overlapping windows". | NEEDS REVIEW |
+| AA3 | PCA procedure | `sklearn.decomposition.PCA(n_components=100, random_state=0)` fitted on the TRAIN split's raw LSTM features only; validation and test projected with the train-fitted PCA; then the unchanged classifier procedure (features standardised with the training mean and standard deviation of the 100 PCA outputs, C chosen on validation macro-F1, test scored once). Standardising after PCA gives every component equal variance (whitening). | `configs/p3_classify_pca.json` (`options.pca_components`); `src/classify.py`. | User, prompt (2026-10-15): PCA to 100 dimensions fitted on train only, same procedure. Standardising after PCA, and PCA on the raw (not standardised) features: Assistant default. | NEEDS REVIEW |
+| AA4 | McNemar variant | counts from the saved error files (a review absent from a classifier's error file was classified correctly); statistic = (\|n10 - n01\| - 1)^2 / (n10 + n01) (continuity-corrected chi-square, 1 degree of freedom) with its p-value; the exact two-sided binomial p-value is also reported. | `src/mcnemar.py`; `configs/p3_mcnemar.json` (A = LSTM, B = Transformer). | User (McNemar on the LSTM vs Transformer test predictions). Continuity correction and the extra exact p-value: Assistant default. | NEEDS REVIEW |
 
 ### My notes
 
@@ -2633,7 +2766,7 @@ Source: `DECISIONS.md` (copied as written there).
 
 - `src/ngram.py`: `data.test` used at line(s) [333]; `tune_discounts(...)` called at line(s) [321]; single use after the call
 - `src/train.py`: `data.test` used at line(s) [332]; `fit(...)` called at line(s) [320]; single use after the call
-- other files in `src/` that use `data.test`: `src/benchmark.py` lines [152]
+- other files in `src/` that use `data.test`: `src/benchmark.py` lines [152], `src/rescore_windows.py` lines [67]
 - method: static scan of the source (Python `ast`), not a run-time trace
 
 #### Padding excluded from the loss: PASS

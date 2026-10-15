@@ -1,0 +1,110 @@
+{
+  "run": "p3_classify_pca",
+  "script": "src/classify.py",
+  "command": "/usr/local/bin/python3 src/classify.py --config configs/p3_classify_pca.json",
+  "date": "2026-10-15T16:20:10+08:00",
+  "git_commit": "731538c1db6ce630a7c28807d9a33db290b9f2a9",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
+  "seed": 0,
+  "config": {
+    "architecture": null,
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": null,
+    "embedding_init": null,
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": null,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "features_dir": "data/features",
+      "feature_sets": [
+        "p3_feat_lstm_mean"
+      ],
+      "raw_csv": "data/IMDB Dataset.csv",
+      "c_grid": [
+        0.001,
+        0.01,
+        0.1,
+        1,
+        10,
+        100
+      ],
+      "selection_metric": "macro_f1",
+      "standardise": true,
+      "max_iter": 1000,
+      "pca_components": 100,
+      "summary_csv": "results/part3_pca.csv",
+      "errors_prefix": "results/part3_errors_"
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "variants": [
+      {
+        "variant": "p3_feat_lstm_mean_pca100",
+        "feature_size": 100,
+        "best_C": 0.01,
+        "val_accuracy": 0.8124,
+        "val_macro_f1": 0.8123610911958704,
+        "test_accuracy": 0.8128,
+        "test_macro_f1": 0.8127963757378343,
+        "n_test": 5000,
+        "n_test_errors": 936,
+        "seed": 0,
+        "pca_components": 100
+      }
+    ]
+  },
+  "details": {
+    "p3_feat_lstm_mean_pca100": {
+      "validation_by_C": [
+        {
+          "C": 0.001,
+          "accuracy": 0.8118,
+          "macro_f1": 0.8117505958263687,
+          "converged": true
+        },
+        {
+          "C": 0.01,
+          "accuracy": 0.8124,
+          "macro_f1": 0.8123610911958704,
+          "converged": true
+        },
+        {
+          "C": 0.1,
+          "accuracy": 0.8122,
+          "macro_f1": 0.8121621243707582,
+          "converged": true
+        },
+        {
+          "C": 1,
+          "accuracy": 0.8122,
+          "macro_f1": 0.8121621243707582,
+          "converged": true
+        },
+        {
+          "C": 10,
+          "accuracy": 0.8122,
+          "macro_f1": 0.8121621243707582,
+          "converged": true
+        },
+        {
+          "C": 100,
+          "accuracy": 0.8122,
+          "macro_f1": 0.8121621243707582,
+          "converged": true
+        }
+      ],
+      "errors_file": "results/part3_errors_p3_feat_lstm_mean_pca100.csv",
+      "seconds": 0.3133890628814697,
+      "pca_explained_variance_ratio_sum": 0.9787787254496062
+    }
+  }
+}

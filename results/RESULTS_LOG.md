@@ -230,3 +230,13 @@ Before `prompts.txt` existed, `src/generate.py` was run end to end twice (n-gram
 - **Script / command:** `src/make_figures.py`; `python3 src/make_figures.py --config configs/make_figures.json` (local CPU; reads existing results only).
 - **Key numbers:** Part I test perplexity (same 981,353 targets): n-gram 111.31, RNN 109.37, LSTM 80.45, Transformer 156.94. Part II test perplexity: random 80.45, own Skip-gram 81.42, GloVe 90.28; GloVe coverage 99.56% of types / 97.52% of tokens; word2vec training 273.8 s (local CPU). Part III test accuracy / macro-F1: LSTM features 0.8192 / 0.8192, Transformer features 0.7744 / 0.7744.
 - **Files:** `results/tables/part{1,2,3}_table.{csv,tex,md}`, `results/figures/part1_loss_curves.pdf`, `results/figures/part2_loss_curves.pdf`, `results/make_figures.json`
+
+### 2026-10-15 — Part III: PCA to 100 dimensions of the LSTM features
+- **Script / command:** `src/classify.py`; `python3 src/classify.py --config configs/p3_classify_pca.json` (seed 0; local CPU; run before commit, `git_dirty: true`). PCA fit on train only, then the unchanged procedure.
+- **Key numbers:** `p3_feat_lstm_mean_pca100`: 100 features, PCA explained variance (sum) 0.9788; best C 0.01; validation accuracy 0.8124; test accuracy 0.8128, macro-F1 0.8128; 936 of 5,000 test errors. For reference, unreduced LSTM (256): test accuracy 0.8192, 904 errors.
+- **Files:** `results/p3_classify_pca.json`, `results/part3_pca.csv`, `results/part3_errors_p3_feat_lstm_mean_pca100.csv`
+
+### 2026-10-15 — Part III: McNemar's test, LSTM vs Transformer test predictions
+- **Script / command:** `src/mcnemar.py`; `python3 src/mcnemar.py --config configs/p3_mcnemar.json` (no randomness; local CPU).
+- **Key numbers:** 5,000 test reviews: both right 3,531; only LSTM right 565; only Transformer right 341; both wrong 563. Chi-square (continuity-corrected, 1 df) 54.8885, p = 1.28e-13; exact binomial p = 9.6e-14.
+- **File:** `results/p3_mcnemar.json`
