@@ -267,6 +267,7 @@ Every run reads one JSON file from `configs/` (no design values are hard-coded i
 |---|---|---|
 | `data.json` | `src/data.py` | vocab 20,000; split 0.1 / 0.1; no subsampling; seed 0 |
 | `inspect_data.json`, `sanity_check.json` | `src/inspect_data.py`, `src/sanity_check.py` | 3 example reviews; bigram, embedding dim 100, batch 32, reviews cut to 256 tokens |
+| `show_batch.json` | `src/data.py --show-batch` | prints one training batch (inputs and shifted targets) to check the windowing; optional |
 | `ngram.json` | `src/ngram.py` | trigram, discount grid 0.1 to 0.95 for each of three discounts, no truncation |
 | `train_rnn.json`, `train_lstm.json` | `src/train.py` | 2 layers, hidden 256, embedding 100 (random), dropout 0.3, context 64, Adam lr 0.001, batch 64, up to 20 epochs, early stopping patience 3, gradient clip 1.0, evaluation on reviews cut to 256 tokens |
 | `train_transformer.json` | `src/train.py` | 2 pre-norm causal blocks, 4 heads, feed-forward width 256, positions up to 256; the training settings are those of the LSTM |

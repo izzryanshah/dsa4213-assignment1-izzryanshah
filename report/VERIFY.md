@@ -1,107 +1,129 @@
-# VERIFY: what to check in `report/REPORT_DRAFT.md` before you rewrite it
+# VERIFY v2: what to check in `report/REPORT_DRAFT.md` before you rewrite it
 
-Written 2026-10-15 by the assistant. Section numbers refer to `REPORT_DRAFT.md`.
+v1 written 2026-10-15; v2 revises it after your review and your Part III extension (commit `d0aacb1` plus the new uncommitted result files). Section numbers refer to `REPORT_DRAFT.md`.
 
-## 0. Problems with the inputs (read first)
+## 0. State of the inputs
 
-1. **`report/template.docx` is a 0-byte file**, so it could not be read. The draft follows `~/Downloads/DSA4213_Assignment1_Report_Template.docx` (section list and page budgets). Check that this is the template you meant, and replace the empty file.
-2. **Your message had two unfilled placeholders.** The brief path `[path to Assignment1_2026.pdf]` was not found on disk, so I used `ASSIGNMENT.md` (its restatement; the PDF is the authoritative text). `[YOUR COMPARISON QUESTION]` was set by your answer: *does better next-token prediction mean better classification?*
-3. **All six *My notes* blocks in `RESULTS.md` are empty** (data, part1, part2, part3, settings, checks). There was nothing of yours to build on, so every analytical point in the draft is the assistant's. The assistant-drafted `results/part3_error_notes.md` (written earlier at your request) was used for the Part III error patterns; it is not your text either.
-4. **`README.md` was out of date when this draft was written; it was rewritten on 2026-10-15.** It now lists the commands, configs and seeds for Parts I to III and the Colab steps. Check that its commands match what you actually ran, and fill in the course-notebook line in its last section.
-5. **Figure 2 differs from the template.** The template asks for validation curves only; `results/figures/part2_loss_curves.pdf` shows training and validation loss, one panel per setting. Same for Figure 1 (the template says "training and validation", which matches).
+1. `report/template.docx` (0 bytes) is no longer in `report/`. The draft follows `~/Downloads/DSA4213_Assignment1_Report_Template.docx`. Confirm it is the template you meant.
+2. All six *My notes* blocks in `RESULTS.md` were empty when I last read them (v1). I did not re-check after your extension; if you have written notes since, the draft does not build on them.
+3. `README.md` was updated by your commit (status says all three parts are done; Part III commands include the five-way, PCA, McNemar and window-rescoring steps). The v1 complaint about it being out of date no longer applies; confirm the commands reproduce the numbers.
+4. Uncommitted: `results/p3_classify_five.json`, `p3_feat_{rnn,lstm_w2v,lstm_glove}_mean.json`, `p3_rank_table.json`, `p3_rescore_windows.json`, `part3_five*.csv`, `part3_lm_vs_classifier.csv`, `part3_window_perplexity.csv`. The draft cites them. The window-rescoring record shows `git_dirty: true` (RESULTS_LOG).
+5. **`src/make_figures.py` and the tables in `results/tables/` do not yet cover** the five-way Table 6, the 64-window perplexity column of Table 3, or the PCA row. Table 6 and the new Table 3 column in the draft were assembled by hand from `part3_five.csv`, `part3_lm_vs_classifier.csv`, `part3_pca.csv` and `part3_window_perplexity.csv`; check them against those files. I did not change code, as you asked in the earlier task and since the request here was a draft review.
 
-## 1. Page-count estimate (main body, excluding references, tool-use statement and appendices)
+## 1. Page-count estimate (main body only)
 
-Rough model: 600 prose words per page, 0.035 page per table row, 0.3 page per figure. Tags and source brackets are not counted. This is an estimate; check it in your actual template.
+Rough model: 600 prose words per page, 0.035 page per table row, 0.3 per figure; tags and source brackets not counted. Paste into the Word template to measure for real.
 
-| Section | Budget (pages) | Estimate | Status |
-|---|---|---|---|
-| 1 Introduction | 0.3 | 0.19 | within |
-| 2 Data | 0.5 | 0.46 | within |
-| 3 Part I | 2.0 | **3.63** (1,618 prose words, 18 table rows, 1 figure) | **over by about 1.6** |
-| 4 Part II | 1.5 | **1.74** (760 prose words) | **over by about 0.25** |
-| 5 Part III | 1.0 | **1.86** (908 prose words, 10 table rows) | **over by about 0.85** |
-| 6 Discussion | 0.4 | 0.33 | within |
-| 7 Limitations | 0.3 | **0.35** | slightly over |
-| **Total** | 6.0 | **about 8.6** | **over by about 2.6 pages** |
-
-Where to cut: Section 3.3 observations and 3.5 interpretation (several bullets repeat each other); Section 3.4 (move more text to Appendix B); Section 5.3 and 5.4 (shorten the property list and merge bullets); the Table 2 and Table 5 notes. You can also shrink figures or tables.
-
-## 2. Every [HYP] and [CHECK] item
-
-**[HYP] items (each names an alternative and says whether the experiments can separate them):**
-
-| # | Location | Claim | Alternative(s) named | Separable by our runs? |
+| Section | Budget | v1 estimate | v2 estimate | Status |
 |---|---|---|---|---|
-| H1 | 3.3, timing caveat | run-to-run training-time spread comes from Colab session | code version (Part I LSTM on older commit) | no |
-| H2 | 3.4 | LSTM's lower perplexity not visible in 3 samples because too few samples | perplexity differences of this size don't change fluency | no (needs larger rating) |
-| H3 | 3.5, bullet 1 | LSTM beats RNN because of gating | parameter count; RNN limited by shared lr/clipping | no |
-| H4 | 3.5, bullet 2 | Transformer worst because positions 64 to 255 untrained | fewest params; untuned LSTM settings; overfitting; too few epochs | no |
-| H5 | 3.5, bullet 3 | trigram competitive with RNN because short context carries most information | RNN undertrained; evaluation-setup differences | no (no context-length experiment) |
-| H6 | 4.3, bullet 3 | trainability costs little because Skip-gram vectors are good features | seed variation; older commit for random run; budget 20 epochs | no (single seed) |
-| H7 | 4.3, bullet 4 | GloVe worst due to domain/tokenisation mismatch | vector scale; 88 filled rows; extra data itself | no (data, domain, scale change together) |
-| H8 | 5.3, last bullet | sarcasm harder for Transformer features | sampling noise; 100-d vs 256-d; different C | no |
-| H9 | 5.4 | perplexity predicts downstream quality | feature size, layer, untrained positions, C | no |
-| H10 | 6 | cautious answer and the missing third data point | n/a | n/a |
+| 1 Introduction | 0.3 | 0.19 | 0.21 | within |
+| 2 Data | 0.5 | 0.46 | 0.41 | within |
+| 3 Part I | 2.0 | 3.63 | **3.08** | **over by about 1.1** |
+| 4 Part II | 1.5 | 1.74 | 1.46 | within |
+| 5 Part III | 1.0 | 1.86 | **2.03** | **over by about 1.0** (grew with the extension) |
+| 6 Discussion | 0.4 | 0.33 | 0.29 | within |
+| 7 Limitations | 0.3 | 0.35 | 0.30 | within |
+| **Total** | 6.0 | 8.6 | **about 7.8** | **still over by about 1.8** |
 
-**[CHECK] items (read the examples yourself):**
+The draft is still too long. Candidates to cut: Section 3.3 (merge the cost, timing and convergence bullets; drop Table 2 or fold it into Table 3), Section 3.4 (move the commentary to Appendix B), Section 5.2 (drop the standard-error and Validation-vs-C bullets), Section 5.3 (keep one of the two bullets and Table 7 at two rows), Section 6 (it repeats Table 6 numbers). Decide what to keep; the 5.4 hypotheses are the most valuable text.
+
+## 2. How each of the nine review points was handled
+
+| # | Review point | Handling in v2 | Checked against |
+|---|---|---|---|
+| 1 | "Overfits" contradicts best epoch 20 | Reworded to "widening gap, slowing improvement, not a rising validation loss" (3.3) | `train_transformer.json`: validation falls every epoch; train minus validation negative from epoch 3 |
+| 2 | Train > validation gap explained wrongly | Added the dropout explanation (train loss averaged with dropout on) and made the Transformer's negative gap the notable fact (3.3). The reason is cited from **code** (`src/train.py:194`, `src/evaluate.py:112`), not from a results file | code lines read |
+| 3 | "Scales may differ" vs 0.503 / 0.279 | Now an [OBS] (ratio about 1.8, not 2x) and scale is listed as alternative (b) for GloVe's result (4.3) | `glove_coverage.json`, `word2vec_cost.json` `fill_std` |
+| 4 | "Trainability costs little" says the opposite | Reworded to "freezing costs little"; the head-start observation (lowest validation loss at epochs 1, 5, 10, random lowest at 20 by 0.012) is now interpreted as [HYP] with alternatives (4.3) | epoch_losses of the three runs |
+| 5 | Trigram training time misleading | Table 3 and Table 2 now show 23.6 s (0.84 + 22.80) with the CPU/GPU caveat | `ngram.json` |
+| 6 | Muddled trigram alternative | Removed the "evaluation setups differ" clause; the alternative is now "RNN undertrained at the cap" (3.5) | all four models were scored on the same 981,353 targets |
+| 7 | C is not a confound | Dropped item (d); 5.1 says choosing C per representation is the same procedure for each | DECISIONS Y1 |
+| 8 | Circular introduction | Replaced with the pretraining motivation (1) | n/a |
+| 9 | Length | Cut about a third of the v1 prose, but the Part III extension added text; still about 1.8 pages over (section 1) | n/a |
+
+Two places where the draft goes slightly beyond the review: (a) the review says the Transformer's position problem "could explain both its poor perplexity and its poor classification". The new window rescoring supports the perplexity half as an [OBS] (156.94 at 256 tokens, 101.00 in 64-token windows). The classification half is **untested**, because Transformer features were extracted only from 256-token inputs; the draft therefore keeps it as [HYP]. (b) The window numbers also change the Transformer's train/validation-gap reading (3.3): at 64 tokens its test cross-entropy is below its final training loss by 0.180, like the LSTM (0.158) and RNN (0.211). Those three differences are derived by me and use test numbers, not validation.
+
+## 3. Every [HYP] and [CHECK] item
+
+**[HYP]**
+
+| # | Location | Claim | Alternative(s) named | Separable? |
+|---|---|---|---|---|
+| H1 | 1 | Transformer confounded by length mismatch, so answer is "only loosely" | n/a (framing) | n/a |
+| H2 | 3.3, last bullet | Transformer's widening train/validation gap mostly reflects 256-token scoring, not overfitting | genuine overfitting hidden by test-based window numbers | no |
+| H3 | 3.4 | LSTM's lower perplexity not visible in 3 samples | perplexity gaps this size barely change fluency | no |
+| H4 | 3.5 b1 | LSTM beats RNN via gating | parameters; RNN limited by lr/clipping | no |
+| H5 | 3.5 b2 | Transformer perplexity inflated by untrained positions 64 to 255 | attention never saw >64 tokens; fewest parameters; untuned; 20 epochs | partly: window drop is consistent with it, but cannot isolate the cause |
+| H6 | 3.5 b3 | Trigram near RNN because short context carries most information | RNN undertrained | no |
+| H7 | 4.3 | Own-frozen embeddings give a head start that random embeddings close | seed noise on 0.012; longer budget might change it | no |
+| H8 | 4.3 | GloVe worst: domain/tokenisation, scale (1.8x), 88 filled rows, extra data | each other | no (all change together) |
+| H9 | 5.4 b3 | Frozen Skip-gram helps features (word geometry from same reviews) despite slightly worse perplexity | seed noise; C differs (0.01 vs 1); feature scale (checked: similar) | no |
+| H10 | 5.4 b4 | Transformer's last place confounded by 256-token features | 100-d size (PCA test says size alone is not enough), parameters, no tuning | no |
+| H11 | 6 | Perplexity is a coarse guide | single-seed noise; Transformer confound | no |
+
+**[CHECK]**
 
 | # | Location | What to verify |
 |---|---|---|
-| C1 | 3.4 | fluency judgement ("all four drift off topic within about 20 tokens", no clear ranking): read `results/part1_generations.md` |
-| C2 | 3.4 | sentiment-consistency judgement on the negative prompt (trigram "just plain sucks", Transformer "the dialogue is awful", RNN/LSTM mixed) |
-| C3 | 4.3, last bullet | "no clear quality difference among the three LSTM settings": read `results/part2_generations.md` |
-| C4 | 5.3, Table 7 pattern column and "Missed by both?" | four patterns and the review excerpts; the "missed by both" column was computed from the errors CSVs (3 of 4 reviews are missed by both classifiers) |
-| C5 | 5.3, "Patterns, from 15 random errors" bullet | all counts ("about 8 of 15", etc.) come from the assistant's manual reading in `results/part3_error_notes.md`; re-read the 30 sampled reviews |
-| C6 | 7 | wording of the "test set used only for final evaluation" FAIL |
+| C1 | 3.4 | fluency and sentiment-consistency judgement; "didn ' t" occurs four times (count it) |
+| C2 | 4.3, last bullet | "no clear quality difference" among the three LSTM settings |
+| C3 | 5.3, Table 7 pattern column and the "15 random errors" bullet | patterns and "about 8 of 15" etc. come from the assistant's manual reading (`results/part3_error_notes.md`); re-read the 30 samples. Only the LSTM and Transformer were error-sampled, not the other three representations |
+| C4 | 7 | wording on the test-set FAIL and on the window rescoring being a diagnostic on the test split (the rescoring was not used to choose anything) |
 
-The repetition count in 3.4 ("didn ' t" four times in the LSTM continuation) is an [OBS] I counted by eye in `results/part1_generations.md`; recount it.
+## 4. Every number and its source
 
-## 3. Every number and its source
+All files under `results/` unless noted. "Derived" = computed by me from results numbers.
 
-All results files are under `results/`. "Derived" means computed from results-file numbers, not stored in one.
-
-| Number(s) in the draft | Source |
+| Number(s) | Source |
 |---|---|
-| 50,000 reviews, 25,000 / 25,000 labels | `inspect_data.json` |
-| Table 1 reviews, tokens, `<unk>` rates; vocabulary 20,003 | `data.json` |
-| Table 1 label counts per split; 37.0% / 38.2% truncated; 256-token head truncation | `p3_prepare_classification.json`; DECISIONS W1 |
-| Causality: 0.0 change, 12 positions per model | `test_causality.json` |
-| Trigram: discounts 0.9/0.8/0.1; 0.84 s fit, 22.80 s tuning; own test perplexity 116.54 on 1,390,673 targets | `ngram.json` |
-| Table 3: perplexity 111.31, 109.37, 80.45, 156.94; params 6,445,342, 7,364,303, 8,033,999, 4,231,115; train 0.84, 3,388, 3,850, 2,246 s; GPU 229,944 / 164,100 / 286,163; CPU 411,334 / 4,291 / 4,027 / 4,960; GPU std 1,200 / 2,997 / 7,950; 981,353 targets | `part1_costs.csv` (also `tables/part1_table.csv`, `benchmark.json`) |
-| Part II LSTM train times 3,394 s and 3,398 s; best epoch 20 for all; best validation loss 4.399 / 4.411 / 4.513 | `p2_lstm_w2v.json`, `p2_lstm_glove.json`, `train_lstm.json` |
-| Per-epoch validation/training losses quoted (epochs 1, 5, 9, 10, 16, 20) and last-epoch drops 0.0004 / 0.0068 / 0.0048 and 0.005 to 0.007 | `epoch_losses` in `train_rnn.json`, `train_lstm.json`, `train_transformer.json`, `p2_lstm_w2v.json`, `p2_lstm_glove.json` |
-| Generation counts (eos 1/0/1/1 of 3; mean new tokens 41.0, 50.0, 35.3, 48.7); all quoted text | `generations_*.json` metrics; `part1_generations.md`; `part2_generations.md` |
-| Skip-gram settings; 273.8 s train, 274.5 s total; coverage 100%; fill std 0.279 | `word2vec_cost.json` |
-| GloVe coverage 99.56% / 97.52% (99.57% / 99.95% without `<unk>`/`<eos>`); 19,914 of 20,002; 88 rows; fill std 0.503 | `glove_coverage.json` |
-| Trainable parameters 6,033,699 vs 8,033,999; frozen check max change 0.0 | `p2_lstm_*.json` details; DECISIONS T2 |
-| Table 6 and 5.2: C 0.01 / 0.1; validation 0.8154 / 0.7624; test accuracy 0.8192 / 0.7744; macro-F1 0.8192 / 0.7744; 904 and 1,128 errors; validation macro-F1 by C | `p3_classify.json`, `part3.csv` |
-| Perplexity vs accuracy ranks | `part3_ranking.csv` |
-| Error properties (203.8 vs 195.1; 45.0% vs 37.0%; 2.34% vs 2.02%; 87.7% vs 87.4%; Transformer equivalents) | `part3_error_stats.csv` |
-| Table 7 excerpts and labels (indices 39703, 37791, 10082, 48419) | `part3_error_sample_p3_feat_lstm_mean.csv`, `part3_error_sample_p3_feat_transformer_mean.csv` |
-| Hyperparameters (Appendix A) | `all_runs.csv`, configs |
-| Package versions (Appendix C) | `README.md` (local runs only; Colab versions are not recorded anywhere I read) |
-| **Derived:** 28.92, 76.49, 1.94 perplexity gaps; 0.98 and 8.86 (1.2%, 10.9%) Part II gaps; 456 s / 12% LSTM time spread, 462 s RNN-LSTM gap; CPU "within about 23%"; accuracy gap 0.0448 and validation gap 0.0530; train-minus-validation gaps (−0.047, −0.269, 0.216, 0.179, +0.349, +0.036); 0.44% (88/20,002) filled rows; binomial SE about 0.006 (formula, not in a file) | computed by the assistant; recheck |
-| **Derived from errors CSVs:** 563 both, 341 LSTM only, 565 Transformer only; error directions 469/435 and 536/592; "3 of 4 Table 7 reviews missed by both" | `part3_errors_p3_feat_lstm_mean.csv`, `part3_errors_p3_feat_transformer_mean.csv` |
+| 50,000 reviews, 25,000 / 25,000 | `inspect_data.json` |
+| Table 1 | `data.json`; `p3_prepare_classification.json` (label counts) |
+| Causality 0.0, 12 positions | `test_causality.json` |
+| Trigram: discounts, 0.84 s, 22.80 s, own perplexity 116.54 on 1,390,673 targets | `ngram.json` |
+| Table 3: 111.31 / 109.37 / 80.45 / 156.94; parameters; train times; GPU and CPU tokens/s; 981,353 targets | `part1_costs.csv` |
+| Table 3: 64-window perplexities 111.11 / 83.06 / 101.00; window cross-entropies 4.711 / 4.420 / 4.615 | `part3_window_perplexity.csv`, `p3_rescore_windows.json` |
+| Final-epoch training loss 4.922 / 4.578 / 4.795; per-epoch losses quoted; last-epoch drops | `epoch_losses` in `train_rnn.json`, `train_lstm.json`, `train_transformer.json`, `p2_lstm_w2v.json`, `p2_lstm_glove.json` |
+| Generation counts, quoted text | `generations_*.json`; `part1_generations.md`; `part2_generations.md` |
+| Skip-gram settings, 273.8 s, fill std 0.279 | `word2vec_cost.json` |
+| GloVe coverage 99.56% / 97.52% (99.57% / 99.95%), 19,914, 88 rows, fill std 0.503 | `glove_coverage.json` |
+| Frozen-table check 0.0; trainable parameters 6,033,699 | `p2_lstm_*.json` |
+| Table 6: LM perplexities, features, best C, accuracy = macro-F1, errors; accuracy and perplexity ranks | `part3_five.csv`, `part3_lm_vs_classifier.csv` |
+| Spearman rho −0.7, p = 0.188 | `p3_rank_table.json` |
+| McNemar 3,531 / 565 / 341 / 563, chi-square 54.89, p = 1.3e-13 | `p3_mcnemar.json` |
+| PCA row 0.8128, 936 errors, 97.9% variance | `part3_pca.csv`, `p3_classify_pca.json` |
+| Validation macro-F1 by C (LSTM 0.806, 0.815) | `p3_classify.json` |
+| Feature standard deviations 0.130 / 0.133 / 0.129 | `p3_feat_lstm_mean.json`, `p3_feat_lstm_w2v_mean.json`, `p3_feat_lstm_glove_mean.json` (train feature std) |
+| Error properties (203.8 vs 195.1, 45.0% vs 37.0%, etc.) | `part3_error_stats.csv` |
+| Table 7 excerpts | `part3_error_sample_p3_feat_lstm_mean.csv`, `part3_error_sample_p3_feat_transformer_mean.csv` |
+| Error directions 469/435 and 536/592 | counted from `part3_errors_p3_feat_*.csv` |
+| Package versions | `README.md` (local only; Colab versions unrecorded) |
+| **Derived:** +1.75, +2.61, −55.94 (window vs 256); 0.98 (1.2%) and 8.86; 0.012; ratio 1.8; 456 s / 12%; 462 s; "about 23%"; accuracy gaps 0.0400, 0.0084, 0.0038, 0.0410, 0.0384; train-minus-validation gaps (−0.047, −0.269, 0.216, 0.179); train-minus-window-test differences 0.180 / 0.158 / 0.211; 23.6 s; 0.44% (88/20,002); standard error about 0.006 (formula, not in a file) | assistant arithmetic; recheck |
 
-## 4. Rubric requirements the draft does not yet meet
+## 5. Rubric requirements the draft does not yet meet
 
-- **Reproducibility (brief: README with data access, dependencies, commands, configs, seeds):** `README.md` is out of date (item 0.4). Colab package versions and the final GitHub link are missing. Not changed, per your instruction.
-- **Your own analysis.** The brief says the analysis "should reflect your own understanding". The draft is the assistant's; you must verify and rewrite it, and the tool-use statement must say truthfully how much you did.
-- **Appendix B** is a placeholder; paste the generation files. **Appendix C** is an outline. **Lesson learned** (Section 7) is blank for you.
-- **Name, student number, date, repository link, references** need your input and confirmation.
-- **Part I:** parameter count, training time and budget were not matched across architectures (stated, not fixed). Only 3 prompts and 1 sample each for generation. No larger context-length experiment, so context length is not separated from architecture.
-- **Part II:** "training stability" evidence is per-epoch only (DECISIONS V1); all runs stopped at the epoch cap, so convergence is compared at a fixed budget. The random run was on an older commit and the frozen runs record `git_dirty: true`. "Representative generated text" rests on 3 prompts.
-- **Part III:** only two representations (LSTM vs Transformer) with different feature sizes; one pooling; no Part II model was classified, so Part II cannot be tied to Part III by data. "Same reviews missed" is shown as counts only.
-- **Limitations:** the `RESULTS.md` "test set used only for final evaluation" check shows FAIL because `src/benchmark.py` reads the test split (DECISIONS J4); decide how to word this.
-- **Seeds:** every run uses seed 0, no multi-seed variance anywhere.
-- **Pending decision:** the figure and table choices of `src/make_figures.py` are still marked NEEDS REVIEW (not yet in `DECISIONS.md`).
-- **Page budget:** about 2.6 pages over (section 1).
+- **Length:** about 1.8 pages over (section 1).
+- **Your own analysis.** The brief says the analysis "should reflect your own understanding"; the draft is the assistant's. The tool-use statement must say truthfully how much you did.
+- **Placeholders:** name, student number, date, repository link, lesson learned, Appendix B text, Colab package versions, exact assistant model names.
+- **Figures and tables out of sync with the new results:** Table 6 (five-way plus PCA) and the 64-window column are not yet in `src/make_figures.py` or `results/tables/`; Figure 1 and Figure 2 are unchanged and show only the original runs. Figure 2 shows training and validation loss (template asks for validation only).
+- **Part III error analysis** covers two of the five representations; "do the representations fail on the same reviews" is answered only for LSTM vs Transformer (563 both wrong).
+- **Headline perplexity (your decision, not mine):** Table 3 shows both the 256-token and 64-window perplexities. Which one is the headline number, and whether Section 3.2 should treat 64 tokens as the "common evaluation setup", changes the Part I ranking and is a design choice for you; DECISIONS AA2 only records how the window score is defined.
+- **Seeds:** all runs use seed 0; no run-to-run variance anywhere. This weakens every difference of about 1 perplexity point or about 0.01 accuracy.
+- **Part II:** stability evidence is per-epoch only; all runs hit the 20-epoch cap (DECISIONS V1).
+- **Test-set check:** `RESULTS.md` FAIL for "test set used only for final evaluation" (benchmark reads the test split); decide how to word it.
+- **Pending decision:** `make_figures.py` layout choices are still NEEDS REVIEW.
+- **Untested confounds that a marker may raise:** Transformer features in 64-token windows; positions trained to 256; a rescaled-GloVe run; multiple seeds.
 
-## 5. The 5 questions a marker is most likely to ask you
+## 6. What changed between v1 and v2 (summary)
 
-1. **"Why is your Transformer the worst model, and is that an architecture result?"** Know: 156.94 vs LSTM 80.45; 4.23M parameters; settings copied from the LSTM and untuned; positions 64 to 255 never updated (trained on 64-token windows, scored at 256); validation loss flat after epoch 5 while training loss falls. You cannot say which cause dominates.
-2. **"Does your result show that lower perplexity gives better classification?"** Know: only two models, one seed, feature size 256 vs 100, different layers and C; the RNN and the Part II models were not classified. Agreement of two rankings is weak evidence.
-3. **"Do pretrained GloVe embeddings help or hurt, and why is GloVe worse than your own Skip-gram?"** Know: 90.28 vs 81.42 vs 80.45; GloVe differs in data, domain, tokenisation and vector scale all at once; 99.56% coverage; no run isolates one factor.
-4. **"How do you know there is no test-set leakage and how were hyperparameters chosen?"** Know: split made once before the vocabulary; vocabulary from training only; discounts, C and early stopping chosen on validation; the one FAIL in `RESULTS.md` and why (benchmark reads the test split to time scoring).
-5. **"Are your differences real given one seed and the 20-epoch cap?"** Know: 80.45 vs 81.42 and RNN 109.37 vs trigram 111.31 are small; the identical LSTM took 3,850 s in Part I and 3,394 s in Part II, so timing gaps of about 12% are not architecture; all runs were still improving at epoch 20.
+- New content: five-way Table 6 with PCA row; McNemar; Spearman; 64-token-window perplexity in Part I; Part II to Part III link in 5.4.
+- Reworded: Transformer overfitting; train/validation gaps and dropout; scale; "freezing costs little"; trigram time; trigram alternative; C confound dropped; introduction.
+- Removed or shortened: v1's Table 7 fourth row, the generation prompt-1 and prompt-3 prose, most of the Discussion, Appendix D contents, several repeated numbers (fewer decimals).
+- The v1 conclusion ("rankings agree, can't say why") is replaced by "only loosely, with a Transformer confound".
+
+## 7. The 5 questions a marker is most likely to ask you
+
+1. **"Your Transformer was trained on 64 tokens and scored on 256. Doesn't that invalidate its perplexity and its Part III features?"** Know: 156.94 at 256 tokens vs 101.00 in 64-token windows; positions 64 to 255 never updated; Transformer features were never extracted at 64 tokens, so the classification effect is untested.
+2. **"Does lower perplexity give better classification?"** Know: Spearman rho −0.7, p = 0.19 with n = 5; the best classifier is the second-best language model (frozen Skip-gram LSTM, 0.8592 vs 0.8192 for the best LM); the worst two are the same on both lists.
+3. **"Why does a frozen Skip-gram LSTM classify better than the trainable-embedding LSTM when its perplexity is worse?"** Know: gap 0.0400 vs a standard error about 0.006; one seed; no McNemar run for this pair; C differs (1 vs 0.01); your hypothesis (word geometry from the same reviews) is untested.
+4. **"Why is GloVe worse than your own Skip-gram, and does that show pretrained embeddings don't help?"** Know: 90.28 vs 81.42; GloVe differs in data, domain, tokenisation and vector scale (0.503 vs 0.279) at once; 99.56% coverage; no run isolates one factor; GloVe still classified better than the random LSTM (0.8276 vs 0.8192, a gap within noise).
+5. **"Are these differences real given one seed and the 20-epoch cap?"** Know: 80.45 vs 81.42 and RNN 109.37 vs trigram 111.31 are small; identical LSTM training took 3,850 s vs 3,394 s; all runs were still improving at epoch 20; McNemar covers one pair; and how hyperparameters (discounts, C, early stopping) were chosen on validation only, with the benchmark FAIL explained.

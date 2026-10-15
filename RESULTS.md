@@ -1,6 +1,6 @@
 # Results
 
-Rebuilt by `src/update_results.py` on 2026-10-15T16:27:53+08:00 from 37 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-15T16:20:38+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
+Rebuilt by `src/update_results.py` on 2026-10-15T17:44:50+08:00 from 43 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-15T16:37:47+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
 
 Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III](#part-iii) · [Settings](#settings) · [Checks](#checks)
 
@@ -1921,6 +1921,71 @@ Read from the run records; nothing here is interpreted.
 | `p3_feat_transformer_mean.errors_file` | results/part3_errors_p3_feat_transformer_mean.csv |
 | `p3_feat_transformer_mean.seconds` | 1.5116 |
 
+#### `p3_classify_five`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/local/bin/python3 src/classify.py --config configs/p3_classify_five.json` |
+| Script | `src/classify.py` |
+| Date | 2026-10-15T16:37:45+08:00 |
+| Git commit | `d0aacb1 (uncommitted changes at run time)` |
+| Hardware | CPU: Apple M2 (Darwin arm64) |
+| Seed | 0 |
+| Result file | `results/p3_classify_five.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | — |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.features_dir` | data/features |
+| `options.feature_sets` | `["p3_feat_lstm_mean", "p3_feat_transformer_mean", "p3_feat_rnn_mean", "p3_feat_lstm_w2v_mean", "p3_feat_lstm_glove_mean"]` |
+| `options.raw_csv` | data/IMDB Dataset.csv |
+| `options.c_grid` | `[0.001, 0.01, 0.1, 1, 10, 100]` |
+| `options.selection_metric` | macro_f1 |
+| `options.standardise` | True |
+| `options.max_iter` | 1,000 |
+| `options.summary_csv` | results/part3_five.csv |
+| `options.errors_prefix` | results/part3_five_errors_ |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `variants` | `[{"variant": "p3_feat_lstm_mean", "feature_size": 256, "best_C": 0.01, "val_accuracy": 0.8154, "val_macro_f1": 0.8153983385850473, "test_accuracy": 0.8192, "test_macro_f1": 0.8191916394214068, "n_test": 5000, "n_test_errors": 904, "seed": 0}, {"variant": "p3_feat_transformer_mean", "feature_size": 100, "best_C": 0.1, "val_accuracy": 0.7624, "val_macro_f1": 0.7623902675053571, "test_accuracy": 0.7744, "test_macro_f1": 0.774371697185695, "n_test": 5000, "n_test_errors": 1128, "seed": 0}, {"variant": "p3_feat_rnn_mean", "feature_size": 256, "best_C": 0.1, "val_accuracy": 0.7676, "val_macro_f1": 0.7675981779697152, "test_accuracy": 0.7782, "test_macro_f1": 0.7781953066126879, "n_test": 5000, "n_test_errors": 1109, "seed": 0}, {"variant": "p3_feat_lstm_w2v_mean", "feature_size": 256, "best_C": 1, "val_accuracy": 0.8486, "val_macro_f1": 0.8485992672204533, "test_accuracy": 0.8592, "test_macro_f1": 0.8591972740592257, "n_test": 5000, "n_test_errors": 704, "seed": 0}, {"variant": "p3_feat_lstm_glove_mean", "feature_size": 256, "best_C": 1, "val_accuracy": 0.8138, "val_macro_f1": 0.8137998137998138, "test_accuracy": 0.8276, "test_macro_f1": 0.827597765667043, "n_test": 5000, "n_test_errors": 862, "seed": 0}]` |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `p3_feat_lstm_mean.validation_by_C` | `[{"C": 0.001, "accuracy": 0.806, "macro_f1": 0.805999223996896, "converged": true}, {"C": 0.01, "accuracy": 0.8154, "macro_f1": 0.8153983385850473, "converged": true}, {"C": 0.1, "accuracy": 0.8144, "macro_f1": 0.8143949812402927, "converged": true}, {"C": 1, "accuracy": 0.815, "macro_f1": 0.8149953748843721, "converged": true}, {"C": 10, "accuracy": 0.815, "macro_f1": 0.8149953748843721, "converged": true}, {"C": 100, "accuracy": 0.815, "macro_f1": 0.8149953748843721, "converged": true}]` |
+| `p3_feat_lstm_mean.errors_file` | results/part3_five_errors_p3_feat_lstm_mean.csv |
+| `p3_feat_lstm_mean.seconds` | 2.9717 |
+| `p3_feat_transformer_mean.validation_by_C` | `[{"C": 0.001, "accuracy": 0.7504, "macro_f1": 0.7503985622957188, "converged": true}, {"C": 0.01, "accuracy": 0.759, "macro_f1": 0.7589983708289868, "converged": true}, {"C": 0.1, "accuracy": 0.7624, "macro_f1": 0.7623902675053571, "converged": true}, {"C": 1, "accuracy": 0.7622, "macro_f1": 0.7621869773588802, "converged": true}, {"C": 10, "accuracy": 0.7624, "macro_f1": 0.7623876821774441, "converged": true}, {"C": 100, "accuracy": 0.7624, "macro_f1": 0.7623876821774441, "converged": true}]` |
+| `p3_feat_transformer_mean.errors_file` | results/part3_five_errors_p3_feat_transformer_mean.csv |
+| `p3_feat_transformer_mean.seconds` | 1.4463 |
+| `p3_feat_rnn_mean.validation_by_C` | `[{"C": 0.001, "accuracy": 0.7552, "macro_f1": 0.7551993733103957, "converged": true}, {"C": 0.01, "accuracy": 0.7642, "macro_f1": 0.7641931238714921, "converged": true}, {"C": 0.1, "accuracy": 0.7676, "macro_f1": 0.7675981779697152, "converged": true}, {"C": 1, "accuracy": 0.7674, "macro_f1": 0.7673979065811593, "converged": true}, {"C": 10, "accuracy": 0.7674, "macro_f1": 0.7673979065811593, "converged": true}, {"C": 100, "accuracy": 0.7666, "macro_f1": 0.7665978993810945, "converged": true}]` |
+| `p3_feat_rnn_mean.errors_file` | results/part3_five_errors_p3_feat_rnn_mean.csv |
+| `p3_feat_rnn_mean.seconds` | 4.4870 |
+| `p3_feat_lstm_w2v_mean.validation_by_C` | `[{"C": 0.001, "accuracy": 0.8408, "macro_f1": 0.840796331947488, "converged": true}, {"C": 0.01, "accuracy": 0.8476, "macro_f1": 0.8475993903975616, "converged": true}, {"C": 0.1, "accuracy": 0.8482, "macro_f1": 0.8481995081664064, "converged": true}, {"C": 1, "accuracy": 0.8486, "macro_f1": 0.8485992672204533, "converged": true}, {"C": 10, "accuracy": 0.8486, "macro_f1": 0.8485992672204533, "converged": true}, {"C": 100, "accuracy": 0.8486, "macro_f1": 0.8485992672204533, "converged": true}]` |
+| `p3_feat_lstm_w2v_mean.errors_file` | results/part3_five_errors_p3_feat_lstm_w2v_mean.csv |
+| `p3_feat_lstm_w2v_mean.seconds` | 2.5834 |
+| `p3_feat_lstm_glove_mean.validation_by_C` | `[{"C": 0.001, "accuracy": 0.807, "macro_f1": 0.8069990658754789, "converged": true}, {"C": 0.01, "accuracy": 0.813, "macro_f1": 0.8129987358714545, "converged": true}, {"C": 0.1, "accuracy": 0.8126, "macro_f1": 0.8125998125998126, "converged": true}, {"C": 1, "accuracy": 0.8138, "macro_f1": 0.8137998137998138, "converged": true}, {"C": 10, "accuracy": 0.8136, "macro_f1": 0.8135997315836134, "converged": true}, {"C": 100, "accuracy": 0.8136, "macro_f1": 0.8135997315836134, "converged": true}]` |
+| `p3_feat_lstm_glove_mean.errors_file` | results/part3_five_errors_p3_feat_lstm_glove_mean.csv |
+| `p3_feat_lstm_glove_mean.seconds` | 2.8458 |
+
 #### `p3_classify_pca`
 
 | Field | Value |
@@ -2030,6 +2095,78 @@ Read from the run records; nothing here is interpreted.
 |---|---|
 | `negation_ids_found` | 10 |
 
+#### `p3_feat_lstm_glove_mean`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/extract_features.py --config configs/p3_feat_lstm_glove_mean.json` |
+| Script | `src/extract_features.py` |
+| Date | 2026-10-15T08:31:35+00:00 |
+| Git commit | `d0aacb1` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/p3_feat_lstm_glove_mean.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | lstm |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | glove |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | 64 |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.model` | lstm |
+| `options.processed_dir` | data/processed |
+| `options.classification_dir` | data/classification |
+| `options.output_dir` | data/features |
+| `options.pooling` | mean |
+| `options.train_result` | results/p2_lstm_glove.json |
+| `options.checkpoint` | checkpoints/p2_lstm_glove.pt |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `pooling` | mean |
+| `splits.train.num_reviews` | 40,000 |
+| `splits.train.feature_size` | 256 |
+| `splits.train.feature_mean` | 0.0065 |
+| `splits.train.feature_std` | 0.1294 |
+| `splits.val.num_reviews` | 5,000 |
+| `splits.val.feature_size` | 256 |
+| `splits.val.feature_mean` | 0.0066 |
+| `splits.val.feature_std` | 0.1293 |
+| `splits.test.num_reviews` | 5,000 |
+| `splits.test.feature_size` | 256 |
+| `splits.test.feature_mean` | 0.0066 |
+| `splits.test.feature_std` | 0.1293 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `train_result` | results/p2_lstm_glove.json |
+| `train_run_date` | 2026-10-14T07:47:42+00:00 |
+| `train_run_git_commit` | 5d822d7526f54d5e7cceb64697568badc1968592 |
+| `checkpoint` | checkpoints/p2_lstm_glove.pt |
+| `num_parameters` | 6,033,699 |
+| `device` | cuda |
+| `timing_seconds.train` | 10.1834 |
+| `timing_seconds.val` | 1.2616 |
+| `timing_seconds.test` | 1.2566 |
+| `output_dir` | data/features/p3_feat_lstm_glove_mean |
+| `weights_unchanged` | True |
+| `padding` | excluded: see src/extract_features.py docstring |
+
 #### `p3_feat_lstm_mean`
 
 | Field | Value |
@@ -2099,6 +2236,150 @@ Read from the run records; nothing here is interpreted.
 | `timing_seconds.val` | 1.2067 |
 | `timing_seconds.test` | 1.2154 |
 | `output_dir` | data/features/p3_feat_lstm_mean |
+| `weights_unchanged` | True |
+| `padding` | excluded: see src/extract_features.py docstring |
+
+#### `p3_feat_lstm_w2v_mean`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/extract_features.py --config configs/p3_feat_lstm_w2v_mean.json` |
+| Script | `src/extract_features.py` |
+| Date | 2026-10-15T08:31:19+00:00 |
+| Git commit | `d0aacb1` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/p3_feat_lstm_w2v_mean.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | lstm |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | w2v |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | 64 |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.model` | lstm |
+| `options.processed_dir` | data/processed |
+| `options.classification_dir` | data/classification |
+| `options.output_dir` | data/features |
+| `options.pooling` | mean |
+| `options.train_result` | results/p2_lstm_w2v.json |
+| `options.checkpoint` | checkpoints/p2_lstm_w2v.pt |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `pooling` | mean |
+| `splits.train.num_reviews` | 40,000 |
+| `splits.train.feature_size` | 256 |
+| `splits.train.feature_mean` | 0.0105 |
+| `splits.train.feature_std` | 0.1333 |
+| `splits.val.num_reviews` | 5,000 |
+| `splits.val.feature_size` | 256 |
+| `splits.val.feature_mean` | 0.0104 |
+| `splits.val.feature_std` | 0.1327 |
+| `splits.test.num_reviews` | 5,000 |
+| `splits.test.feature_size` | 256 |
+| `splits.test.feature_mean` | 0.0104 |
+| `splits.test.feature_std` | 0.1328 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `train_result` | results/p2_lstm_w2v.json |
+| `train_run_date` | 2026-10-14T06:50:49+00:00 |
+| `train_run_git_commit` | 5d822d7526f54d5e7cceb64697568badc1968592 |
+| `checkpoint` | checkpoints/p2_lstm_w2v.pt |
+| `num_parameters` | 6,033,699 |
+| `device` | cuda |
+| `timing_seconds.train` | 10.0470 |
+| `timing_seconds.val` | 1.2597 |
+| `timing_seconds.test` | 1.2364 |
+| `output_dir` | data/features/p3_feat_lstm_w2v_mean |
+| `weights_unchanged` | True |
+| `padding` | excluded: see src/extract_features.py docstring |
+
+#### `p3_feat_rnn_mean`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/extract_features.py --config configs/p3_feat_rnn_mean.json` |
+| Script | `src/extract_features.py` |
+| Date | 2026-10-15T08:30:58+00:00 |
+| Git commit | `d0aacb1` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/p3_feat_rnn_mean.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | rnn |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | random |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | 64 |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.model` | rnn |
+| `options.processed_dir` | data/processed |
+| `options.classification_dir` | data/classification |
+| `options.output_dir` | data/features |
+| `options.pooling` | mean |
+| `options.train_result` | results/train_rnn.json |
+| `options.checkpoint` | checkpoints/train_rnn.pt |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `pooling` | mean |
+| `splits.train.num_reviews` | 40,000 |
+| `splits.train.feature_size` | 256 |
+| `splits.train.feature_mean` | -0.0210 |
+| `splits.train.feature_std` | 0.5076 |
+| `splits.val.num_reviews` | 5,000 |
+| `splits.val.feature_size` | 256 |
+| `splits.val.feature_mean` | -0.0210 |
+| `splits.val.feature_std` | 0.5076 |
+| `splits.test.num_reviews` | 5,000 |
+| `splits.test.feature_size` | 256 |
+| `splits.test.feature_mean` | -0.0210 |
+| `splits.test.feature_std` | 0.5075 |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `train_result` | results/train_rnn.json |
+| `train_run_date` | 2026-10-12T07:16:34+00:00 |
+| `train_run_git_commit` | 7b9bbe6758682f640994b57ac1efa86ba487c75d |
+| `checkpoint` | checkpoints/train_rnn.pt |
+| `num_parameters` | 7,364,303 |
+| `device` | cuda |
+| `timing_seconds.train` | 3.7732 |
+| `timing_seconds.val` | 0.3464 |
+| `timing_seconds.test` | 0.3455 |
+| `output_dir` | data/features/p3_feat_rnn_mean |
 | `weights_unchanged` | True |
 | `padding` | excluded: see src/extract_features.py docstring |
 
@@ -2305,9 +2586,181 @@ Read from the run records; nothing here is interpreted.
 | `eos_dropped` | True |
 | `padding` | right, &lt;pad&gt; id 0 |
 
+#### `p3_rank_table`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/local/bin/python3 src/rank_table.py --config configs/p3_rank_table.json` |
+| Script | `src/rank_table.py` |
+| Date | 2026-10-15T16:37:47+08:00 |
+| Git commit | `d0aacb1 (uncommitted changes at run time)` |
+| Hardware | CPU: Apple M2 (Darwin arm64) |
+| Seed | 0 |
+| Result file | `results/p3_rank_table.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | — |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.classifier_csv` | results/part3_five.csv |
+| `options.output_csv` | results/part3_lm_vs_classifier.csv |
+| `options.variant_to_lm_run.p3_feat_lstm_mean` | train_lstm |
+| `options.variant_to_lm_run.p3_feat_transformer_mean` | train_transformer |
+| `options.variant_to_lm_run.p3_feat_rnn_mean` | train_rnn |
+| `options.variant_to_lm_run.p3_feat_lstm_w2v_mean` | p2_lstm_w2v |
+| `options.variant_to_lm_run.p3_feat_lstm_glove_mean` | p2_lstm_glove |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `n_representations` | 5 |
+| `spearman_perplexity_vs.test_accuracy.rho` | -0.7000 |
+| `spearman_perplexity_vs.test_accuracy.p_value` | 0.1881 |
+| `spearman_perplexity_vs.test_macro_f1.rho` | -0.7000 |
+| `spearman_perplexity_vs.test_macro_f1.p_value` | 0.1881 |
+| `rows` | `[{"variant": "p3_feat_lstm_mean", "lm_test_perplexity": 80.44937180664519, "test_accuracy": 0.8192, "test_macro_f1": 0.8191916394214068, "perplexity_rank": 1, "accuracy_rank": 3, "macro_f1_rank": 3}, {"variant": "p3_feat_transformer_mean", "lm_test_perplexity": 156.9419120574047, "test_accuracy": 0.7744, "test_macro_f1": 0.774371697185695, "perplexity_rank": 5, "accuracy_rank": 5, "macro_f1_rank": 5}, {"variant": "p3_feat_rnn_mean", "lm_test_perplexity": 109.36640734248003, "test_accuracy": 0.7782, "test_macro_f1": 0.7781953066126879, "perplexity_rank": 4, "accuracy_rank": 4, "macro_f1_rank": 4}, {"variant": "p3_feat_lstm_w2v_mean", "lm_test_perplexity": 81.4248763657732, "test_accuracy": 0.8592, "test_macro_f1": 0.8591972740592257, "perplexity_rank": 2, "accuracy_rank": 1, "macro_f1_rank": 1}, {"variant": "p3_feat_lstm_glove_mean", "lm_test_perplexity": 90.28071680904144, "test_accuracy": 0.8276, "test_macro_f1": 0.827597765667043, "perplexity_rank": 3, "accuracy_rank": 2, "macro_f1_rank": 2}]` |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `lm_records.p3_feat_lstm_mean` | results/train_lstm.json |
+| `lm_records.p3_feat_transformer_mean` | results/train_transformer.json |
+| `lm_records.p3_feat_rnn_mean` | results/train_rnn.json |
+| `lm_records.p3_feat_lstm_w2v_mean` | results/p2_lstm_w2v.json |
+| `lm_records.p3_feat_lstm_glove_mean` | results/p2_lstm_glove.json |
+| `classifier_csv` | results/part3_five.csv |
+
+#### `p3_rescore_windows`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/bin/python3 src/rescore_windows.py --config configs/p3_rescore_windows.json` |
+| Script | `src/rescore_windows.py` |
+| Date | 2026-10-15T08:32:55+00:00 |
+| Git commit | `d0aacb1 (uncommitted changes at run time)` |
+| Hardware | GPU: Tesla T4 |
+| Seed | 0 |
+| Result file | `results/p3_rescore_windows.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | — |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | 64 |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.processed_dir` | data/processed |
+| `options.models` | `[{"name": "RNN", "model": "rnn", "train_result": "results/train_rnn.json", "checkpoint": "checkpoints/train_rnn.pt"}, {"name": "LSTM", "model": "lstm", "train_result": "results/train_lstm.json", "checkpoint": "checkpoints/train_lstm.pt"}, {"name": "Transformer", "model": "transformer", "train_result": "results/train_transformer.json", "checkpoint": "checkpoints/train_transformer.pt"}]` |
+| `options.max_length` | 256 |
+| `options.window` | 64 |
+| `options.max_reviews` | — |
+| `options.output_csv` | results/part3_window_perplexity.csv |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `window` | 64 |
+| `max_length` | 256 |
+| `models` | `[{"model": "RNN", "stored_test_ppl_256": 109.36640734248003, "recomputed_test_ppl_256": 109.36640734248003, "test_ppl_64_windows": 111.11363518723036, "num_targets": 981353, "target_checksum": "4f77927a1cd952f56697be95540ea0fc002013d9f8278d3f95c1290e6c305605"}, {"model": "LSTM", "stored_test_ppl_256": 80.44937180664519, "recomputed_test_ppl_256": 80.44937180664519, "test_ppl_64_windows": 83.05876831094027, "num_targets": 981353, "target_checksum": "4f77927a1cd952f56697be95540ea0fc002013d9f8278d3f95c1290e6c305605"}, {"model": "Transformer", "stored_test_ppl_256": 156.9419120574047, "recomputed_test_ppl_256": 156.9419120574047, "test_ppl_64_windows": 101.00279537713587, "num_targets": 981353, "target_checksum": "4f77927a1cd952f56697be95540ea0fc002013d9f8278d3f95c1290e6c305605"}]` |
+
+**Details**
+
+| Name | Value |
+|---|---|
+| `RNN.train_result` | results/train_rnn.json |
+| `RNN.train_run_date` | 2026-10-12T07:16:34+00:00 |
+| `RNN.train_run_git_commit` | 7b9bbe6758682f640994b57ac1efa86ba487c75d |
+| `RNN.checkpoint` | checkpoints/train_rnn.pt |
+| `RNN.num_parameters` | 7,364,303 |
+| `RNN.device` | cuda |
+| `RNN.seconds` | 10.2598 |
+| `RNN.window` | 64 |
+| `RNN.max_length` | 256 |
+| `RNN.reviews_scored` | 5,000 |
+| `RNN.avg_cross_entropy_256` | 4.6947 |
+| `RNN.avg_cross_entropy_windows` | 4.7106 |
+| `LSTM.train_result` | results/train_lstm.json |
+| `LSTM.train_run_date` | 2026-10-12T06:19:48+00:00 |
+| `LSTM.train_run_git_commit` | 7b9bbe6758682f640994b57ac1efa86ba487c75d |
+| `LSTM.checkpoint` | checkpoints/train_lstm.pt |
+| `LSTM.num_parameters` | 8,033,999 |
+| `LSTM.device` | cuda |
+| `LSTM.seconds` | 10.4046 |
+| `LSTM.window` | 64 |
+| `LSTM.max_length` | 256 |
+| `LSTM.reviews_scored` | 5,000 |
+| `LSTM.avg_cross_entropy_256` | 4.3876 |
+| `LSTM.avg_cross_entropy_windows` | 4.4195 |
+| `Transformer.train_result` | results/train_transformer.json |
+| `Transformer.train_run_date` | 2026-10-12T15:05:12+00:00 |
+| `Transformer.train_run_git_commit` | b59b5edeba923436751d1a65b48aee466c30e47e |
+| `Transformer.checkpoint` | checkpoints/train_transformer.pt |
+| `Transformer.num_parameters` | 4,231,115 |
+| `Transformer.device` | cuda |
+| `Transformer.seconds` | 6.1808 |
+| `Transformer.window` | 64 |
+| `Transformer.max_length` | 256 |
+| `Transformer.reviews_scored` | 5,000 |
+| `Transformer.avg_cross_entropy_256` | 5.0559 |
+| `Transformer.avg_cross_entropy_windows` | 4.6151 |
+
 ### Part III extension facts
 
 Read from the run records; nothing here is interpreted.
+
+**Language-model test perplexity vs classifier test accuracy and macro-F1** (5 representations; rank 1 = lowest perplexity / highest score; record `p3_rank_table`)
+
+| Representation | LM test perplexity | Perplexity rank | Test accuracy | Accuracy rank | Test macro-F1 | Macro-F1 rank |
+|---|---|---|---|---|---|---|
+| `p3_feat_lstm_mean` | 80.4494 | 1 | 0.8192 | 3 | 0.8192 | 3 |
+| `p3_feat_transformer_mean` | 156.9419 | 5 | 0.7744 | 5 | 0.7744 | 5 |
+| `p3_feat_rnn_mean` | 109.3664 | 4 | 0.7782 | 4 | 0.7782 | 4 |
+| `p3_feat_lstm_w2v_mean` | 81.4249 | 2 | 0.8592 | 1 | 0.8592 | 1 |
+| `p3_feat_lstm_glove_mean` | 90.2807 | 3 | 0.8276 | 2 | 0.8276 | 2 |
+
+
+**Spearman rank correlation** between LM test perplexity and the classifier score (n = 5; a negative value means lower perplexity goes with a higher score)
+
+| Classifier score | Spearman rho | Two-sided p-value |
+|---|---|---|
+| accuracy | -0.7000 | 0.1881 |
+| macro f1 | -0.7000 | 0.1881 |
+
+
+**Test perplexity: first 256 tokens in one piece vs consecutive non-overlapping 64-token windows** (same test targets; the script stops if `num_targets` or the checksum differ; record `p3_rescore_windows`, GPU: Tesla T4)
+
+| Model | Stored Part I value (256 tokens) | Recomputed here (256 tokens) | 64-token windows | Test targets | Target checksum (first 12) |
+|---|---|---|---|---|---|
+| RNN | 109.3664 | 109.3664 | 111.1136 | 981,353 | `4f77927a1cd9...` |
+| LSTM | 80.4494 | 80.4494 | 83.0588 | 981,353 | `4f77927a1cd9...` |
+| Transformer | 156.9419 | 156.9419 | 101.0028 | 981,353 | `4f77927a1cd9...` |
+
 
 **PCA to 100 dimensions** (fit on the train split only, then the same classifier procedure; records `p3_classify_pca` and `p3_classify`)
 
@@ -2641,7 +3094,7 @@ Source: `DECISIONS.md` (copied as written there).
 | AA3 | PCA procedure | NEEDS REVIEW |
 | AA4 | McNemar variant | NEEDS REVIEW |
 
-### All design choices (92)
+### All design choices (93)
 
 | ID | Decision | Value | Where | Chosen by | Status |
 |---|---|---|---|---|---|
@@ -2737,6 +3190,7 @@ Source: `DECISIONS.md` (copied as written there).
 | AA2 | Window rescoring definition | the Part I test targets (each test review cut to its first 256 tokens; inputs = tokens 0..254, targets = tokens 1..255) are scored by `evaluate.evaluate()` unchanged, with a scorer that cuts each review's input into consecutive 64-token pieces (0-63, 64-127, ...) and runs the model on each piece separately (fresh recurrent state; Transformer positions 0-63 only). Each target is predicted from the tokens before it inside its own window. `num_targets` and `target_checksum` must equal the one-piece run (the script stops otherwise). It also recomputes the one-piece 256 value as a check of the script against the stored Part I value. Models: RNN, LSTM, Transformer (Part I checkpoints). | `src/rescore_windows.py` (`WindowedScorer`); `configs/p3_rescore_windows.json` (`options.window` 64, `options.max_length` 256, `batch_size` 64). | User, prompt (2026-10-15): non-overlapping 64-token windows over the same first-256-token targets. The 64-token window starts at position 0 of the review (no tokens are shared between windows), and the first target of each later window sees only one input token of context: Assistant reading of "non-overlapping windows". | NEEDS REVIEW |
 | AA3 | PCA procedure | `sklearn.decomposition.PCA(n_components=100, random_state=0)` fitted on the TRAIN split's raw LSTM features only; validation and test projected with the train-fitted PCA; then the unchanged classifier procedure (features standardised with the training mean and standard deviation of the 100 PCA outputs, C chosen on validation macro-F1, test scored once). Standardising after PCA gives every component equal variance (whitening). | `configs/p3_classify_pca.json` (`options.pca_components`); `src/classify.py`. | User, prompt (2026-10-15): PCA to 100 dimensions fitted on train only, same procedure. Standardising after PCA, and PCA on the raw (not standardised) features: Assistant default. | NEEDS REVIEW |
 | AA4 | McNemar variant | counts from the saved error files (a review absent from a classifier's error file was classified correctly); statistic = (\|n10 - n01\| - 1)^2 / (n10 + n01) (continuity-corrected chi-square, 1 degree of freedom) with its p-value; the exact two-sided binomial p-value is also reported. | `src/mcnemar.py`; `configs/p3_mcnemar.json` (A = LSTM, B = Transformer). | User (McNemar on the LSTM vs Transformer test predictions). Continuity correction and the extra exact p-value: Assistant default. | NEEDS REVIEW |
+| AB1 | Error files with review text are not committed | `results/part3_errors_*.csv`, `results/part3_five_errors_*.csv` and `results/part3_error_sample_*.csv` (they hold verbatim IMDB review text) are git-ignored and untracked; the local copies stay and are rebuilt by `classify.py` and `error_sample.py`. | `.gitignore`; `git rm --cached` on the five tracked files. Earlier commits still contain them (history not rewritten). | User (option 1 of 3, 2026-10-15). | confirmed |
 
 ### My notes
 

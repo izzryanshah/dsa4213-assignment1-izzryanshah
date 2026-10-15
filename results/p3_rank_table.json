@@ -1,0 +1,108 @@
+{
+  "run": "p3_rank_table",
+  "script": "src/rank_table.py",
+  "command": "/usr/local/bin/python3 src/rank_table.py --config configs/p3_rank_table.json",
+  "date": "2026-10-15T16:37:47+08:00",
+  "git_commit": "d0aacb15c94ac4b811ee68c1a6ab3cc866a685ba",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
+  "seed": 0,
+  "config": {
+    "architecture": null,
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": null,
+    "embedding_init": null,
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": null,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "classifier_csv": "results/part3_five.csv",
+      "output_csv": "results/part3_lm_vs_classifier.csv",
+      "variant_to_lm_run": {
+        "p3_feat_lstm_mean": "train_lstm",
+        "p3_feat_transformer_mean": "train_transformer",
+        "p3_feat_rnn_mean": "train_rnn",
+        "p3_feat_lstm_w2v_mean": "p2_lstm_w2v",
+        "p3_feat_lstm_glove_mean": "p2_lstm_glove"
+      }
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "n_representations": 5,
+    "spearman_perplexity_vs": {
+      "test_accuracy": {
+        "rho": -0.7,
+        "p_value": 0.18812040437418728
+      },
+      "test_macro_f1": {
+        "rho": -0.7,
+        "p_value": 0.18812040437418728
+      }
+    },
+    "rows": [
+      {
+        "variant": "p3_feat_lstm_mean",
+        "lm_test_perplexity": 80.44937180664519,
+        "test_accuracy": 0.8192,
+        "test_macro_f1": 0.8191916394214068,
+        "perplexity_rank": 1,
+        "accuracy_rank": 3,
+        "macro_f1_rank": 3
+      },
+      {
+        "variant": "p3_feat_transformer_mean",
+        "lm_test_perplexity": 156.9419120574047,
+        "test_accuracy": 0.7744,
+        "test_macro_f1": 0.774371697185695,
+        "perplexity_rank": 5,
+        "accuracy_rank": 5,
+        "macro_f1_rank": 5
+      },
+      {
+        "variant": "p3_feat_rnn_mean",
+        "lm_test_perplexity": 109.36640734248003,
+        "test_accuracy": 0.7782,
+        "test_macro_f1": 0.7781953066126879,
+        "perplexity_rank": 4,
+        "accuracy_rank": 4,
+        "macro_f1_rank": 4
+      },
+      {
+        "variant": "p3_feat_lstm_w2v_mean",
+        "lm_test_perplexity": 81.4248763657732,
+        "test_accuracy": 0.8592,
+        "test_macro_f1": 0.8591972740592257,
+        "perplexity_rank": 2,
+        "accuracy_rank": 1,
+        "macro_f1_rank": 1
+      },
+      {
+        "variant": "p3_feat_lstm_glove_mean",
+        "lm_test_perplexity": 90.28071680904144,
+        "test_accuracy": 0.8276,
+        "test_macro_f1": 0.827597765667043,
+        "perplexity_rank": 3,
+        "accuracy_rank": 2,
+        "macro_f1_rank": 2
+      }
+    ]
+  },
+  "details": {
+    "lm_records": {
+      "p3_feat_lstm_mean": "results/train_lstm.json",
+      "p3_feat_transformer_mean": "results/train_transformer.json",
+      "p3_feat_rnn_mean": "results/train_rnn.json",
+      "p3_feat_lstm_w2v_mean": "results/p2_lstm_w2v.json",
+      "p3_feat_lstm_glove_mean": "results/p2_lstm_glove.json"
+    },
+    "classifier_csv": "results/part3_five.csv"
+  }
+}

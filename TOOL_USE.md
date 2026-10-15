@@ -412,3 +412,8 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 ## 2026-10-15 (review text kept out of git, DECISIONS AB1)
 
 - User chose option 1. Added the three error-file patterns to `.gitignore`, ran `git rm --cached` on the five tracked files (local copies kept), added `DECISIONS.md` AB1, updated README section 9. Nothing committed; history not rewritten.
+
+## 2026-10-15 (assessor-readiness check)
+
+- Checked, without changing code: all 26 `src/` and 11 `tests/` files compile and have a module docstring; no TODO/debug leftovers; every `src/` script and all but one config are referenced in `README.md`; the notebook sections referenced in the README exist (sections 1 to 14); all 11 tests pass locally (`test_causality`, `test_evaluate`, `test_frozen_embedding`, `test_generate`, `test_models` and `test_train` run with the repository's config and ignore `--results-dir`, so they rewrote their `results/test_*.json`; I restored those four from git).
+- `README.md`: added the missing `show_batch.json` row to the config table. No git changes were made (nothing staged, committed, ignored or untracked). Ran `update_results.py`.

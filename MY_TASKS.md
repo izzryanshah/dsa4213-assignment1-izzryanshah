@@ -1,6 +1,6 @@
 # My tasks
 
-Rebuilt by `src/update_results.py` on Thu 15 Oct 2026, 16:27 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (1 day(s) left; today is Thu 15 Oct).
+Rebuilt by `src/update_results.py` on Thu 15 Oct 2026, 17:44 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (1 day(s) left; today is Thu 15 Oct).
 
 Tick a box yourself with `[x]`; this file never ticks anything for you, and keeps your ticks and anything you write between the marker lines. Do not delete the `<!--id:...-->` tags at the end of each line.
 
@@ -10,16 +10,10 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 
 - [ ] Put your planned day for each task into `schedule` in `configs/update_results.json` (item id -> `YYYY-MM-DD`, or `section:<key>` -> date). Until then every item shows "Planned: not set" and nothing can be overdue *(Planned: not set)* <!--id:wait-schedule-->
 - [ ] Review 9 NEEDS REVIEW decision(s): see [Decisions to review](#decisions-to-review) *(Planned: not set)* <!--id:wait-decisions-->
-- [ ] Start run `p3_classify_five`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p3_classify_five-->
-- [ ] Start run `p3_feat_lstm_glove_mean`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p3_feat_lstm_glove_mean-->
-- [ ] Start run `p3_feat_lstm_w2v_mean`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p3_feat_lstm_w2v_mean-->
-- [ ] Start run `p3_feat_rnn_mean`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p3_feat_rnn_mean-->
-- [ ] Start run `p3_rank_table`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p3_rank_table-->
-- [ ] Start run `p3_rescore_windows`: see [Runs to do](#runs-to-do) *(Planned: not set)* <!--id:wait-run-p3_rescore_windows-->
 - [ ] Write your notes for Data, Part I, Part II, Part III: see [Results to interpret](#results-to-interpret) *(Planned: not set)* <!--id:wait-notes-->
 - [ ] Fix failing check: Test set used only for final evaluation: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-test-set-used-only-for-final-evaluation-->
 - [ ] Fix failing check: All models scored on identical test targets: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-all-models-scored-on-identical-test-targets-->
-- [ ] Commit and push: 28 uncommitted file(s), 1 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
+- [ ] Commit and push: 16 uncommitted file(s), 2 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
 
 ### Added by me
 
@@ -74,36 +68,8 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 
 ## Runs to do
 
-- [ ] Run `p3_classify_five` *(Planned: not set)* <!--id:run-p3_classify_five-->
-  - Command: `python3 src/classify.py --config configs/p3_classify_five.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
-  - Time: no earlier run of this script has a recorded time
-  - Produces: `results/p3_classify_five.json`, then a new section in `RESULTS.md` after `update_results.py`
-- [ ] Run `p3_feat_lstm_glove_mean` *(Planned: not set)* <!--id:run-p3_feat_lstm_glove_mean-->
-  - Command: `python3 src/extract_features.py --config configs/p3_feat_lstm_glove_mean.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
-  - Time: no earlier run of this script has a recorded time
-  - Produces: `results/p3_feat_lstm_glove_mean.json`, then a new section in `RESULTS.md` after `update_results.py`
-- [ ] Run `p3_feat_lstm_w2v_mean` *(Planned: not set)* <!--id:run-p3_feat_lstm_w2v_mean-->
-  - Command: `python3 src/extract_features.py --config configs/p3_feat_lstm_w2v_mean.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
-  - Time: no earlier run of this script has a recorded time
-  - Produces: `results/p3_feat_lstm_w2v_mean.json`, then a new section in `RESULTS.md` after `update_results.py`
-- [ ] Run `p3_feat_rnn_mean` *(Planned: not set)* <!--id:run-p3_feat_rnn_mean-->
-  - Command: `python3 src/extract_features.py --config configs/p3_feat_rnn_mean.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
-  - Time: no earlier run of this script has a recorded time
-  - Produces: `results/p3_feat_rnn_mean.json`, then a new section in `RESULTS.md` after `update_results.py`
-- [ ] Run `p3_rank_table` *(Planned: not set)* <!--id:run-p3_rank_table-->
-  - Command: `python3 src/rank_table.py --config configs/p3_rank_table.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
-  - Time: no earlier run of this script has a recorded time
-  - Produces: `results/p3_rank_table.json`, then a new section in `RESULTS.md` after `update_results.py`
-- [ ] Run `p3_rescore_windows` *(Planned: not set)* <!--id:run-p3_rescore_windows-->
-  - Command: `python3 src/rescore_windows.py --config configs/p3_rescore_windows.json` (in Colab: the same command with a leading `!`, from inside the repo folder)
-  - Time: no earlier run of this script has a recorded time
-  - Produces: `results/p3_rescore_windows.json`, then a new section in `RESULTS.md` after `update_results.py`
-- [ ] Part III extension, in this order: (1) in Colab run notebook sections 13 and 14, then copy `data/features/` and `results/` back from Drive; (2) locally run `classify.py` with `configs/p3_classify_five.json`, then `rank_table.py` with `configs/p3_rank_table.json` *(Planned: not set)* <!--id:run-p3-extension-->
-  - Section 13 (Colab): `python -u src/extract_features.py` for `configs/p3_feat_rnn_mean.json`, `p3_feat_lstm_w2v_mean.json`, `p3_feat_lstm_glove_mean.json`; a few minutes on a T4 (the LSTM and Transformer extractions took about 12 s each)
-  - Section 14 (Colab): `python -u src/rescore_windows.py --config configs/p3_rescore_windows.json`; a few minutes on a T4 (each model is scored twice over the 5,000 test reviews)
-  - Needs `checkpoints/train_rnn.pt`, `p2_lstm_w2v.pt`, `p2_lstm_glove.pt`, `train_lstm.pt`, `train_transformer.pt` and `data/classification/` on Drive; run `!git pull` first
-  - Local steps: `python3 src/classify.py --config configs/p3_classify_five.json`, then `python3 src/rank_table.py --config configs/p3_rank_table.json`
-  - Colab only (CLAUDE.md rule 9): the extraction and rescoring cells never run on this machine
+Nothing here right now.
+
 
 ### Added by me
 
@@ -123,7 +89,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
   - Runs in this section: `generations_p2_lstm_glove`, `generations_p2_lstm_w2v`, `glove_coverage`, `p2_lstm_glove`, `p2_lstm_w2v`, `word2vec_cost`
   - Where: the empty *My notes* block at the end of the Part II section of `RESULTS.md`
 - [ ] Write your notes for [Part III](RESULTS.md#part-iii) *(Planned: not set)* <!--id:interp-part3-->
-  - Runs in this section: `p3_classify`, `p3_classify_pca`, `p3_error_sample`, `p3_feat_lstm_mean`, `p3_feat_transformer_mean`, `p3_mcnemar`, `p3_prepare_classification`
+  - Runs in this section: `p3_classify`, `p3_classify_five`, `p3_classify_pca`, `p3_error_sample`, `p3_feat_lstm_glove_mean`, `p3_feat_lstm_mean`, `p3_feat_lstm_w2v_mean`, `p3_feat_rnn_mean`, `p3_feat_transformer_mean`, `p3_mcnemar`, `p3_prepare_classification`, `p3_rank_table`, `p3_rescore_windows`
   - Where: the empty *My notes* block at the end of the Part III section of `RESULTS.md`
 
 ### Added by me
@@ -188,7 +154,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 - [ ] Nothing submitted contains API keys, credentials or data you may not share (`data/` is git-ignored) *(Planned: not set)* <!--id:req-secrets-->
   - Status: not done (cannot be checked automatically; tick when finished)
 - [ ] Submit the PDF report and the code (a GitHub link the instructor can open, or a zip) *(Planned: not set)* <!--id:req-submit-->
-  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 28 uncommitted file(s); 1 unpushed commit(s). Whether the instructor has access cannot be checked from here)
+  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 16 uncommitted file(s); 2 unpushed commit(s). Whether the instructor has access cannot be checked from here)
 - [ ] Find out the late-submission policy and the submission platform (the brief says both are announced separately) *(Planned: not set)* <!--id:req-late-->
   - Status: not done (cannot be checked automatically; tick when finished)
 

@@ -1,0 +1,75 @@
+{
+  "run": "p3_feat_lstm_w2v_mean",
+  "script": "src/extract_features.py",
+  "command": "/usr/bin/python3 src/extract_features.py --config configs/p3_feat_lstm_w2v_mean.json",
+  "date": "2026-10-15T08:31:19+00:00",
+  "git_commit": "d0aacb15c94ac4b811ee68c1a6ab3cc866a685ba",
+  "git_dirty": false,
+  "gpu": "Tesla T4",
+  "hardware": "GPU: Tesla T4",
+  "seed": 0,
+  "config": {
+    "architecture": "lstm",
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": null,
+    "embedding_init": "w2v",
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": 64,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "model": "lstm",
+      "processed_dir": "data/processed",
+      "classification_dir": "data/classification",
+      "output_dir": "data/features",
+      "pooling": "mean",
+      "train_result": "results/p2_lstm_w2v.json",
+      "checkpoint": "checkpoints/p2_lstm_w2v.pt"
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "pooling": "mean",
+    "splits": {
+      "train": {
+        "num_reviews": 40000,
+        "feature_size": 256,
+        "feature_mean": 0.010480140335857868,
+        "feature_std": 0.13328908383846283
+      },
+      "val": {
+        "num_reviews": 5000,
+        "feature_size": 256,
+        "feature_mean": 0.010360910557210445,
+        "feature_std": 0.13271471858024597
+      },
+      "test": {
+        "num_reviews": 5000,
+        "feature_size": 256,
+        "feature_mean": 0.01043649110943079,
+        "feature_std": 0.13276658952236176
+      }
+    }
+  },
+  "details": {
+    "train_result": "results/p2_lstm_w2v.json",
+    "train_run_date": "2026-10-14T06:50:49+00:00",
+    "train_run_git_commit": "5d822d7526f54d5e7cceb64697568badc1968592",
+    "checkpoint": "checkpoints/p2_lstm_w2v.pt",
+    "num_parameters": 6033699,
+    "device": "cuda",
+    "timing_seconds": {
+      "train": 10.046952247619629,
+      "val": 1.2597250938415527,
+      "test": 1.2364284992218018
+    },
+    "output_dir": "data/features/p3_feat_lstm_w2v_mean",
+    "weights_unchanged": true,
+    "padding": "excluded: see src/extract_features.py docstring"
+  }
+}

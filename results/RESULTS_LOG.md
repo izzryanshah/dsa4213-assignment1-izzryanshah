@@ -240,3 +240,18 @@ Before `prompts.txt` existed, `src/generate.py` was run end to end twice (n-gram
 - **Script / command:** `src/mcnemar.py`; `python3 src/mcnemar.py --config configs/p3_mcnemar.json` (no randomness; local CPU).
 - **Key numbers:** 5,000 test reviews: both right 3,531; only LSTM right 565; only Transformer right 341; both wrong 563. Chi-square (continuity-corrected, 1 df) 54.8885, p = 1.28e-13; exact binomial p = 9.6e-14.
 - **File:** `results/p3_mcnemar.json`
+
+### 2026-10-15 08:31 UTC — Part III extension: mean-pooled features for the RNN and the two Part II LSTMs (Colab)
+- **Script / command:** `src/extract_features.py`; `python -u src/extract_features.py --config configs/p3_feat_rnn_mean.json`, `... p3_feat_lstm_w2v_mean.json`, `... p3_feat_lstm_glove_mean.json` (seed 0; git commit `d0aacb1`, `git_dirty: false`; Tesla T4).
+- **Key numbers:** RNN (7,364,303 parameters): features 40,000 / 5,000 / 5,000 x 256; seconds train / val / test 3.8 / 0.3 / 0.3; train feature mean -0.0210, std 0.5076. LSTM frozen w2v (6,033,699 trainable): x 256; 10.0 / 1.3 / 1.2 s; mean 0.0105, std 0.1333. LSTM frozen GloVe: x 256; 10.2 / 1.3 / 1.3 s; mean 0.0065, std 0.1294. `weights_unchanged` true for all three.
+- **Files:** `results/p3_feat_rnn_mean.json`, `results/p3_feat_lstm_w2v_mean.json`, `results/p3_feat_lstm_glove_mean.json` (the feature arrays in `data/features/` were not in the results zip)
+
+### 2026-10-15 08:32 UTC — Part III diagnostic: test perplexity in 64-token windows (Colab)
+- **Script / command:** `src/rescore_windows.py`; `python -u src/rescore_windows.py --config configs/p3_rescore_windows.json` (seed 0; git commit `d0aacb1`, `git_dirty: true`; Tesla T4).
+- **Key numbers** (stored Part I value / recomputed 256 tokens / 64-token windows): RNN 109.3664 / 109.3664 / 111.1136; LSTM 80.4494 / 80.4494 / 83.0588; Transformer 156.9419 / 156.9419 / 101.0028. All three: 981,353 targets, checksum `4f77927a1cd9...` (equal to Part I and to the one-piece run).
+- **Files:** `results/p3_rescore_windows.json`, `results/part3_window_perplexity.csv`
+
+### 2026-10-15 — Part III: classifier on five representations, and LM perplexity vs classifier table
+- **Script / command:** `src/classify.py`; `python3 src/classify.py --config configs/p3_classify_five.json`, then `src/rank_table.py`; `python3 src/rank_table.py --config configs/p3_rank_table.json` (seed 0; local CPU; run before commit, `git_dirty: true`). Same procedure for all five.
+- **Key numbers** (LM test perplexity; best C; validation macro-F1; test accuracy = test macro-F1; test errors of 5,000): LSTM 80.4494; 0.01; 0.8154; 0.8192; 904. Transformer 156.9419; 0.1; 0.7624; 0.7744; 1,128. RNN 109.3664; 0.1; 0.7676; 0.7782; 1,109. LSTM frozen w2v 81.4249; 1; 0.8486; 0.8592; 704. LSTM frozen GloVe 90.2807; 1; 0.8138; 0.8276; 862. Spearman rho (perplexity vs test accuracy, and vs test macro-F1; n = 5) -0.7, two-sided p = 0.1881 for both. The LSTM and Transformer rows equal the earlier `p3_classify` results.
+- **Files:** `results/p3_classify_five.json`, `results/part3_five.csv`, `results/part3_five_errors_<variant>.csv` (x5), `results/p3_rank_table.json`, `results/part3_lm_vs_classifier.csv`

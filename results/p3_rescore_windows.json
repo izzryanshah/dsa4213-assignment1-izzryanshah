@@ -1,0 +1,128 @@
+{
+  "run": "p3_rescore_windows",
+  "script": "src/rescore_windows.py",
+  "command": "/usr/bin/python3 src/rescore_windows.py --config configs/p3_rescore_windows.json",
+  "date": "2026-10-15T08:32:55+00:00",
+  "git_commit": "d0aacb15c94ac4b811ee68c1a6ab3cc866a685ba",
+  "git_dirty": true,
+  "gpu": "Tesla T4",
+  "hardware": "GPU: Tesla T4",
+  "seed": 0,
+  "config": {
+    "architecture": null,
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": null,
+    "embedding_init": null,
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": 64,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "processed_dir": "data/processed",
+      "models": [
+        {
+          "name": "RNN",
+          "model": "rnn",
+          "train_result": "results/train_rnn.json",
+          "checkpoint": "checkpoints/train_rnn.pt"
+        },
+        {
+          "name": "LSTM",
+          "model": "lstm",
+          "train_result": "results/train_lstm.json",
+          "checkpoint": "checkpoints/train_lstm.pt"
+        },
+        {
+          "name": "Transformer",
+          "model": "transformer",
+          "train_result": "results/train_transformer.json",
+          "checkpoint": "checkpoints/train_transformer.pt"
+        }
+      ],
+      "max_length": 256,
+      "window": 64,
+      "max_reviews": null,
+      "output_csv": "results/part3_window_perplexity.csv"
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "window": 64,
+    "max_length": 256,
+    "models": [
+      {
+        "model": "RNN",
+        "stored_test_ppl_256": 109.36640734248003,
+        "recomputed_test_ppl_256": 109.36640734248003,
+        "test_ppl_64_windows": 111.11363518723036,
+        "num_targets": 981353,
+        "target_checksum": "4f77927a1cd952f56697be95540ea0fc002013d9f8278d3f95c1290e6c305605"
+      },
+      {
+        "model": "LSTM",
+        "stored_test_ppl_256": 80.44937180664519,
+        "recomputed_test_ppl_256": 80.44937180664519,
+        "test_ppl_64_windows": 83.05876831094027,
+        "num_targets": 981353,
+        "target_checksum": "4f77927a1cd952f56697be95540ea0fc002013d9f8278d3f95c1290e6c305605"
+      },
+      {
+        "model": "Transformer",
+        "stored_test_ppl_256": 156.9419120574047,
+        "recomputed_test_ppl_256": 156.9419120574047,
+        "test_ppl_64_windows": 101.00279537713587,
+        "num_targets": 981353,
+        "target_checksum": "4f77927a1cd952f56697be95540ea0fc002013d9f8278d3f95c1290e6c305605"
+      }
+    ]
+  },
+  "details": {
+    "RNN": {
+      "train_result": "results/train_rnn.json",
+      "train_run_date": "2026-10-12T07:16:34+00:00",
+      "train_run_git_commit": "7b9bbe6758682f640994b57ac1efa86ba487c75d",
+      "checkpoint": "checkpoints/train_rnn.pt",
+      "num_parameters": 7364303,
+      "device": "cuda",
+      "seconds": 10.259847164154053,
+      "window": 64,
+      "max_length": 256,
+      "reviews_scored": 5000,
+      "avg_cross_entropy_256": 4.694703780151484,
+      "avg_cross_entropy_windows": 4.710553418072971
+    },
+    "LSTM": {
+      "train_result": "results/train_lstm.json",
+      "train_run_date": "2026-10-12T06:19:48+00:00",
+      "train_run_git_commit": "7b9bbe6758682f640994b57ac1efa86ba487c75d",
+      "checkpoint": "checkpoints/train_lstm.pt",
+      "num_parameters": 8033999,
+      "device": "cuda",
+      "seconds": 10.404638290405273,
+      "window": 64,
+      "max_length": 256,
+      "reviews_scored": 5000,
+      "avg_cross_entropy_256": 4.38762806491375,
+      "avg_cross_entropy_windows": 4.419548409185125
+    },
+    "Transformer": {
+      "train_result": "results/train_transformer.json",
+      "train_run_date": "2026-10-12T15:05:12+00:00",
+      "train_run_git_commit": "b59b5edeba923436751d1a65b48aee466c30e47e",
+      "checkpoint": "checkpoints/train_transformer.pt",
+      "num_parameters": 4231115,
+      "device": "cuda",
+      "seconds": 6.180773019790649,
+      "window": 64,
+      "max_length": 256,
+      "reviews_scored": 5000,
+      "avg_cross_entropy_256": 5.055875749990758,
+      "avg_cross_entropy_windows": 4.6151481934596035
+    }
+  }
+}
