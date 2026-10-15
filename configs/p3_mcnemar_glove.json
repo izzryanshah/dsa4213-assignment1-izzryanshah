@@ -1,0 +1,21 @@
+{
+  "architecture": null,
+  "layers": null,
+  "hidden_size": null,
+  "embedding_dim": null,
+  "embedding_init": null,
+  "context_length": null,
+  "learning_rate": null,
+  "batch_size": null,
+  "epochs": null,
+  "dropout": null,
+  "vocab_size": 20000,
+  "subsample_size": null,
+  "seed": 0,
+  "options": {
+    "classification_dir": "data/classification",
+    "errors_prefix": "results/part3_five_errors_",
+    "variant_a": "p3_feat_lstm_glove_mean",
+    "variant_b": "p3_feat_lstm_mean"
+  }
+}

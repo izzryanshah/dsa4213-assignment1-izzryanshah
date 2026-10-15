@@ -1,0 +1,46 @@
+{
+  "run": "p3_mcnemar_glove",
+  "script": "src/mcnemar.py",
+  "command": "/usr/local/bin/python3 src/mcnemar.py --config configs/p3_mcnemar_glove.json",
+  "date": "2026-10-15T18:02:35+08:00",
+  "git_commit": "77c82e6660692f1eac031e26f940024eedf36d6f",
+  "git_dirty": true,
+  "gpu": null,
+  "hardware": "CPU: Apple M2 (Darwin arm64)",
+  "seed": 0,
+  "config": {
+    "architecture": null,
+    "layers": null,
+    "hidden_size": null,
+    "embedding_dim": null,
+    "embedding_init": null,
+    "context_length": null,
+    "learning_rate": null,
+    "batch_size": null,
+    "epochs": null,
+    "dropout": null,
+    "vocab_size": 20000,
+    "subsample_size": null,
+    "seed": 0,
+    "options": {
+      "classification_dir": "data/classification",
+      "errors_prefix": "results/part3_five_errors_",
+      "variant_a": "p3_feat_lstm_glove_mean",
+      "variant_b": "p3_feat_lstm_mean"
+    }
+  },
+  "epoch_losses": [],
+  "metrics": {
+    "variant_a": "p3_feat_lstm_glove_mean",
+    "variant_b": "p3_feat_lstm_mean",
+    "n_test": 5000,
+    "both_right": 3781,
+    "both_wrong": 547,
+    "only_a_right": 357,
+    "only_b_right": 315,
+    "statistic": 2.5014880952380953,
+    "p_value": 0.11373878115878534,
+    "p_value_exact": 0.11367151168369084
+  },
+  "details": {}
+}

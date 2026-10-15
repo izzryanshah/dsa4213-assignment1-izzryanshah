@@ -417,3 +417,9 @@ Went through all 24 `DECISIONS.md` NEEDS REVIEW items with the user, 2-3 options
 
 - Checked, without changing code: all 26 `src/` and 11 `tests/` files compile and have a module docstring; no TODO/debug leftovers; every `src/` script and all but one config are referenced in `README.md`; the notebook sections referenced in the README exist (sections 1 to 14); all 11 tests pass locally (`test_causality`, `test_evaluate`, `test_frozen_embedding`, `test_generate`, `test_models` and `test_train` run with the repository's config and ignore `--results-dir`, so they rewrote their `results/test_*.json`; I restored those four from git).
 - `README.md`: added the missing `show_batch.json` row to the config table. No git changes were made (nothing staged, committed, ignored or untracked). Ran `update_results.py`.
+
+## 2026-10-15 — McNemar tests for the Part II embedding variants
+Added `configs/p3_mcnemar_w2v.json` and `configs/p3_mcnemar_glove.json` (no new code: `src/mcnemar.py` already takes the two variants and the error-file prefix from the config). Ran both locally; results in `results/p3_mcnemar_{w2v,glove}.json`, logged in `results/RESULTS_LOG.md`. Done in response to a pasted review of the report draft; the report text itself was not changed.
+
+## 2026-10-15 — Report draft v3 (second review)
+Rewrote `report/REPORT_DRAFT.md` at the user's request after a pasted review: Discussion rebuilt as across-architecture vs within-architecture; parameter breakdown (Table 2); McNemar table (Table 7) with the two new pairs; Spearman exact permutation p; truncation/pooling error explanation; negation statistic dropped; C argument moved to 5.4; tags and `[results/...]`/`DECISIONS` references removed from the body. Appended section 8 to `report/VERIFY.md`, DECISIONS AB1. No code or result files changed beyond the McNemar configs. The rest of the report, including every analytical point, remains assistant-drafted for the user to verify.

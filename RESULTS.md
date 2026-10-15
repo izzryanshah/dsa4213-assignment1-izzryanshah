@@ -1,6 +1,6 @@
 # Results
 
-Rebuilt by `src/update_results.py` on 2026-10-15T17:44:50+08:00 from 43 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-15T16:37:47+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
+Rebuilt by `src/update_results.py` on 2026-10-15T18:09:30+08:00 from 45 run records in `results/`, `DECISIONS.md` and `results/RESULTS_LOG.md`. Newest run record: 2026-10-15T18:02:35+08:00. Do not edit outside the *My notes* blocks; they are rebuilt each time.
 
 Contents: [Data](#data) · [Part I](#part-i) · [Part II](#part-ii) · [Part III](#part-iii) · [Settings](#settings) · [Checks](#checks)
 
@@ -2501,6 +2501,104 @@ Read from the run records; nothing here is interpreted.
 | `only_a_right` | 565 |
 | `only_b_right` | 341 |
 | `statistic` | 54.8885 |
+| `p_value` | 0.0000 |
+| `p_value_exact` | 0.0000 |
+
+#### `p3_mcnemar_glove`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/local/bin/python3 src/mcnemar.py --config configs/p3_mcnemar_glove.json` |
+| Script | `src/mcnemar.py` |
+| Date | 2026-10-15T18:02:35+08:00 |
+| Git commit | `77c82e6 (uncommitted changes at run time)` |
+| Hardware | CPU: Apple M2 (Darwin arm64) |
+| Seed | 0 |
+| Result file | `results/p3_mcnemar_glove.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | — |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.classification_dir` | data/classification |
+| `options.errors_prefix` | results/part3_five_errors_ |
+| `options.variant_a` | p3_feat_lstm_glove_mean |
+| `options.variant_b` | p3_feat_lstm_mean |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `variant_a` | p3_feat_lstm_glove_mean |
+| `variant_b` | p3_feat_lstm_mean |
+| `n_test` | 5,000 |
+| `both_right` | 3,781 |
+| `both_wrong` | 547 |
+| `only_a_right` | 357 |
+| `only_b_right` | 315 |
+| `statistic` | 2.5015 |
+| `p_value` | 0.1137 |
+| `p_value_exact` | 0.1137 |
+
+#### `p3_mcnemar_w2v`
+
+| Field | Value |
+|---|---|
+| Command | `/usr/local/bin/python3 src/mcnemar.py --config configs/p3_mcnemar_w2v.json` |
+| Script | `src/mcnemar.py` |
+| Date | 2026-10-15T18:02:32+08:00 |
+| Git commit | `77c82e6 (uncommitted changes at run time)` |
+| Hardware | CPU: Apple M2 (Darwin arm64) |
+| Seed | 0 |
+| Result file | `results/p3_mcnemar_w2v.json` |
+
+**Settings used**
+
+| Setting | Value |
+|---|---|
+| `architecture` | — |
+| `layers` | — |
+| `hidden_size` | — |
+| `embedding_dim` | — |
+| `embedding_init` | — |
+| `context_length` | — |
+| `learning_rate` | — |
+| `batch_size` | — |
+| `epochs` | — |
+| `dropout` | — |
+| `vocab_size` | 20,000 |
+| `subsample_size` | — |
+| `seed` | 0 |
+| `options.classification_dir` | data/classification |
+| `options.errors_prefix` | results/part3_five_errors_ |
+| `options.variant_a` | p3_feat_lstm_w2v_mean |
+| `options.variant_b` | p3_feat_lstm_mean |
+
+**Key numbers**
+
+| Metric | Value |
+|---|---|
+| `variant_a` | p3_feat_lstm_w2v_mean |
+| `variant_b` | p3_feat_lstm_mean |
+| `n_test` | 5,000 |
+| `both_right` | 3,861 |
+| `both_wrong` | 469 |
+| `only_a_right` | 435 |
+| `only_b_right` | 235 |
+| `statistic` | 59.1060 |
 | `p_value` | 0.0000 |
 | `p_value_exact` | 0.0000 |
 

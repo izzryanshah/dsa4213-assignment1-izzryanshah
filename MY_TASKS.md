@@ -1,6 +1,6 @@
 # My tasks
 
-Rebuilt by `src/update_results.py` on Thu 15 Oct 2026, 17:44 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (1 day(s) left; today is Thu 15 Oct).
+Rebuilt by `src/update_results.py` on Thu 15 Oct 2026, 18:09 Singapore time. **Deadline: Fri 16 Oct 2026, 11:59 PM SGT** (1 day(s) left; today is Thu 15 Oct).
 
 Tick a box yourself with `[x]`; this file never ticks anything for you, and keeps your ticks and anything you write between the marker lines. Do not delete the `<!--id:...-->` tags at the end of each line.
 
@@ -13,7 +13,7 @@ Contents: [Waiting on me now](#waiting-on-me-now) · [Decisions to review](#deci
 - [ ] Write your notes for Data, Part I, Part II, Part III: see [Results to interpret](#results-to-interpret) *(Planned: not set)* <!--id:wait-notes-->
 - [ ] Fix failing check: Test set used only for final evaluation: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-test-set-used-only-for-final-evaluation-->
 - [ ] Fix failing check: All models scored on identical test targets: see [Failed checks](#failed-checks) *(Planned: not set)* <!--id:wait-fail-all-models-scored-on-identical-test-targets-->
-- [ ] Commit and push: 16 uncommitted file(s), 2 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
+- [ ] Commit and push: 11 uncommitted file(s), 0 unpushed commit(s). The instructor can only see what is pushed *(Planned: not set)* <!--id:wait-commit-->
 
 ### Added by me
 
@@ -89,7 +89,7 @@ Nothing here right now.
   - Runs in this section: `generations_p2_lstm_glove`, `generations_p2_lstm_w2v`, `glove_coverage`, `p2_lstm_glove`, `p2_lstm_w2v`, `word2vec_cost`
   - Where: the empty *My notes* block at the end of the Part II section of `RESULTS.md`
 - [ ] Write your notes for [Part III](RESULTS.md#part-iii) *(Planned: not set)* <!--id:interp-part3-->
-  - Runs in this section: `p3_classify`, `p3_classify_five`, `p3_classify_pca`, `p3_error_sample`, `p3_feat_lstm_glove_mean`, `p3_feat_lstm_mean`, `p3_feat_lstm_w2v_mean`, `p3_feat_rnn_mean`, `p3_feat_transformer_mean`, `p3_mcnemar`, `p3_prepare_classification`, `p3_rank_table`, `p3_rescore_windows`
+  - Runs in this section: `p3_classify`, `p3_classify_five`, `p3_classify_pca`, `p3_error_sample`, `p3_feat_lstm_glove_mean`, `p3_feat_lstm_mean`, `p3_feat_lstm_w2v_mean`, `p3_feat_rnn_mean`, `p3_feat_transformer_mean`, `p3_mcnemar`, `p3_mcnemar_glove`, `p3_mcnemar_w2v`, `p3_prepare_classification`, `p3_rank_table`, `p3_rescore_windows`
   - Where: the empty *My notes* block at the end of the Part III section of `RESULTS.md`
 
 ### Added by me
@@ -154,7 +154,7 @@ Nothing here right now.
 - [ ] Nothing submitted contains API keys, credentials or data you may not share (`data/` is git-ignored) *(Planned: not set)* <!--id:req-secrets-->
   - Status: not done (cannot be checked automatically; tick when finished)
 - [ ] Submit the PDF report and the code (a GitHub link the instructor can open, or a zip) *(Planned: not set)* <!--id:req-submit-->
-  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 16 uncommitted file(s); 2 unpushed commit(s). Whether the instructor has access cannot be checked from here)
+  - Status: not done (remote `origin` = git@github.com:izzryanshah/dsa4213-assignment1-izzryanshah.git; 11 uncommitted file(s); 0 unpushed commit(s). Whether the instructor has access cannot be checked from here)
 - [ ] Find out the late-submission policy and the submission platform (the brief says both are announced separately) *(Planned: not set)* <!--id:req-late-->
   - Status: not done (cannot be checked automatically; tick when finished)
 
